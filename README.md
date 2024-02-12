@@ -1,0 +1,2 @@
+# blacklist
+Stock Application
