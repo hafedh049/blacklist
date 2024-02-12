@@ -21,15 +21,14 @@ class _ProductsTableState extends State<ProductsTable> {
         height: MediaQuery.sizeOf(context).height,
         padding: const EdgeInsets.all(24),
         color: darkColor,
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: StatefulBuilder(
-            builder: (BuildContext context, void Function(void Function()) _) {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Row(
+        child: StatefulBuilder(
+          builder: (BuildContext context, void Function(void Function()) _) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Flexible(
+                  child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       Checkbox(
@@ -51,55 +50,55 @@ class _ProductsTableState extends State<ProductsTable> {
                       Text("ACTION", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
                     ],
                   ),
-                  Container(width: MediaQuery.sizeOf(context).width, height: .5, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),
-                  Expanded(
-                    child: ListView.separated(
-                      itemBuilder: (BuildContext context, int index) {
-                        return Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            Checkbox(
-                              value: _selectAll,
-                              checkColor: purpleColor,
-                              onChanged: (bool? value) {
-                                setState(() {
-                                  _selectAll = !_selectAll;
-                                });
-                              },
-                            ),
-                            const SizedBox(width: 30),
-                            for (final String column in _columns) ...<Widget>[
-                              Text(column, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
-                              const SizedBox(width: 85),
-                            ],
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: const Icon(FontAwesome.eye_solid, color: greenColor, size: 15),
-                                ),
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: const Icon(FontAwesome.pen_solid, color: purpleColor, size: 15),
-                                ),
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: const Icon(FontAwesome.circle_xmark_solid, color: redColor, size: 15),
-                                ),
-                              ],
-                            ),
+                ),
+                Container(width: MediaQuery.sizeOf(context).width, height: .5, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),
+                Expanded(
+                  child: ListView.separated(
+                    itemBuilder: (BuildContext context, int index) {
+                      return Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Checkbox(
+                            value: _selectAll,
+                            checkColor: purpleColor,
+                            onChanged: (bool? value) {
+                              setState(() {
+                                _selectAll = !_selectAll;
+                              });
+                            },
+                          ),
+                          const SizedBox(width: 30),
+                          for (final String column in _columns) ...<Widget>[
+                            Text(column, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
+                            const SizedBox(width: 85),
                           ],
-                        );
-                      },
-                      separatorBuilder: (BuildContext context, int index) => Container(width: MediaQuery.sizeOf(context).width, height: .3, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),
-                      itemCount: 10,
-                    ),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              IconButton(
+                                onPressed: () {},
+                                icon: const Icon(FontAwesome.eye_solid, color: greenColor, size: 15),
+                              ),
+                              IconButton(
+                                onPressed: () {},
+                                icon: const Icon(FontAwesome.pen_solid, color: purpleColor, size: 15),
+                              ),
+                              IconButton(
+                                onPressed: () {},
+                                icon: const Icon(FontAwesome.circle_xmark_solid, color: redColor, size: 15),
+                              ),
+                            ],
+                          ),
+                        ],
+                      );
+                    },
+                    separatorBuilder: (BuildContext context, int index) => Container(width: MediaQuery.sizeOf(context).width, height: .3, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),
+                    itemCount: 10,
                   ),
-                ],
-              );
-            },
-          ),
+                ),
+              ],
+            );
+          },
         ),
       ),
     );
