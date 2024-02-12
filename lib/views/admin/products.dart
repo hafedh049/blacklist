@@ -69,11 +69,25 @@ class _ProductsTableState extends State<ProductsTable> {
                             const SizedBox(width: 30),
                             for (final String column in _columns) ...<Widget>[
                               Text(column, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
-                              const SizedBox(width: 10),
-                              const Icon(FontAwesome.sort_solid, size: 15, color: greyColor),
                               const SizedBox(width: 60),
                             ],
-                            Text("ACTION", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                IconButton(
+                                  onPressed: () {},
+                                  icon: const Icon(FontAwesome.eye_solid, color: greenColor, size: 15),
+                                ),
+                                IconButton(
+                                  onPressed: () {},
+                                  icon: const Icon(FontAwesome.pen_solid, color: purpleColor, size: 15),
+                                ),
+                                IconButton(
+                                  onPressed: () {},
+                                  icon: const Icon(FontAwesome.circle_xmark_solid, color: redColor, size: 15),
+                                ),
+                              ],
+                            ),
                           ],
                         ),
                       );
