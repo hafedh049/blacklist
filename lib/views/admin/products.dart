@@ -27,6 +27,22 @@ class _ProductsTableState extends State<ProductsTable> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
+                SfDataGrid(
+                  source: employeeDataSource,
+                  columns: <GridColumn>[
+                    GridColumn(
+                        columnName: 'id',
+                        label: Container(
+                            padding: EdgeInsets.all(16.0),
+                            alignment: Alignment.centerRight,
+                            child: Text(
+                              'ID',
+                            ))),
+                    GridColumn(columnName: 'name', label: Container(padding: EdgeInsets.all(16.0), alignment: Alignment.centerLeft, child: Text('Name'))),
+                    GridColumn(columnName: 'designation', width: 120, label: Container(padding: EdgeInsets.all(16.0), alignment: Alignment.centerLeft, child: Text('Designation'))),
+                    GridColumn(columnName: 'salary', label: Container(padding: EdgeInsets.all(16.0), alignment: Alignment.centerRight, child: Text('Salary'))),
+                  ],
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
@@ -39,7 +55,14 @@ class _ProductsTableState extends State<ProductsTable> {
                         });
                       },
                     ),
-                    for (final String column in _columns) Text(column, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
+                    for (final String column in _columns)
+                      Row(
+                        children: <Widget>[
+                          Text(column, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
+                          const SizedBox(width: 10),
+                          const Icon(FontAwesome.sort_solid, size: 15, color: purpleColor),
+                        ],
+                      ),
                     Text("ACTION", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
                   ],
                 ),
@@ -59,7 +82,14 @@ class _ProductsTableState extends State<ProductsTable> {
                               });
                             },
                           ),
-                          for (final String column in _columns) Text(column, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
+                          const SizedBox(width: 30),
+                          for (final String column in _columns)
+                            Row(
+                              children: <Widget>[
+                                Text(column, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
+                                const SizedBox(width: 85),
+                              ],
+                            ),
                           Row(
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
@@ -81,7 +111,7 @@ class _ProductsTableState extends State<ProductsTable> {
                       );
                     },
                     separatorBuilder: (BuildContext context, int index) => Container(width: MediaQuery.sizeOf(context).width, height: .3, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),
-                    itemCount: 10,
+                    itemCount: 1000,
                   ),
                 ),
               ],
