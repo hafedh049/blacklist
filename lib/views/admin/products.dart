@@ -17,13 +17,14 @@ class _ProductsTableState extends State<ProductsTable> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        width: MediaQuery.sizeOf(context).width,
         padding: const EdgeInsets.all(24),
         color: darkColor,
-        child: StatefulBuilder(
-          builder: (BuildContext context, void Function(void Function()) _) {
-            return SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Column(
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: StatefulBuilder(
+            builder: (BuildContext context, void Function(void Function()) _) {
+              return Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -95,9 +96,9 @@ class _ProductsTableState extends State<ProductsTable> {
                     ),
                   ),
                 ],
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
       ),
     );
