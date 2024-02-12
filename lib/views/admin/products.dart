@@ -51,49 +51,46 @@ class _ProductsTableState extends State<ProductsTable> {
                 ),
                 Container(width: MediaQuery.sizeOf(context).width, height: .5, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),
                 Expanded(
-                  child: ListView.separated(
-                    itemBuilder: (BuildContext context, int index) {
-                      return SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: <Widget>[
-                            Checkbox(
-                              value: _selectAll,
-                              checkColor: purpleColor,
-                              onChanged: (bool? value) {
-                                setState(() {
-                                  _selectAll = !_selectAll;
-                                });
-                              },
+                  child: Table(
+                    border: const TableBorder(left: BorderSide.none, top: BorderSide.none, right: BorderSide.none),
+                    children: <TableRow>[
+                      for (int index = 0; index < 1000; index += 1)
+                        TableRow(
+                          children: <TableCell>[
+                            TableCell(
+                              child: Checkbox(
+                                value: _selectAll,
+                                checkColor: purpleColor,
+                                onChanged: (bool? value) {
+                                  setState(() {
+                                    _selectAll = !_selectAll;
+                                  });
+                                },
+                              ),
                             ),
-                            const SizedBox(width: 30),
-                            for (final String column in _columns) ...<Widget>[
-                              Text(column, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
-                              const SizedBox(width: 60),
-                            ],
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: const Icon(FontAwesome.eye_solid, color: greenColor, size: 15),
-                                ),
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: const Icon(FontAwesome.pen_solid, color: purpleColor, size: 15),
-                                ),
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: const Icon(FontAwesome.circle_xmark_solid, color: redColor, size: 15),
-                                ),
-                              ],
+                            for (final String column in _columns) TableCell(child: Text(column, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor))),
+                            TableCell(
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  IconButton(
+                                    onPressed: () {},
+                                    icon: const Icon(FontAwesome.eye_solid, color: greenColor, size: 15),
+                                  ),
+                                  IconButton(
+                                    onPressed: () {},
+                                    icon: const Icon(FontAwesome.pen_solid, color: purpleColor, size: 15),
+                                  ),
+                                  IconButton(
+                                    onPressed: () {},
+                                    icon: const Icon(FontAwesome.circle_xmark_solid, color: redColor, size: 15),
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
-                      );
-                    },
-                    separatorBuilder: (BuildContext context, int index) => Container(width: MediaQuery.sizeOf(context).width, height: .3, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),
-                    itemCount: 1000,
+                    ],
                   ),
                 ),
               ],
