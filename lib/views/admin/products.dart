@@ -1,4 +1,5 @@
 import 'package:blacklist/utils/shared.dart';
+import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
@@ -51,43 +52,15 @@ class _ProductsTableState extends State<ProductsTable> {
                 ),
                 Container(width: MediaQuery.sizeOf(context).width, height: .5, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),
                 Expanded(
-                  child: Table(
-                    border: const TableBorder(left: BorderSide.none, top: BorderSide.none, right: BorderSide.none),
-                    children: <TableRow>[
+                  child: DataTable2(
+                    columns: <DataColumn2>[
+                      for (final String column in _columns) DataColumn2(label: Text(column, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor))),
+                    ],
+                    rows: <DataRow2>[
                       for (int index = 0; index < 1000; index += 1)
-                        TableRow(
-                          children: <TableCell>[
-                            TableCell(
-                              child: Checkbox(
-                                value: _selectAll,
-                                checkColor: purpleColor,
-                                onChanged: (bool? value) {
-                                  setState(() {
-                                    _selectAll = !_selectAll;
-                                  });
-                                },
-                              ),
-                            ),
-                            for (final String column in _columns) TableCell(child: Text(column, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor))),
-                            TableCell(
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  IconButton(
-                                    onPressed: () {},
-                                    icon: const Icon(FontAwesome.eye_solid, color: greenColor, size: 15),
-                                  ),
-                                  IconButton(
-                                    onPressed: () {},
-                                    icon: const Icon(FontAwesome.pen_solid, color: purpleColor, size: 15),
-                                  ),
-                                  IconButton(
-                                    onPressed: () {},
-                                    icon: const Icon(FontAwesome.circle_xmark_solid, color: redColor, size: 15),
-                                  ),
-                                ],
-                              ),
-                            ),
+                        DataRow2(
+                          cells: <DataCell>[
+                            for (final String column in _columns) DataCell(Text(column, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor))),
                           ],
                         ),
                     ],
