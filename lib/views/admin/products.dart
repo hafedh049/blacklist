@@ -10,6 +10,7 @@ class ProductsTable extends StatefulWidget {
 
 class _ProductsTableState extends State<ProductsTable> {
   bool _selectAll = false;
+  final List<String> _columns = const <String>["DATE", "REFERENCE", "PRODUCT NAME", "CATEGORY", "REAL PRICE", "NEW PRICE", "QUANTITY"];
   final Map<String, List<dynamic>> _data = <String, List<dynamic>>{};
   @override
   Widget build(BuildContext context) {
@@ -34,6 +35,7 @@ class _ProductsTableState extends State<ProductsTable> {
                           });
                         },
                       ),
+                      for(final String column in _columns)...<Widget>[  Text(column),,const SizedBox(width: 10),,const SizedBox(width: 30),],
                     ],
                   ),
                 ),
@@ -53,7 +55,7 @@ class _ProductsTableState extends State<ProductsTable> {
                                 });
                               },
                             ),
-                            SizedBox(width: 100),
+                            const SizedBox(width: 30),
                             Text("26/09/23"),
                           ],
                         ),
