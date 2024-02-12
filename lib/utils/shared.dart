@@ -8,4 +8,4 @@ const Color greyColor = Color.fromARGB(255, 166, 170, 176);
 const Color greenColor = Colors.greenAccent;
 const Color blueColor = Colors.blueAccent;
 const Color redColor = Colors.red;
-const Color transparentColor = Colors.red;
+const Color transparentColor = Colors.transparent;
