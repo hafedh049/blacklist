@@ -44,7 +44,17 @@ class _ProductsTableState extends State<ProductsTable> {
                       return SingleChildScrollView(
                         child: Row(
                           children: <Widget>[
-                            SizedBox(width: 100, child: Text("26/09/23")),
+                            Checkbox(
+                              value: _selectAll,
+                              checkColor: purpleColor,
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  _selectAll = !_selectAll;
+                                });
+                              },
+                            ),
+                            SizedBox(width: 100),
+                            Text("26/09/23"),
                           ],
                         ),
                       );
