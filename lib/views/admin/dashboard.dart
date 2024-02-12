@@ -1,5 +1,6 @@
 import 'package:blacklist/utils/shared.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
 
 class Dashboard extends StatefulWidget {
@@ -14,23 +15,24 @@ class _DashboardState extends State<Dashboard> {
     <String, dynamic>{
       "icon": FontAwesome.wallet_solid,
       "title": "SALES PER DAY",
-      "ammount": 12.00,
+      "amount": 12.00,
     },
     <String, dynamic>{
       "icon": FontAwesome.circle_dollar_to_slot_solid,
       "title": "SALES PER MONTH",
-      "ammount": 312.00,
+      "amount": 312.00,
     },
     <String, dynamic>{
       "icon": FontAwesome.google_wallet_brand,
       "title": "SALES PER YEAR",
-      "ammount": 5312.00,
+      "amount": 5312.00,
     },
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: scaffoldColor,
       body: Padding(
         padding: const EdgeInsets.all(24),
         child: SingleChildScrollView(
@@ -47,7 +49,13 @@ class _DashboardState extends State<Dashboard> {
                       Icon(item["icon"], size: 35, color: purpleColor),
                       const Spacer(),
                       Column(
-                        children: <Widget>[],
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Text(item["title"], style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.bold)),
+                          const SizedBox(height: 5),
+                          Text(item["amount"], style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.bold)),
+                        ],
                       ),
                     ],
                   ),
