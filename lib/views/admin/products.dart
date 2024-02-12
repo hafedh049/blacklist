@@ -18,6 +18,7 @@ class _ProductsTableState extends State<ProductsTable> {
     return Scaffold(
       body: Container(
         width: MediaQuery.sizeOf(context).width,
+        height: MediaQuery.sizeOf(context).height,
         padding: const EdgeInsets.all(24),
         color: darkColor,
         child: SingleChildScrollView(
@@ -92,7 +93,7 @@ class _ProductsTableState extends State<ProductsTable> {
                         );
                       },
                       separatorBuilder: (BuildContext context, int index) => Container(width: MediaQuery.sizeOf(context).width, height: .3, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),
-                      itemCount: 1000,
+                      itemCount: 10,
                     ),
                   ),
                 ],
