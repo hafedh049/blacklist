@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'package:blacklist/utils/shared.dart';
 import 'package:flutter/material.dart';
@@ -46,21 +48,32 @@ class _DashboardState extends State<Dashboard> {
                   padding: const EdgeInsets.all(24),
                   margin: const EdgeInsets.only(bottom: 24),
                   color: darkColor,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Icon(item["icon"], size: 35, color: purpleColor),
-                      const Spacer(),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Text(item["title"], style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.bold, color: greyColor)),
-                          const SizedBox(height: 5),
-                          AnimatedFlipCounter(value: item["amount"], fractionDigits: 2, suffix: " DT", textStyle: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.bold, color: whiteColor), duration: 1.seconds, decimalSeparator: ",", thousandSeparator: "_"),
-                        ],
-                      ),
-                    ],
+                  child: InkWell(
+                    focusColor: transparentColor,
+                    splashColor: transparentColor,
+                    highlightColor: transparentColor,
+                    hoverColor: transparentColor,
+                    onTap: () {
+                      setState(() {
+                        item["amount"] = Random().nextInt(4000) * Random().nextInt(4000);
+                      });
+                    },
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Icon(item["icon"], size: 35, color: purpleColor),
+                        const Spacer(),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Text(item["title"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.bold, color: greyColor)),
+                            const SizedBox(height: 5),
+                            AnimatedFlipCounter(value: item["amount"], wholeDigits: 0, fractionDigits: 2, suffix: " DT", textStyle: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.bold, color: whiteColor), duration: 1.seconds, decimalSeparator: ",", thousandSeparator: " "),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
             ],
