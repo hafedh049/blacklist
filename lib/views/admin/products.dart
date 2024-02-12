@@ -45,6 +45,7 @@ class _ProductsTableState extends State<ProductsTable> {
                         const Icon(FontAwesome.sort_solid, size: 15, color: greyColor),
                         const SizedBox(width: 60),
                       ],
+                      Text("ACTION", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
                     ],
                   ),
                 ),
