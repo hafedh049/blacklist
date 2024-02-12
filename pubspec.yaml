@@ -21,7 +21,6 @@ dependencies:
   icons_plus: ^5.0.0
   lottie: ^3.0.0
   animated_flip_counter: ^0.2.6
-  data_table_2: ^2.5.10
 
 dev_dependencies:
   flutter_test:
