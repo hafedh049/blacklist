@@ -1,5 +1,7 @@
+import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'package:blacklist/utils/shared.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
 
@@ -42,6 +44,7 @@ class _DashboardState extends State<Dashboard> {
               for (Map<String, dynamic> item in _gains)
                 Container(
                   padding: const EdgeInsets.all(24),
+                  margin: const EdgeInsets.only(bottom: 24),
                   color: darkColor,
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -52,9 +55,9 @@ class _DashboardState extends State<Dashboard> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
-                          Text(item["title"], style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.bold)),
+                          Text(item["title"], style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.bold, color: greyColor)),
                           const SizedBox(height: 5),
-                          Text(item["amount"], style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.bold)),
+                          AnimatedFlipCounter(value: item["amount"], fractionDigits: 2, suffix: " DT", textStyle: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.bold, color: whiteColor), duration: 1.seconds, decimalSeparator: ",", thousandSeparator: "_"),
                         ],
                       ),
                     ],
