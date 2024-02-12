@@ -17,6 +17,57 @@ class _AddProductState extends State<AddProduct> {
   final TextEditingController _productQuantityController = TextEditingController();
   final TextEditingController _productStockAlertController = TextEditingController();
 
+  late final Map<String, Map<String, dynamic>> _productTemplate = <String, Map<String, dynamic>>{
+    "Product Category": <String, dynamic>{
+      "controller": _productCategoryController,
+      "type": "text",
+      "read_only": false,
+      "is_date": 1,
+    },
+    "Product Name": <String, dynamic>{
+      "controller": _productNameController,
+      "type": "text",
+      "read_only": false,
+      "is_date": 1,
+    },
+    "Product Category": <String, dynamic>{
+      "controller": _productCategoryController,
+      "type": "text",
+      "read_only": false,
+      "is_date": 1,
+    },
+    "Product Category": <String, dynamic>{
+      "controller": _productCategoryController,
+      "type": "text",
+      "read_only": false,
+      "is_date": 1,
+    },
+    "Product Category": <String, dynamic>{
+      "controller": _productCategoryController,
+      "type": "text",
+      "read_only": false,
+      "is_date": 1,
+    },
+    "Product Category": <String, dynamic>{
+      "controller": _productCategoryController,
+      "type": "text",
+      "read_only": false,
+      "is_date": 1,
+    },
+    "Product Category": <String, dynamic>{
+      "controller": _productCategoryController,
+      "type": "text",
+      "read_only": false,
+      "is_date": 1,
+    },
+    "Product Category": <String, dynamic>{
+      "controller": _productCategoryController,
+      "type": "text",
+      "read_only": false,
+      "is_date": 1,
+    },
+  };
+
   @override
   void dispose() {
     _productNameController.dispose();
