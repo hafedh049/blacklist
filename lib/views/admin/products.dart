@@ -13,7 +13,6 @@ class ProductsTable extends StatefulWidget {
 class _ProductsTableState extends State<ProductsTable> {
   bool _selectAll = false;
   final List<String> _columns = const <String>["DATE", "REFERENCE", "PRODUCT NAME", "CATEGORY", "REAL PRICE", "NEW PRICE", "QUANTITY", "STOCK ALERT"];
-  final Map<String, List<dynamic>> _data = <String, List<dynamic>>{};
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,12 +21,14 @@ class _ProductsTableState extends State<ProductsTable> {
         color: darkColor,
         child: StatefulBuilder(
           builder: (BuildContext context, void Function(void Function()) _) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
+            return SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       Checkbox(
                         value: _selectAll,
@@ -48,14 +49,12 @@ class _ProductsTableState extends State<ProductsTable> {
                       Text("ACTION", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
                     ],
                   ),
-                ),
-                Container(width: MediaQuery.sizeOf(context).width, height: .5, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),
-                Expanded(
-                  child: ListView.separated(
-                    itemBuilder: (BuildContext context, int index) {
-                      return SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
+                  Container(width: MediaQuery.sizeOf(context).width, height: .5, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),
+                  Expanded(
+                    child: ListView.separated(
+                      itemBuilder: (BuildContext context, int index) {
+                        return Row(
+                          mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
                             Checkbox(
                               value: _selectAll,
@@ -89,14 +88,14 @@ class _ProductsTableState extends State<ProductsTable> {
                               ],
                             ),
                           ],
-                        ),
-                      );
-                    },
-                    separatorBuilder: (BuildContext context, int index) => Container(width: MediaQuery.sizeOf(context).width, height: .3, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),
-                    itemCount: 1000,
+                        );
+                      },
+                      separatorBuilder: (BuildContext context, int index) => Container(width: MediaQuery.sizeOf(context).width, height: .3, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),
+                      itemCount: 1000,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             );
           },
         ),
