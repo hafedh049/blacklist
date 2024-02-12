@@ -27,36 +27,28 @@ class _ProductsTableState extends State<ProductsTable> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Flexible(
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Checkbox(
-                        value: _selectAll,
-                        checkColor: purpleColor,
-                        onChanged: (bool? value) {
-                          setState(() {
-                            _selectAll = !_selectAll;
-                          });
-                        },
-                      ),
-                      const SizedBox(width: 30),
-                      for (final String column in _columns) ...<Widget>[
-                        Text(column, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
-                        const SizedBox(width: 10),
-                        const Icon(FontAwesome.sort_solid, size: 15, color: purpleColor),
-                        const SizedBox(width: 60),
-                      ],
-                      Text("ACTION", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
-                    ],
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Checkbox(
+                      value: _selectAll,
+                      checkColor: purpleColor,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          _selectAll = !_selectAll;
+                        });
+                      },
+                    ),
+                    for (final String column in _columns) Text(column, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
+                    Text("ACTION", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
+                  ],
                 ),
                 Container(width: MediaQuery.sizeOf(context).width, height: .5, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),
                 Expanded(
                   child: ListView.separated(
                     itemBuilder: (BuildContext context, int index) {
                       return Row(
-                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Checkbox(
                             value: _selectAll,
@@ -67,11 +59,7 @@ class _ProductsTableState extends State<ProductsTable> {
                               });
                             },
                           ),
-                          const SizedBox(width: 30),
-                          for (final String column in _columns) ...<Widget>[
-                            Text(column, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
-                            const SizedBox(width: 85),
-                          ],
+                          for (final String column in _columns) Text(column, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
                           Row(
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
