@@ -9,7 +9,7 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   final List<Map<String, dynamic>> _gains = <Map<String, dynamic>>[
-    <String, dynamic>{},
+    <String, dynamic>{"icon":,},
   ];
 
   @override
