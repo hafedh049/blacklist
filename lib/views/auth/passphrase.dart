@@ -24,11 +24,14 @@ class _PassphraseState extends State<Passphrase> {
       backgroundColor: scaffoldColor,
       body: Center(
         child: Container(
+          width: MediaQuery.sizeOf(context).width * .6,
           padding: const EdgeInsets.all(24),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
+              Text("WELCOME", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
+              Container(width: MediaQuery.sizeOf(context).width, height: .3, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
@@ -39,7 +42,7 @@ class _PassphraseState extends State<Passphrase> {
               ),
               const SizedBox(height: 20),
               Container(
-                color: darkColor,
+                decoration: BoxDecoration(color: darkColor, borderRadius: BorderRadius.circular(3)),
                 child: StatefulBuilder(
                   builder: (BuildContext context, void Function(void Function()) _) {
                     return TextField(
