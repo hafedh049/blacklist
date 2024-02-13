@@ -1,6 +1,4 @@
 import 'package:blacklist/views/admin/add_product.dart';
-import 'package:blacklist/views/admin/dashboard.dart';
-import 'package:blacklist/views/admin/products.dart';
 import 'package:flutter/material.dart';
 
 void main() {

@@ -71,6 +71,7 @@ class _AddProductState extends State<AddProduct> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: scaffoldColor,
       body: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
@@ -85,10 +86,11 @@ class _AddProductState extends State<AddProduct> {
                     children: <Widget>[
                       Text(entry.key, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
                       const SizedBox(height: 20),
-                      Flexible(
-                        child: TextField(
-                          controller: entry.value["controller"],
-                        ),
+                      TextField(
+                        controller: entry.value["controller"],
+                        readOnly: entry.value["date"] == "text" && entry.value["type"] == "reference" ? true : false,
+                        style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                        decoration: InputDecoration(contentPadding: const EdgeInsets.all(8),border: ),
                       ),
                     ],
                   ),
