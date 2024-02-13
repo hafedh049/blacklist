@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:animated_loading_border/animated_loading_border.dart';
 import 'package:blacklist/utils/callbacks.dart';
 import 'package:blacklist/utils/shared.dart';
+import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_animated_button/flutter_animated_button.dart';
@@ -15,7 +18,9 @@ class Passphrase extends StatefulWidget {
 }
 
 class _PassphraseState extends State<Passphrase> {
-  final String _adminPassPhrase = "";
+  final String _adminPassphrase = "admin";
+  final String _vendorPassphrase = "vendor";
+
   final TextEditingController _passphrase = TextEditingController();
   @override
   void dispose() {
@@ -92,8 +97,13 @@ class _PassphraseState extends State<Passphrase> {
                     if (_passphrase.text.trim().isEmpty) {
                       showToast("Please enter the passphrase", redColor);
                     } else {
-                      if (_passphrase.text.trim().isEmpty == _adminPassPhrase) {
-                      } else {}
+                      if (sha512.convert(utf8.encode(_passphrase.text)) == sha512.convert(utf8.encode(_adminPassphrase))) {
+                        showToast("Welcome ADMIN", greenColor);
+                      } else if (sha512.convert(utf8.encode(_passphrase.text)) == sha512.convert(utf8.encode(_vendorPassphrase))) {
+                        showToast("Welcome VENDOR", greenColor);
+                      } else {
+                        showToast("Wrong Credentials", redColor);
+                      }
                     }
                   },
                 ),
