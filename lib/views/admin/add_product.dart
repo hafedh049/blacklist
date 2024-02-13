@@ -101,28 +101,30 @@ class _AddProductState extends State<AddProduct> {
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
                             Text(entry.key, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
-                            if (entry.value["required"]) ...<Widget>[
-                              const SizedBox(width: 5),
-                              Text("*", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: redColor)),
-                            ],
+                            const SizedBox(width: 5),
+                            Text("*", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: entry.value["required"] ? redColor : greenColor)),
                           ],
                         ),
                         const SizedBox(height: 20),
                         Container(
                           color: darkColor,
-                          child: TextField(
-                            controller: entry.value["controller"],
-                            readOnly: entry.value["type"] == "date" || entry.value["type"] == "reference" ? true : false,
-                            style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                            decoration: InputDecoration(
-                              contentPadding: const EdgeInsets.all(16),
-                              focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
-                              border: InputBorder.none,
-                              hintText: "Choose ${entry.key}",
-                              hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                            ),
-                            cursorColor: purpleColor,
-                            inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp(entry.value["type"] == "number" ? r"[\d.]" : r"."))],
+                          child: StatefulBuilder(
+                            builder: (BuildContext context, void Function(void Function()) _) {
+                              return TextField(
+                                controller: entry.value["controller"],
+                                readOnly: entry.value["type"] == "date" || entry.value["type"] == "reference" ? true : false,
+                                style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                                decoration: InputDecoration(
+                                  contentPadding: const EdgeInsets.all(20),
+                                  focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
+                                  border: InputBorder.none,
+                                  hintText: "Choose ${entry.key}",
+                                  hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                                ),
+                                cursorColor: purpleColor,
+                                inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp(entry.value["type"] == "number" ? r"[\d.]" : r"."))],
+                              );
+                            },
                           ),
                         ),
                         const SizedBox(height: 20),
