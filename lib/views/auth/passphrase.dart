@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:animated_loading_border/animated_loading_border.dart';
 import 'package:blacklist/utils/callbacks.dart';
 import 'package:blacklist/utils/shared.dart';
+import 'package:blacklist/views/admin/edit_product.dart';
+import 'package:blacklist/views/admin/products.dart';
 import 'package:blacklist/views/admin/stores.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
@@ -43,6 +45,8 @@ class _PassphraseState extends State<Passphrase> {
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => const StoresList()));
       } else if (sha512.convert(utf8.encode(_passphrase.text)) == sha512.convert(utf8.encode(_vendorPassphrase))) {
         showToast("Welcome VENDOR", greenColor);
+        // ignore: use_build_context_synchronously
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => const EditProduct()));
       } else {
         showToast("Wrong Credentials", redColor);
         _passphraseFocus.requestFocus();
