@@ -27,34 +27,42 @@ class _AddProductState extends State<AddProduct> {
     "Category": <String, dynamic>{
       "controller": _productCategoryController,
       "type": "text",
+      "required": true,
     },
     "Product Name": <String, dynamic>{
       "controller": _productNameController,
       "type": "text",
+      "required": true,
     },
     "Date": <String, dynamic>{
       "controller": _productDateController,
       "type": "date",
+      "required": false,
     },
     "Reference": <String, dynamic>{
       "controller": _productReferenceController,
       "type": "reference",
+      "required": false,
     },
     "Base Price": <String, dynamic>{
       "controller": _productOldPriceController,
       "type": "number",
+      "required": true,
     },
     "New Price": <String, dynamic>{
       "controller": _productNewPriceController,
       "type": "number",
+      "required": true,
     },
     "Quantity": <String, dynamic>{
       "controller": _productQuantityController,
       "type": "number",
+      "required": true,
     },
     "Stock Alert": <String, dynamic>{
       "controller": _productStockAlertController,
       "type": "number",
+      "required": true,
     },
   };
 
@@ -88,16 +96,25 @@ class _AddProductState extends State<AddProduct> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        Text(entry.key, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Text(entry.key, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
+                            if (entry.value["required"]) ...<Widget>[
+                              const SizedBox(width: 5),
+                              Text("*", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: redColor)),
+                            ],
+                          ],
+                        ),
                         const SizedBox(height: 20),
                         Container(
                           color: darkColor,
                           child: TextField(
                             controller: entry.value["controller"],
                             readOnly: entry.value["type"] == "date" || entry.value["type"] == "reference" ? true : false,
-                            style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                            style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
                             decoration: InputDecoration(
-                              contentPadding: const EdgeInsets.all(8),
+                              contentPadding: const EdgeInsets.all(16),
                               focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
                               border: InputBorder.none,
                               hintText: "Choose ${entry.key}",
