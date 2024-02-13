@@ -30,27 +30,27 @@ class _AddProductState extends State<AddProduct> {
       "type": "text",
     },
     "Date": <String, dynamic>{
-      "controller": _productCategoryController,
+      "controller": _productDateController,
       "type": "date",
     },
     "Reference": <String, dynamic>{
-      "controller": _productCategoryController,
+      "controller": _productReferenceController,
       "type": "reference",
     },
     "Base Price": <String, dynamic>{
-      "controller": _productCategoryController,
+      "controller": _productOldPriceController,
       "type": "number",
     },
     "New Price": <String, dynamic>{
-      "controller": _productCategoryController,
+      "controller": _productNewPriceController,
       "type": "number",
     },
     "Quantity": <String, dynamic>{
-      "controller": _productCategoryController,
+      "controller": _productQuantityController,
       "type": "number",
     },
     "Stock Alert": <String, dynamic>{
-      "controller": _productCategoryController,
+      "controller": _productStockAlertController,
       "type": "number",
     },
   };
@@ -74,29 +74,41 @@ class _AddProductState extends State<AddProduct> {
       backgroundColor: scaffoldColor,
       body: Padding(
         padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Wrap(
-              children: <Widget>[
-                for (final MapEntry<String, Map<String, dynamic>> entry in _productTemplate.entries)
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Text(entry.key, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
-                      const SizedBox(height: 20),
-                      TextField(
-                        controller: entry.value["controller"],
-                        readOnly: entry.value["date"] == "text" && entry.value["type"] == "reference" ? true : false,
-                        style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                        decoration: InputDecoration(contentPadding: const EdgeInsets.all(8),border: ),
-                      ),
-                    ],
-                  ),
-              ],
-            ),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Wrap(
+                children: <Widget>[
+                  for (final MapEntry<String, Map<String, dynamic>> entry in _productTemplate.entries)
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Text(entry.key, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
+                        const SizedBox(height: 20),
+                        Container(
+                          color: darkColor,
+                          child: TextField(
+                            controller: entry.value["controller"],
+                            readOnly: entry.value["type"] == "date" || entry.value["type"] == "reference" ? true : false,
+                            style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                            decoration: InputDecoration(
+                              contentPadding: const EdgeInsets.all(8),
+                              focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
+                              border: InputBorder.none,
+                              hintText: "Choose ${entry.key}",
+                              hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                      ],
+                    ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
