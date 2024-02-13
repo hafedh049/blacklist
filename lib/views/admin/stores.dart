@@ -10,6 +10,9 @@ class StoresList extends StatefulWidget {
 }
 
 class _StoresListState extends State<StoresList> {
+  final List<Map<String, dynamic>> _stores = <Map<String, dynamic>>[
+    <String, dynamic>{"     "},
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
