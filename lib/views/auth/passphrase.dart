@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:animated_loading_border/animated_loading_border.dart';
 import 'package:blacklist/utils/callbacks.dart';
 import 'package:blacklist/utils/shared.dart';
+import 'package:blacklist/views/admin/dashboard.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -22,6 +23,7 @@ class _PassphraseState extends State<Passphrase> {
   final String _vendorPassphrase = "vendor";
 
   bool _buttonState = false;
+  bool _passphraseState = false;
 
   final GlobalKey<State> _buttonKey = GlobalKey<State>();
 
@@ -33,16 +35,18 @@ class _PassphraseState extends State<Passphrase> {
       showToast("Please enter the passphrase", redColor);
     } else {
       _buttonKey.currentState!.setState(() => _buttonState = true);
+      await Future.delayed(200.ms);
+      _buttonKey.currentState!.setState(() => _buttonState = false);
       if (sha512.convert(utf8.encode(_passphrase.text)) == sha512.convert(utf8.encode(_adminPassphrase))) {
         showToast("Welcome ADMIN", greenColor);
+        // ignore: use_build_context_synchronously
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => const Dashboard()));
       } else if (sha512.convert(utf8.encode(_passphrase.text)) == sha512.convert(utf8.encode(_vendorPassphrase))) {
         showToast("Welcome VENDOR", greenColor);
       } else {
         showToast("Wrong Credentials", redColor);
         _passphraseFocus.requestFocus();
       }
-      await Future.delayed(200.ms);
-      _buttonKey.currentState!.setState(() => _buttonState = false);
     }
   }
 
@@ -85,6 +89,7 @@ class _PassphraseState extends State<Passphrase> {
                   child: StatefulBuilder(
                     builder: (BuildContext context, void Function(void Function()) _) {
                       return TextField(
+                        obscureText: !_passphraseState,
                         focusNode: _passphraseFocus,
                         onSubmitted: (value) => _signIn(),
                         onChanged: (String value) {
@@ -100,7 +105,8 @@ class _PassphraseState extends State<Passphrase> {
                           border: InputBorder.none,
                           hintText: 'Passphrase',
                           hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                          suffixIcon: _passphrase.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
+                          prefixIcon: _passphrase.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
+                          suffixIcon: IconButton(onPressed: () => _(() => _passphraseState = !_passphraseState), icon: Icon(_passphraseState ? FontAwesome.eye_solid : FontAwesome.eye_slash_solid, size: 15, color: purpleColor)),
                         ),
                         cursorColor: purpleColor,
                       );
@@ -132,7 +138,7 @@ class _PassphraseState extends State<Passphrase> {
                           ),
                         ),
                         const SizedBox(width: 10),
-                        AnimatedOpacity(opacity: _buttonState ? 1 : 0, duration: 300.ms, child: const Icon(FontAwesome.bookmark_solid, color: purpleColor, size: 30)),
+                        AnimatedOpacity(opacity: _buttonState ? 1 : 0, duration: 300.ms, child: const Icon(FontAwesome.bookmark_solid, color: purpleColor, size: 35)),
                       ],
                     );
                   },
