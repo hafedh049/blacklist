@@ -122,7 +122,7 @@ class _AddProductState extends State<AddProduct> {
                               hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
                             ),
                             cursorColor: purpleColor,
-                            inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.allow(entry.value["type"] == "number" ? r"[\d.]" : r".")],
+                            inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp(entry.value["type"] == "number" ? r"[\d.]" : r"."))],
                           ),
                         ),
                         const SizedBox(height: 20),
