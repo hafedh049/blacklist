@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -12,8 +15,8 @@ class AddProduct extends StatefulWidget {
 
 class _AddProductState extends State<AddProduct> {
   final TextEditingController _productNameController = TextEditingController();
-  final TextEditingController _productDateController = TextEditingController();
-  final TextEditingController _productReferenceController = TextEditingController();
+  final TextEditingController _productDateController = TextEditingController(text: formatDate(DateTime.now(), const <String>[yy, '-', M, '-', d, " ", HH, ':', nn, ':', ss]).toUpperCase());
+  final TextEditingController _productReferenceController = TextEditingController(text: "#${List<String>.generate(8, (int index) => Random().nextInt(10).toString()).join()}");
   final TextEditingController _productCategoryController = TextEditingController();
   final TextEditingController _productOldPriceController = TextEditingController();
   final TextEditingController _productNewPriceController = TextEditingController();
