@@ -1,8 +1,8 @@
 import 'dart:math';
 
 import 'package:blacklist/utils/shared.dart';
+import 'package:blacklist/views/admin/dashboard.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class StoresList extends StatefulWidget {
@@ -52,7 +52,9 @@ class _StoresListState extends State<StoresList> {
                         splashColor: transparentColor,
                         hoverColor: transparentColor,
                         highlightColor: transparentColor,
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const Dashboard()));
+                        },
                         child: Container(
                           width: 250,
                           padding: const EdgeInsets.all(16),
@@ -86,7 +88,7 @@ class _StoresListState extends State<StoresList> {
                               ),
                             ],
                           ),
-                        ).animate(onComplete: (AnimationController controller) => controller.repeat()).shimmer(color: purpleColor.withOpacity(.5), duration: 7.seconds),
+                        ),
                       ),
                   ],
                 ),

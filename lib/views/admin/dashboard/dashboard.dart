@@ -19,17 +19,17 @@ class _DashboardState extends State<Dashboard> {
     <String, dynamic>{
       "icon": FontAwesome.wallet_solid,
       "title": "SALES PER DAY",
-      "amount": 12.00,
+      "amount": 0.0,
     },
     <String, dynamic>{
       "icon": FontAwesome.circle_dollar_to_slot_solid,
       "title": "SALES PER MONTH",
-      "amount": 312.00,
+      "amount": 0.0,
     },
     <String, dynamic>{
       "icon": FontAwesome.google_wallet_brand,
       "title": "SALES PER YEAR",
-      "amount": 5312.00,
+      "amount": 0.0,
     },
   ];
 
@@ -55,7 +55,7 @@ class _DashboardState extends State<Dashboard> {
                     hoverColor: transparentColor,
                     onTap: () {
                       setState(() {
-                        item["amount"] = Random().nextInt(4000) * Random().nextInt(4000);
+                        item["amount"] = Random().nextInt(4000) * Random().nextDouble();
                       });
                     },
                     child: Row(
@@ -69,7 +69,7 @@ class _DashboardState extends State<Dashboard> {
                           children: <Widget>[
                             Text(item["title"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.bold, color: greyColor)),
                             const SizedBox(height: 5),
-                            AnimatedFlipCounter(value: item["amount"], wholeDigits: 0, fractionDigits: 2, suffix: " DT", textStyle: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.bold, color: whiteColor), duration: 1.seconds, decimalSeparator: ",", thousandSeparator: " "),
+                            AnimatedFlipCounter(value: item["amount"], wholeDigits: 1, fractionDigits: 2, suffix: " DT", textStyle: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.bold, color: whiteColor), duration: 2.seconds, decimalSeparator: ",", thousandSeparator: " "),
                           ],
                         ),
                       ],

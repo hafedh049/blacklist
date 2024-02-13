@@ -27,6 +27,7 @@ dependencies:
   animated_loading_border: ^0.0.2
   fluttertoast: ^8.2.4
   crypto: ^3.0.3
+  syncfusion_flutter_charts: ^24.2.5
 
 dev_dependencies:
   flutter_test:
