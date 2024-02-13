@@ -15,8 +15,8 @@ class _CategoryListState extends State<CategoryList> {
   final List<Map<String, dynamic>> _categories = List<Map<String, dynamic>>.generate(
     20,
     (int index) => <String, dynamic>{
-      "background_image": "assets/images/bg.png",
-      "category": "Category ${index + 1}",
+      "background_image": "assets/images/bg.jpg",
+      "category_name": "Category ${index + 1}",
       "total_products": Random().nextInt(4000),
       "total_articles": Random().nextInt(20),
     },
@@ -65,7 +65,11 @@ class _CategoryListState extends State<CategoryList> {
                         child: Container(
                           width: 300,
                           padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: darkColor),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: darkColor,
+                            image: DecorationImage(image: AssetImage(item["background_image"]), fit: BoxFit.cover),
+                          ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisSize: MainAxisSize.min,
@@ -74,23 +78,23 @@ class _CategoryListState extends State<CategoryList> {
                                 children: <Widget>[
                                   Text("Category", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
                                   const SizedBox(width: 10),
-                                  Text(item["store_name"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: blueColor)),
+                                  Text(item["category_name"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: blueColor)),
                                 ],
                               ),
                               const SizedBox(height: 10),
                               Row(
                                 children: <Widget>[
-                                  Text("Vendor", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
+                                  Text("Total Articles", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
                                   const SizedBox(width: 10),
-                                  Text(item["vendor_name"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greenColor)),
+                                  Text(item["total_articles"].toString(), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greenColor)),
                                 ],
                               ),
                               const SizedBox(height: 10),
                               Row(
                                 children: <Widget>[
-                                  Text("Vendor", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
+                                  Text("Total Products", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
                                   const SizedBox(width: 10),
-                                  Text(item["vendor_name"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greenColor)),
+                                  Text(item["total_products"].toString(), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
                                 ],
                               ),
                             ],
