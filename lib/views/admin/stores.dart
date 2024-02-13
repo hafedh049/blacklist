@@ -3,6 +3,8 @@ import 'dart:math';
 import 'package:blacklist/utils/shared.dart';
 import 'package:blacklist/views/admin/category_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_animated_button/flutter_animated_button.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class StoresList extends StatefulWidget {
@@ -56,7 +58,7 @@ class _StoresListState extends State<StoresList> {
                           Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const CategoryList()));
                         },
                         child: Container(
-                          width: 250,
+                          width: 300,
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: darkColor),
                           child: Column(
@@ -84,6 +86,42 @@ class _StoresListState extends State<StoresList> {
                                   Text("Total Products", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
                                   const SizedBox(width: 10),
                                   Text(item["total_products"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: redColor)),
+                                ],
+                              ),
+                              const SizedBox(height: 20),
+                              Text("Vendor Acess", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
+                              const SizedBox(height: 10),
+                              Row(
+                                children: <Widget>[
+                                  AnimatedButton(
+                                    width: 100,
+                                    height: 40,
+                                    text: 'OPEN',
+                                    selectedTextColor: darkColor,
+                                    animatedOn: AnimatedOn.onHover,
+                                    animationDuration: 500.ms,
+                                    isReverse: true,
+                                    selectedBackgroundColor: greenColor,
+                                    backgroundColor: purpleColor,
+                                    transitionType: TransitionType.TOP_TO_BOTTOM,
+                                    textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                                    onPress: () {},
+                                  ),
+                                  const SizedBox(width: 20),
+                                  AnimatedButton(
+                                    width: 100,
+                                    height: 40,
+                                    text: 'CLOSE',
+                                    selectedTextColor: darkColor,
+                                    animatedOn: AnimatedOn.onHover,
+                                    animationDuration: 500.ms,
+                                    isReverse: true,
+                                    selectedBackgroundColor: redColor,
+                                    backgroundColor: purpleColor,
+                                    transitionType: TransitionType.TOP_TO_BOTTOM,
+                                    textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                                    onPress: () {},
+                                  ),
                                 ],
                               ),
                             ],
