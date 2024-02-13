@@ -20,10 +20,11 @@ class _SignInState extends State<SignIn> {
       body: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Row(
               children: <Widget>[
-                Text("ADD PRODUCT", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
+                Text("SIGN IN", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
                 const Spacer(),
                 RichText(
                   text: TextSpan(
@@ -54,11 +55,37 @@ class _SignInState extends State<SignIn> {
                           highlightColor: transparentColor,
                           hoverColor: transparentColor,
                           onTap: () {},
-                          child: Container(
-                            width: 300,
-                            height: 300,
-                            decoration: BoxDecoration(color: darkColor, borderRadius: BorderRadius.circular(15)),
-                            child: Text("ADMIN", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
+                          onHover: (bool value) => _(() => _adminState = value),
+                          child: AnimatedContainer(
+                            duration: 300.ms,
+                            alignment: Alignment.center,
+                            width: 200,
+                            height: 200,
+                            decoration: BoxDecoration(color: _adminState ? purpleColor.withOpacity(.1) : darkColor, borderRadius: BorderRadius.circular(15)),
+                            child: Text("ADMIN", style: GoogleFonts.itim(fontSize: 35, fontWeight: FontWeight.w500, color: greyColor)),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  StatefulBuilder(
+                    builder: (BuildContext context, void Function(void Function()) _) {
+                      return AnimatedPadding(
+                        duration: 300.ms,
+                        padding: EdgeInsets.only(bottom: _vendorState ? 10 : 0),
+                        child: InkWell(
+                          splashColor: transparentColor,
+                          highlightColor: transparentColor,
+                          hoverColor: transparentColor,
+                          onTap: () {},
+                          onHover: (bool value) => _(() => _vendorState = value),
+                          child: AnimatedContainer(
+                            duration: 300.ms,
+                            alignment: Alignment.center,
+                            width: 200,
+                            height: 200,
+                            decoration: BoxDecoration(color: _vendorState ? purpleColor.withOpacity(.1) : darkColor, borderRadius: BorderRadius.circular(15)),
+                            child: Text("VENDOR", style: GoogleFonts.itim(fontSize: 35, fontWeight: FontWeight.w500, color: greyColor)),
                           ),
                         ),
                       );
