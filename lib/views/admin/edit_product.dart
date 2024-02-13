@@ -10,14 +10,14 @@ import 'package:icons_plus/icons_plus.dart';
 
 import '../../utils/shared.dart';
 
-class AddProduct extends StatefulWidget {
-  const AddProduct({super.key});
+class EditProduct extends StatefulWidget {
+  const EditProduct({super.key});
 
   @override
-  State<AddProduct> createState() => _AddProductState();
+  State<EditProduct> createState() => _EditProductState();
 }
 
-class _AddProductState extends State<AddProduct> {
+class _EditProductState extends State<EditProduct> {
   final TextEditingController _productNameController = TextEditingController();
   final TextEditingController _productDateController = TextEditingController(text: formatDate(DateTime.now(), const <String>[yy, '-', M, '-', d, " ", HH, ':', nn, ':', ss]).toUpperCase());
   final TextEditingController _productReferenceController = TextEditingController(text: "#${List<String>.generate(8, (int index) => Random().nextInt(10).toString()).join()}");
@@ -109,7 +109,7 @@ class _AddProductState extends State<AddProduct> {
                     text: TextSpan(
                       children: <TextSpan>[
                         TextSpan(text: "Dashboard", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
-                        TextSpan(text: " / Add Product", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
+                        TextSpan(text: " / Edit Product", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
                       ],
                     ),
                   ),
@@ -177,7 +177,7 @@ class _AddProductState extends State<AddProduct> {
               AnimatedButton(
                 width: 150,
                 height: 40,
-                text: 'SUBMIT',
+                text: 'UPDATE',
                 selectedTextColor: darkColor,
                 animatedOn: AnimatedOn.onHover,
                 animationDuration: 500.ms,
