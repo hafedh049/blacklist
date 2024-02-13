@@ -3,7 +3,10 @@ import 'dart:math';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_animated_button/flutter_animated_button.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:icons_plus/icons_plus.dart';
 
 import '../../utils/shared.dart';
 
@@ -90,6 +93,8 @@ class _AddProductState extends State<AddProduct> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
+              Text("ADD PRODUCT", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
+              Container(width: MediaQuery.sizeOf(context).width, height: .3, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),
               Wrap(
                 children: <Widget>[
                   for (final MapEntry<String, Map<String, dynamic>> entry in _productTemplate.entries)
@@ -111,6 +116,11 @@ class _AddProductState extends State<AddProduct> {
                           child: StatefulBuilder(
                             builder: (BuildContext context, void Function(void Function()) _) {
                               return TextField(
+                                onChanged: (String value) {
+                                  if (value.trim().length <= 1) {
+                                    _(() {});
+                                  }
+                                },
                                 controller: entry.value["controller"],
                                 readOnly: entry.value["type"] == "date" || entry.value["type"] == "reference" ? true : false,
                                 style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
@@ -120,6 +130,7 @@ class _AddProductState extends State<AddProduct> {
                                   border: InputBorder.none,
                                   hintText: "Choose ${entry.key}",
                                   hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                                  suffixIcon: entry.value["controller"].text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
                                 ),
                                 cursorColor: purpleColor,
                                 inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp(entry.value["type"] == "number" ? r"[\d.]" : r"."))],
@@ -132,6 +143,19 @@ class _AddProductState extends State<AddProduct> {
                     ),
                 ],
               ),
+              AnimatedButton(
+                width: 200,
+                text: 'ADD',
+                selectedTextColor: darkColor,
+                animatedOn: AnimatedOn.onHover,
+                animationDuration: 500.ms,
+                isReverse: true,
+                selectedBackgroundColor: greenColor,
+                backgroundColor: purpleColor,
+                transitionType: TransitionType.TOP_TO_BOTTOM,
+                textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                onPress: () {},
+              )
             ],
           ),
         ),
