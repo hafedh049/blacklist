@@ -45,7 +45,11 @@ class _StoresListState extends State<StoresList> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[],
+                      children: <Widget>[
+                        Text("Store Name", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
+                        const SizedBox(height: 10),
+                        Text("Store Vendor", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
+                      ],
                     ),
                   ),
                 ],
