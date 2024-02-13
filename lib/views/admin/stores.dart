@@ -56,19 +56,28 @@ class _StoresListState extends State<StoresList> {
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
                             Row(
-                              children: <Widget>[],
+                              children: <Widget>[
+                                Text("Store", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
+                                const SizedBox(width: 10),
+                                Text(item["store_name"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: blueColor)),
+                              ],
                             ),
-                            Text("Store", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
-                            const SizedBox(width: 10),
-                            Text(item["store_name"], style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
                             const SizedBox(height: 10),
-                            Text("Vendor", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
+                            Row(
+                              children: <Widget>[
+                                Text("Vendor", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
+                                const SizedBox(width: 10),
+                                Text(item["vendor_name"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greenColor)),
+                              ],
+                            ),
                             const SizedBox(height: 10),
-                            Text(item["vendor_name"], style: GoogleFonts.itim(fontSize: 20, fontWeight: FontWeight.w500, color: redColor)),
-                            const SizedBox(height: 10),
-                            Text("Total Products", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
-                            const SizedBox(height: 10),
-                            Text(item["total_products"], style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greenColor)),
+                            Row(
+                              children: <Widget>[
+                                Text("Total Products", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
+                                const SizedBox(width: 10),
+                                Text(item["total_products"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: redColor)),
+                              ],
+                            ),
                           ],
                         ),
                       ),
