@@ -63,7 +63,7 @@ class _DashboardState extends State<Dashboard> {
                     child: Stack(
                       alignment: Alignment.centerLeft,
                       children: <Widget>[
-                        Icon(item["icon"], size: 60, color: greyColor.withOpacity(.2)),
+                        Icon(item["icon"], size: 60, color: greyColor.withOpacity(.05)),
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
@@ -75,7 +75,7 @@ class _DashboardState extends State<Dashboard> {
                               children: <Widget>[
                                 Text(item["title"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.bold, color: greyColor)),
                                 const SizedBox(height: 5),
-                                AnimatedFlipCounter(value: item["amount"], wholeDigits: 1, fractionDigits: 2, suffix: " DT", textStyle: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.bold, color: whiteColor), duration: 2.seconds, decimalSeparator: ",", thousandSeparator: " "),
+                                AnimatedFlipCounter(value: item["amount"], wholeDigits: 1, fractionDigits: 2, suffix: " DT", textStyle: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.bold, color: whiteColor), duration: 1.seconds, decimalSeparator: ",", thousandSeparator: " "),
                               ],
                             ),
                           ],
