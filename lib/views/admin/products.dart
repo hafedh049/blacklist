@@ -28,6 +28,21 @@ class _ProductsTableState extends State<ProductsTable> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Text("PRODUCTS LIST", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
+                    const Spacer(),
+                    RichText(
+                      text: TextSpan(
+                        children: <TextSpan>[
+                          TextSpan(text: "Dashboard", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
+                          TextSpan(text: " / Products List", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                Container(width: MediaQuery.sizeOf(context).width, height: .3, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
