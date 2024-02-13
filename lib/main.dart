@@ -1,4 +1,4 @@
-import 'package:blacklist/views/admin/products.dart';
+import 'package:blacklist/views/auth/sign_in.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -13,7 +13,7 @@ class Main extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark(),
-      home: const ProductsTable(),
+      home: const SignIn(),
     );
   }
 }
