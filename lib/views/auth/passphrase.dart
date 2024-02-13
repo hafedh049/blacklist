@@ -40,8 +40,9 @@ class _PassphraseState extends State<Passphrase> {
       } else {
         showToast("Wrong Credentials", redColor);
         _passphraseFocus.requestFocus();
-        _buttonKey.currentState!.setState(() => _buttonState = false);
       }
+      await Future.delayed(200.ms);
+      _buttonKey.currentState!.setState(() => _buttonState = false);
     }
   }
 
@@ -110,22 +111,29 @@ class _PassphraseState extends State<Passphrase> {
                 StatefulBuilder(
                   key: _buttonKey,
                   builder: (BuildContext context, void Function(void Function()) _) {
-                    return IgnorePointer(
-                      ignoring: _buttonState,
-                      child: AnimatedButton(
-                        width: 150,
-                        height: 40,
-                        text: _buttonState ? "WAIT..." : 'CONTINUE',
-                        selectedTextColor: darkColor,
-                        animatedOn: AnimatedOn.onHover,
-                        animationDuration: 500.ms,
-                        isReverse: true,
-                        selectedBackgroundColor: redColor,
-                        backgroundColor: purpleColor,
-                        transitionType: TransitionType.TOP_TO_BOTTOM,
-                        textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                        onPress: _signIn,
-                      ),
+                    return Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        IgnorePointer(
+                          ignoring: _buttonState,
+                          child: AnimatedButton(
+                            width: 150,
+                            height: 40,
+                            text: _buttonState ? "WAIT..." : 'CONTINUE',
+                            selectedTextColor: darkColor,
+                            animatedOn: AnimatedOn.onHover,
+                            animationDuration: 500.ms,
+                            isReverse: true,
+                            selectedBackgroundColor: redColor,
+                            backgroundColor: purpleColor,
+                            transitionType: TransitionType.TOP_TO_BOTTOM,
+                            textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                            onPress: _signIn,
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        AnimatedOpacity(opacity: _buttonState ? 1 : 0, duration: 300.ms, child: const Icon(FontAwesome.bookmark_solid, color: purpleColor, size: 30)),
+                      ],
                     );
                   },
                 ),
