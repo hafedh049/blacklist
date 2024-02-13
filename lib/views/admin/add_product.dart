@@ -32,41 +32,49 @@ class _AddProductState extends State<AddProduct> {
       "controller": _productCategoryController,
       "type": "text",
       "required": true,
+      "hint": "Choose Category",
     },
     "Product Name": <String, dynamic>{
       "controller": _productNameController,
       "type": "text",
       "required": true,
+      "hint": "Choose Name",
     },
     "Date": <String, dynamic>{
       "controller": _productDateController,
       "type": "date",
       "required": false,
+      "hint": "",
     },
     "Reference": <String, dynamic>{
       "controller": _productReferenceController,
       "type": "reference",
       "required": false,
+      "hint": "",
     },
     "Base Price": <String, dynamic>{
       "controller": _productOldPriceController,
       "type": "number",
       "required": true,
+      "hint": "0.00 DT",
     },
     "New Price": <String, dynamic>{
       "controller": _productNewPriceController,
       "type": "number",
       "required": true,
+      "hint": "0.00 DT",
     },
     "Quantity": <String, dynamic>{
       "controller": _productQuantityController,
       "type": "number",
       "required": true,
+      "hint": "0",
     },
     "Stock Alert": <String, dynamic>{
       "controller": _productStockAlertController,
       "type": "number",
       "required": true,
+      "hint": "0",
     },
   };
 
@@ -93,7 +101,20 @@ class _AddProductState extends State<AddProduct> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text("ADD PRODUCT", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
+              Row(
+                children: <Widget>[
+                  Text("ADD PRODUCT", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
+                  const Spacer(),
+                  RichText(
+                    text: TextSpan(
+                      children: <TextSpan>[
+                        TextSpan(text: "Dashboard", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
+                        TextSpan(text: " / Add Product", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
               Container(width: MediaQuery.sizeOf(context).width, height: .3, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),
               Wrap(
                 children: <Widget>[
@@ -128,7 +149,7 @@ class _AddProductState extends State<AddProduct> {
                                   contentPadding: const EdgeInsets.all(20),
                                   focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
                                   border: InputBorder.none,
-                                  hintText: "Choose ${entry.key}",
+                                  hintText: entry.value["hint"],
                                   hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
                                   suffixIcon: entry.value["controller"].text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
                                 ),
@@ -144,8 +165,9 @@ class _AddProductState extends State<AddProduct> {
                 ],
               ),
               AnimatedButton(
-                width: 200,
-                text: 'ADD',
+                width: 150,
+                height: 40,
+                text: 'SUBMIT',
                 selectedTextColor: darkColor,
                 animatedOn: AnimatedOn.onHover,
                 animationDuration: 500.ms,
@@ -153,7 +175,7 @@ class _AddProductState extends State<AddProduct> {
                 selectedBackgroundColor: greenColor,
                 backgroundColor: purpleColor,
                 transitionType: TransitionType.TOP_TO_BOTTOM,
-                textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
                 onPress: () {},
               )
             ],
