@@ -187,7 +187,7 @@ class _EditProductState extends State<EditProduct> {
                 transitionType: TransitionType.TOP_TO_BOTTOM,
                 textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
                 onPress: () {},
-              )
+              ),
             ],
           ),
         ),

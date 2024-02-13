@@ -23,6 +23,8 @@ dependencies:
   animated_flip_counter: ^0.2.6
   date_format: ^2.0.7
   flutter_animated_button: ^2.0.3
+  animated_loading_border: ^0.0.2
+  fluttertoast: ^8.2.4
 
 dev_dependencies:
   flutter_test:
