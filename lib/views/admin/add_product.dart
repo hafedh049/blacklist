@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../utils/shared.dart';
@@ -120,6 +121,8 @@ class _AddProductState extends State<AddProduct> {
                               hintText: "Choose ${entry.key}",
                               hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
                             ),
+                            cursorColor: purpleColor,
+                            inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.allow(entry.value["type"] == "number" ? r"[\d.]" : r".")],
                           ),
                         ),
                         const SizedBox(height: 20),
