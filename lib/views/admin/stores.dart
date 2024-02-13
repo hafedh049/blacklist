@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:blacklist/utils/shared.dart';
-import 'package:blacklist/views/admin/dashboard/dashboard.dart';
+import 'package:blacklist/views/admin/category_list.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -53,7 +53,7 @@ class _StoresListState extends State<StoresList> {
                         hoverColor: transparentColor,
                         highlightColor: transparentColor,
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const Dashboard()));
+                          Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const CategoryList()));
                         },
                         child: Container(
                           width: 250,

@@ -4,7 +4,6 @@ import 'package:animated_loading_border/animated_loading_border.dart';
 import 'package:blacklist/utils/callbacks.dart';
 import 'package:blacklist/utils/shared.dart';
 import 'package:blacklist/views/admin/edit_product.dart';
-import 'package:blacklist/views/admin/products.dart';
 import 'package:blacklist/views/admin/stores.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
