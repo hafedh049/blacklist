@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:blacklist/utils/shared.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -10,9 +12,7 @@ class StoresList extends StatefulWidget {
 }
 
 class _StoresListState extends State<StoresList> {
-  final List<Map<String, dynamic>> _stores = <Map<String, dynamic>>[
-    <String, dynamic>{"     "},
-  ];
+  final List<Map<String, dynamic>> _stores = List<Map<String, dynamic>>.generate(20, (int index) => <String, dynamic>{"store_name": "Store ${îndex+1}", "verndor_name": "Vendor ${îndex+1}", "total_products": Random().nextInt(4000)});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,18 +43,23 @@ class _StoresListState extends State<StoresList> {
                 crossAxisAlignment: WrapCrossAlignment.center,
                 runAlignment: WrapAlignment.center,
                 children: <Widget>[
-                  Container(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Text("Store Name", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
-                        const SizedBox(height: 10),
-                        Text("Store Vendor", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
-                      ],
+                  for (final Map<String, dynamic> item in _stores)
+                    Container(
+                      width: 200,
+                      height: 200,
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Text(item["store"], style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
+                          const SizedBox(height: 10),
+                          Text("Store Vendor", style: GoogleFonts.itim(fontSize: 20, fontWeight: FontWeight.w500, color: redColor)),
+                          const SizedBox(height: 10),
+                          Text("Store Vendor", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greenColor)),
+                        ],
+                      ),
                     ),
-                  ),
                 ],
               ),
             ),
