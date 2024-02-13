@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:blacklist/utils/shared.dart';
-import 'package:blacklist/views/admin/dashboard.dart';
+import 'package:blacklist/views/admin/dashboard/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
