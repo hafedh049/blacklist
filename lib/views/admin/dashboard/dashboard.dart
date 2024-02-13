@@ -60,33 +60,39 @@ class _DashboardState extends State<Dashboard> {
                         item["amount"] = Random().nextInt(4000) * Random().nextDouble();
                       });
                     },
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
+                    child: Stack(
+                      alignment: Alignment.centerLeft,
                       children: <Widget>[
-                        Icon(item["icon"], size: 35, color: purpleColor),
-                        const Spacer(),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
+                        Icon(item["icon"], size: 60, color: greyColor.withOpacity(.2)),
+                        Row(
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
-                            Text(item["title"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.bold, color: greyColor)),
-                            const SizedBox(height: 5),
-                            AnimatedFlipCounter(value: item["amount"], wholeDigits: 1, fractionDigits: 2, suffix: " DT", textStyle: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.bold, color: whiteColor), duration: 2.seconds, decimalSeparator: ",", thousandSeparator: " "),
+                            Icon(item["icon"], size: 35, color: purpleColor),
+                            const Spacer(),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Text(item["title"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.bold, color: greyColor)),
+                                const SizedBox(height: 5),
+                                AnimatedFlipCounter(value: item["amount"], wholeDigits: 1, fractionDigits: 2, suffix: " DT", textStyle: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.bold, color: whiteColor), duration: 2.seconds, decimalSeparator: ",", thousandSeparator: " "),
+                              ],
+                            ),
                           ],
                         ),
                       ],
                     ),
                   ),
                 ),
-              Wrap(
+              const Wrap(
                 alignment: WrapAlignment.center,
                 crossAxisAlignment: WrapCrossAlignment.center,
                 runAlignment: WrapAlignment.center,
                 runSpacing: 20,
                 spacing: 20,
                 children: <Widget>[
-                  const PieChart(),
-                  const BarChart(),
+                  PieChart(),
+                  BarChart(),
                 ],
               ),
             ],
