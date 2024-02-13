@@ -77,7 +77,7 @@ class _DashboardState extends State<Dashboard> {
                     ),
                   ),
                 ),
-              PieChart(),
+              const PieChart(),
             ],
           ),
         ),

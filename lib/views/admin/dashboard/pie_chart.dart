@@ -12,16 +12,17 @@ class PieChart extends StatefulWidget {
 }
 
 class _PieChartState extends State<PieChart> {
-  final List<_PieData> pieData = List<_PieData>.generate(30, (int index) => _PieData((index + 1).toString(), Random().nextInt(4000) * Random().nextDouble()));
+  final List<_PieData> pieData = List<_PieData>.generate(5, (int index) => _PieData(const <String>["Heap", "Queue", "Stack", "Linked List", "Tree"][Random().nextInt(5)], Random().nextInt(4000) * Random().nextDouble()));
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 300,
+      height: 400,
+      width: 400,
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: darkColor),
+      decoration: const BoxDecoration(color: darkColor),
       child: SfCircularChart(
-        title: ChartTitle(text: 'Sales by sales person'),
-        legend: Legend(isVisible: true),
+        title: const ChartTitle(text: 'TOP SALES BY MONTH'),
+        legend: const Legend(isVisible: true),
         series: <PieSeries<_PieData, String>>[
           PieSeries<_PieData, String>(explode: true, explodeIndex: 0, dataSource: pieData, xValueMapper: (_PieData data, _) => data.xData, yValueMapper: (_PieData data, _) => data.yData, dataLabelMapper: (_PieData data, _) => data.text, dataLabelSettings: DataLabelSettings(isVisible: true)),
         ],
