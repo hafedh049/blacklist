@@ -79,9 +79,16 @@ class _DashboardState extends State<Dashboard> {
                   ),
                 ),
               Wrap(
-                children: <Widget>[],
+                alignment: WrapAlignment.center,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                runAlignment: WrapAlignment.center,
+                runSpacing: 20,
+                spacing: 20,
+                children: <Widget>[
+                  const PieChart(),
+                  const BarChart(),
+                ],
               ),
-              const BarChart(),
             ],
           ),
         ),
