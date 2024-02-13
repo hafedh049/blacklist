@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:blacklist/utils/shared.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class StoresList extends StatefulWidget {
@@ -47,39 +48,45 @@ class _StoresListState extends State<StoresList> {
                   spacing: 20,
                   children: <Widget>[
                     for (final Map<String, dynamic> item in _stores)
-                      Container(
-                        width: 250,
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: darkColor),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            Row(
-                              children: <Widget>[
-                                Text("Store", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
-                                const SizedBox(width: 10),
-                                Text(item["store_name"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: blueColor)),
-                              ],
-                            ),
-                            const SizedBox(height: 10),
-                            Row(
-                              children: <Widget>[
-                                Text("Vendor", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
-                                const SizedBox(width: 10),
-                                Text(item["vendor_name"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greenColor)),
-                              ],
-                            ),
-                            const SizedBox(height: 10),
-                            Row(
-                              children: <Widget>[
-                                Text("Total Products", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
-                                const SizedBox(width: 10),
-                                Text(item["total_products"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: redColor)),
-                              ],
-                            ),
-                          ],
-                        ),
+                      InkWell(
+                        splashColor: transparentColor,
+                        hoverColor: transparentColor,
+                        highlightColor: transparentColor,
+                        onTap: () {},
+                        child: Container(
+                          width: 250,
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: darkColor),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              Row(
+                                children: <Widget>[
+                                  Text("Store", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
+                                  const SizedBox(width: 10),
+                                  Text(item["store_name"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: blueColor)),
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                              Row(
+                                children: <Widget>[
+                                  Text("Vendor", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
+                                  const SizedBox(width: 10),
+                                  Text(item["vendor_name"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greenColor)),
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                              Row(
+                                children: <Widget>[
+                                  Text("Total Products", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
+                                  const SizedBox(width: 10),
+                                  Text(item["total_products"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: redColor)),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ).animate(onComplete: (AnimationController controller) => controller.repeat()).shimmer(color: purpleColor.withOpacity(.5), duration: 7.seconds),
                       ),
                   ],
                 ),
