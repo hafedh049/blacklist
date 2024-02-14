@@ -1,6 +1,7 @@
 import 'package:blacklist/utils/shared.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:icons_plus/icons_plus.dart';
 
 class ProductsManagement extends StatefulWidget {
   const ProductsManagement({super.key});
@@ -11,14 +12,7 @@ class ProductsManagement extends StatefulWidget {
 
 class _ProductsManagementState extends State<ProductsManagement> {
   bool _selectAll = false;
-  final Map<String, List<dynamic>> _columns = <String, List<dynamic>>{
-    "DATE": [],
-    "REFERENCE": [],
-    "PRODUCT NAME": [],
-    "CATEGORY": [],
-    "PRICE": [],
-    "QUANTITY": [],
-  };
+  final List<String> _columns = const <String>["DATE", "REFERENCE", "PRODUCT NAME", "CATEGORY", "PRICE", "QUANTITY", "QUANTITY"];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,14 +46,7 @@ class _ProductsManagementState extends State<ProductsManagement> {
                 decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), color: darkColor),
                 child: StatefulBuilder(
                   builder: (BuildContext context, void Function(void Function()) _) {
-                    return SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: <Widget>[],
-                      ),
-                    )
-
-                        /*Column(
+                    return Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
@@ -112,8 +99,7 @@ class _ProductsManagementState extends State<ProductsManagement> {
                           ),
                         ),
                       ],
-                    )*/
-                        ;
+                    );
                   },
                 ),
               ),
