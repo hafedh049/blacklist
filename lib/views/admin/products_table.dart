@@ -1,5 +1,7 @@
 import 'package:blacklist/utils/shared.dart';
+import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
 
@@ -14,10 +16,12 @@ class ProductsTable extends StatefulWidget {
 
 class _ProductsTableState extends State<ProductsTable> {
   bool _selectAll = false;
-  final List<String> _columns = const <String>["DATE", "REFERENCE", "PRODUCT NAME", "CATEGORY", "REAL PRICE", "NEW PRICE", "QUANTITY", "STOCK ALERT"];
+  final List<String> _columns = const <String>["CHECKBOX", "DATE", "REFERENCE", "PRODUCT NAME", "CATEGORY", "REAL PRICE", "NEW PRICE", "QUANTITY", "STOCK ALERT", "ACTIONS"];
   late final List<Map<String, dynamic>> _data;
 
   final PageController _pageController = PageController();
+  int _currentPageIndex = 0;
+  final GlobalKey<State> _currentPageIndexKey = GlobalKey<State>();
 
   @override
   void initState() {
@@ -96,10 +100,16 @@ class _ProductsTableState extends State<ProductsTable> {
                             builder: (BuildContext context, void Function(void Function()) _) {
                               final List<List<Map<String, dynamic>>> data = splitter(_data);
                               return PageView.builder(
+                                controller: _pageController,
                                 physics: const NeverScrollableScrollPhysics(),
-                                onPageChanged: (int value) {},
+                                onPageChanged: (int value) => _currentPageIndexKey.currentState!.setState(() => _currentPageIndex = value),
                                 itemCount: data.length,
                                 itemBuilder: (BuildContext context, int index) {
+                                  return DataTable2(
+                                    columns: List<DataColumn2>.generate(_columns.length, (index) => null),
+                                    rows: <DataRow2>[],
+                                  );
+
                                   return SingleChildScrollView(
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -151,24 +161,33 @@ class _ProductsTableState extends State<ProductsTable> {
                             },
                           ),
                         ),
-                        const SizedBox(height: 20),
-                        Row(
-                          children: <Widget>[
-                            const Spacer(),
-                            IconButton(
-                              onPressed: () {},
-                              icon: const Icon(FontAwesome.chevron_left_solid, color: purpleColor, size: 15),
-                            ),
-                            Text(key, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
-                            IconButton(
-                              onPressed: () {},
-                              icon: const Icon(FontAwesome.chevron_right_solid, color: purpleColor, size: 15),
-                            ),
-                          ],
-                        ),
                       ],
                     ),
                   ),
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  children: <Widget>[
+                    const Spacer(),
+                    IconButton(
+                      onPressed: () {
+                        _pageController.previousPage(duration: 200.ms, curve: Curves.linear);
+                      },
+                      icon: const Icon(FontAwesome.chevron_left_solid, color: purpleColor, size: 15),
+                    ),
+                    StatefulBuilder(
+                      key: _currentPageIndexKey,
+                      builder: (BuildContext context, void Function(void Function()) _) {
+                        return Text((_currentPageIndex + 1).toString(), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor));
+                      },
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        _pageController.nextPage(duration: 200.ms, curve: Curves.linear);
+                      },
+                      icon: const Icon(FontAwesome.chevron_right_solid, color: purpleColor, size: 15),
+                    ),
+                  ],
                 ),
               ],
             );

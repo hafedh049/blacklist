@@ -28,6 +28,7 @@ dependencies:
   fluttertoast: ^8.2.4
   crypto: ^3.0.3
   syncfusion_flutter_charts: ^24.2.5
+  data_table_2: ^2.5.10
 
 dev_dependencies:
   flutter_test:
