@@ -116,38 +116,77 @@ class _CategoryListState extends State<CategoryList> {
                                       builder: (BuildContext context) => Container(
                                         padding: const EdgeInsets.all(16),
                                         child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisSize: MainAxisSize.min,
                                           children: <Widget>[
                                             Text("Category Name", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
                                             const SizedBox(height: 10),
-                                            TextField(
-                                              onChanged: (String value) {
-                                                if (value.trim().length <= 1) {
-                                                  _(() {});
-                                                }
-                                              },
-                                              controller: categoryName,
-                                              style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                                              decoration: InputDecoration(
-                                                contentPadding: const EdgeInsets.all(20),
-                                                focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
-                                                border: InputBorder.none,
-                                                hintText: "Choose a category name",
-                                                hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                                                suffixIcon: categoryName.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
-                                              ),
-                                              cursorColor: purpleColor,
-                                              inputFormatters: <TextInputFormatter>[
-                                                FilteringTextInputFormatter.allow(
-                                                  RegExp(
-                                                    entry.value["type"] == "double"
-                                                        ? r"[\d.]"
-                                                        : entry.value["type"] == "number"
-                                                            ? r"\d"
-                                                            : r".",
+                                            StatefulBuilder(
+                                              builder: (BuildContext context, void Function(void Function()) _) {
+                                                return TextField(
+                                                  onChanged: (String value) {
+                                                    if (value.trim().length <= 1) {
+                                                      _(() {});
+                                                    }
+                                                  },
+                                                  controller: categoryName,
+                                                  style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                                                  decoration: InputDecoration(
+                                                    contentPadding: const EdgeInsets.all(20),
+                                                    focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
+                                                    border: InputBorder.none,
+                                                    hintText: "Choose a category name",
+                                                    hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                                                    suffixIcon: categoryName.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
                                                   ),
-                                                ),
-                                              ],
-                                            )
+                                                  cursorColor: purpleColor,
+                                                );
+                                              },
+                                            ),
+                                            const SizedBox(height: 20),
+                                            Row(
+                                              children: <Widget>[AnimatedButton(
+                                  width: 80,
+                                  height: 30,
+                                  text: 'CANCEL',
+                                  selectedTextColor: whiteColor,
+                                  animatedOn: AnimatedOn.onHover,
+                                  animationDuration: 500.ms,
+                                  isReverse: true,
+                                  selectedBackgroundColor: darkColor,
+                                  backgroundColor: redColor,
+                                  transitionType: TransitionType.TOP_TO_BOTTOM,
+                                  textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                                  onPress: () {
+                                    for (Map<String, dynamic> item in _categories) {
+                                      item["state"] = false;
+                                    }
+                                    setState(() => _deleteState = false);
+                                  },
+                                ),
+                              ],
+                            ),AnimatedButton(
+                                  width: 80,
+                                  height: 30,
+                                  text: 'CANCEL',
+                                  selectedTextColor: whiteColor,
+                                  animatedOn: AnimatedOn.onHover,
+                                  animationDuration: 500.ms,
+                                  isReverse: true,
+                                  selectedBackgroundColor: darkColor,
+                                  backgroundColor: redColor,
+                                  transitionType: TransitionType.TOP_TO_BOTTOM,
+                                  textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                                  onPress: () {
+                                    for (Map<String, dynamic> item in _categories) {
+                                      item["state"] = false;
+                                    }
+                                    setState(() => _deleteState = false);
+                                  },
+                                ),
+                              ],
+
+                                            ),
                                           ],
                                         ),
                                       ),
