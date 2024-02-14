@@ -1,7 +1,10 @@
 import 'dart:math';
 
 import 'package:blacklist/utils/shared.dart';
+import 'package:blacklist/views/admin/products.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_animated_button/flutter_animated_button.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CategoryList extends StatefulWidget {
@@ -21,6 +24,8 @@ class _CategoryListState extends State<CategoryList> {
       "total_articles": Random().nextInt(20),
     },
   );
+  final List<bool> _checksList = List<bool>.generate(20, (int index) => false);
+  bool _deleteState = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,13 +40,78 @@ class _CategoryListState extends State<CategoryList> {
                 children: <Widget>[
                   Text("CATEGORIES LIST", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
                   const Spacer(),
-                  RichText(
-                    text: TextSpan(
-                      children: <TextSpan>[
-                        TextSpan(text: "CATEGORIES", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
-                        TextSpan(text: " / Category List", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
-                      ],
-                    ),
+                  StatefulBuilder(
+                    builder: (BuildContext context, void Function(void Function()) _) {
+                      return _deleteState
+                          ? Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                AnimatedButton(
+                                  width: 80,
+                                  height: 30,
+                                  text: 'SELECT ALL',
+                                  selectedTextColor: whiteColor,
+                                  animatedOn: AnimatedOn.onHover,
+                                  animationDuration: 500.ms,
+                                  isReverse: true,
+                                  selectedBackgroundColor: darkColor,
+                                  backgroundColor: purpleColor,
+                                  transitionType: TransitionType.TOP_TO_BOTTOM,
+                                  textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                                  onPress: () {},
+                                ),
+                                const SizedBox(width: 20),
+                                AnimatedButton(
+                                  width: 80,
+                                  height: 30,
+                                  text: 'CANCEL',
+                                  selectedTextColor: whiteColor,
+                                  animatedOn: AnimatedOn.onHover,
+                                  animationDuration: 500.ms,
+                                  isReverse: true,
+                                  selectedBackgroundColor: darkColor,
+                                  backgroundColor: purpleColor,
+                                  transitionType: TransitionType.TOP_TO_BOTTOM,
+                                  textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                                  onPress: () {},
+                                ),
+                              ],
+                            )
+                          : Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                AnimatedButton(
+                                  width: 80,
+                                  height: 30,
+                                  text: 'ADD',
+                                  selectedTextColor: whiteColor,
+                                  animatedOn: AnimatedOn.onHover,
+                                  animationDuration: 500.ms,
+                                  isReverse: true,
+                                  selectedBackgroundColor: darkColor,
+                                  backgroundColor: greenColor,
+                                  transitionType: TransitionType.TOP_TO_BOTTOM,
+                                  textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                                  onPress: () {},
+                                ),
+                                const SizedBox(width: 20),
+                                AnimatedButton(
+                                  width: 80,
+                                  height: 30,
+                                  text: 'DELETE',
+                                  selectedTextColor: whiteColor,
+                                  animatedOn: AnimatedOn.onHover,
+                                  animationDuration: 500.ms,
+                                  isReverse: true,
+                                  selectedBackgroundColor: darkColor,
+                                  backgroundColor: redColor,
+                                  transitionType: TransitionType.TOP_TO_BOTTOM,
+                                  textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                                  onPress: () {},
+                                ),
+                              ],
+                            );
+                    },
                   ),
                 ],
               ),
@@ -60,7 +130,7 @@ class _CategoryListState extends State<CategoryList> {
                         hoverColor: transparentColor,
                         highlightColor: transparentColor,
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const CategoryList()));
+                          Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const ProductsTable()));
                         },
                         child: Container(
                           width: 300,
