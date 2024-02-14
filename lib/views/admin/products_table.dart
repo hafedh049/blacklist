@@ -72,29 +72,6 @@ class _ProductsTableState extends State<ProductsTable> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Checkbox(
-                              value: _selectAll,
-                              checkColor: purpleColor,
-                              onChanged: (bool? value) {
-                                setState(() {
-                                  _selectAll = !_selectAll;
-                                });
-                              },
-                            ),
-                            const SizedBox(width: 30),
-                            for (final String column in _columns) ...<Widget>[
-                              Text(column, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
-                              const SizedBox(width: 10),
-                              const Icon(FontAwesome.sort_solid, size: 15, color: purpleColor),
-                              const SizedBox(width: 60),
-                            ],
-                            Text("ACTION", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
-                          ],
-                        ),
-                        Container(width: MediaQuery.sizeOf(context).width, height: .5, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),
                         Expanded(
                           child: StatefulBuilder(
                             builder: (BuildContext context, void Function(void Function()) _) {
@@ -106,8 +83,40 @@ class _ProductsTableState extends State<ProductsTable> {
                                 itemCount: data.length,
                                 itemBuilder: (BuildContext context, int index) {
                                   return DataTable2(
-                                    columns: List<DataColumn2>.generate(_columns.length, (index) => null),
-                                    rows: <DataRow2>[],
+                                    empty: null,
+                                    isHorizontalScrollBarVisible: false,
+                                    isVerticalScrollBarVisible: false,
+                                    onSelectAll: (bool? value) {},
+                                    showCheckboxColumn: true,
+                                    columns: _columns
+                                        .map(
+                                          (String e) => DataColumn2(
+                                            size: ColumnSize.L,
+                                            tooltip: e,
+                                            label: e == "CHECKBOX"
+                                                ? Checkbox(
+                                                    value: _selectAll,
+                                                    checkColor: purpleColor,
+                                                    onChanged: (bool? value) => setState(() => _selectAll = !_selectAll),
+                                                  )
+                                                : Text(e, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
+                                          ),
+                                        )
+                                        .toList(),
+                                    rows: data[index]
+                                        .map(
+                                          (Map<String, dynamic> e) => DataRow2(
+                                            specificRowHeight: 40,
+                                            cells: e.keys
+                                                .map(
+                                                  (String e) => DataCell(
+                                                    Text(e, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
+                                                  ),
+                                                )
+                                                .toList(),
+                                          ),
+                                        )
+                                        .toList(),
                                   );
 
                                   return SingleChildScrollView(
