@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:blacklist/utils/shared.dart';
-import 'package:blacklist/views/admin/products.dart';
+import 'package:blacklist/views/admin/products_table.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_animated_button/flutter_animated_button.dart';
@@ -113,6 +113,8 @@ class _CategoryListState extends State<CategoryList> {
                                   textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
                                   onPress: () {
                                     final TextEditingController categoryName = TextEditingController();
+                                    final FocusNode categoryNode = FocusNode();
+
                                     showModalBottomSheet<void>(
                                       context: context,
                                       builder: (BuildContext context) => Container(
@@ -167,6 +169,17 @@ class _CategoryListState extends State<CategoryList> {
                                                   onPress: () {
                                                     if (categoryName.text.trim().isNotEmpty) {
                                                       showToast("New category has been added", greenColor);
+                                                      _categories.add(
+                                                        <String, dynamic>{
+                                                          "background_image": "assets/images/bg.jpg",
+                                                          "category_name": categoryName.text.trim(),
+                                                          "total_products": 0,
+                                                          "total_articles": 0,
+                                                          "state": false,
+                                                        },
+                                                      );
+                                                      Navigator.pop(context);
+                                                      setState(() {});
                                                     } else {
                                                       showToast("Please enter a category name", redColor);
                                                     }
@@ -192,7 +205,12 @@ class _CategoryListState extends State<CategoryList> {
                                           ],
                                         ),
                                       ),
-                                    ).then((void value) => categoryName.dispose());
+                                    ).then(
+                                      (void value) {
+                                        categoryName.dispose();
+                                        categoryNode.dispose();
+                                      },
+                                    );
                                   },
                                 ),
                                 const SizedBox(width: 20),
