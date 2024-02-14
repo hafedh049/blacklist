@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_animated_button/flutter_animated_button.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:icons_plus/icons_plus.dart';
 
 class CategoryList extends StatefulWidget {
   const CategoryList({super.key});
@@ -47,9 +48,9 @@ class _CategoryListState extends State<CategoryList> {
                               mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
                                 AnimatedButton(
-                                  width: 100,
+                                  width: 150,
                                   height: 30,
-                                  text: 'SELECT ALL',
+                                  text: _categories.map((Map<String, dynamic> e) => e["state"]).toList().every((dynamic element) => element == true) ? "UNSELECT ALL" : 'SELECT ALL',
                                   selectedTextColor: whiteColor,
                                   animatedOn: AnimatedOn.onHover,
                                   animationDuration: 500.ms,
@@ -59,11 +60,15 @@ class _CategoryListState extends State<CategoryList> {
                                   transitionType: TransitionType.TOP_TO_BOTTOM,
                                   textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
                                   onPress: () {
-                                  if(){
-  for (Map<String, dynamic> item in _categories) {
-                                      item["state"] = true;
+                                    if (!_categories.map((Map<String, dynamic> e) => e["state"]).toList().every((dynamic element) => element == true)) {
+                                      for (Map<String, dynamic> item in _categories) {
+                                        item["state"] = true;
+                                      }
+                                    } else {
+                                      for (Map<String, dynamic> item in _categories) {
+                                        item["state"] = false;
+                                      }
                                     }
-                                  }else{}
                                     setState(() {});
                                   },
                                 ),
@@ -104,7 +109,50 @@ class _CategoryListState extends State<CategoryList> {
                                   backgroundColor: greenColor,
                                   transitionType: TransitionType.TOP_TO_BOTTOM,
                                   textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                                  onPress: () {},
+                                  onPress: () {
+                                    final TextEditingController categoryName = TextEditingController();
+                                    showModalBottomSheet<void>(
+                                      context: context,
+                                      builder: (BuildContext context) => Container(
+                                        padding: const EdgeInsets.all(16),
+                                        child: Column(
+                                          children: <Widget>[
+                                            Text("Category Name", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
+                                            const SizedBox(height: 10),
+                                            TextField(
+                                              onChanged: (String value) {
+                                                if (value.trim().length <= 1) {
+                                                  _(() {});
+                                                }
+                                              },
+                                              controller: categoryName,
+                                              style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                                              decoration: InputDecoration(
+                                                contentPadding: const EdgeInsets.all(20),
+                                                focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
+                                                border: InputBorder.none,
+                                                hintText: "Choose a category name",
+                                                hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                                                suffixIcon: categoryName.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
+                                              ),
+                                              cursorColor: purpleColor,
+                                              inputFormatters: <TextInputFormatter>[
+                                                FilteringTextInputFormatter.allow(
+                                                  RegExp(
+                                                    entry.value["type"] == "double"
+                                                        ? r"[\d.]"
+                                                        : entry.value["type"] == "number"
+                                                            ? r"\d"
+                                                            : r".",
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ).then((void value) => categoryName.dispose());
+                                  },
                                 ),
                                 const SizedBox(width: 20),
                                 AnimatedButton(
