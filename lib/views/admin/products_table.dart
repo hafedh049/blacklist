@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
 
+import '../../utils/callbacks.dart';
+
 class ProductsTable extends StatefulWidget {
   const ProductsTable({super.key});
 
@@ -13,6 +15,14 @@ class ProductsTable extends StatefulWidget {
 class _ProductsTableState extends State<ProductsTable> {
   bool _selectAll = false;
   final List<String> _columns = const <String>["DATE", "REFERENCE", "PRODUCT NAME", "CATEGORY", "REAL PRICE", "NEW PRICE", "QUANTITY", "STOCK ALERT"];
+  late final List<Map<String, dynamic>> _data;
+
+  @override
+  void initState() {
+    _data = List<Map<String, dynamic>>.generate(1000, (int index) => <String, dynamic>{for (final String key in _columns) key: key});
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,7 +31,6 @@ class _ProductsTableState extends State<ProductsTable> {
         width: MediaQuery.sizeOf(context).width,
         height: MediaQuery.sizeOf(context).height,
         padding: const EdgeInsets.all(24),
-        color: darkColor,
         child: StatefulBuilder(
           builder: (BuildContext context, void Function(void Function()) _) {
             return Column(
@@ -43,77 +52,138 @@ class _ProductsTableState extends State<ProductsTable> {
                   ],
                 ),
                 Container(width: MediaQuery.sizeOf(context).width, height: .3, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Checkbox(
-                        value: _selectAll,
-                        checkColor: purpleColor,
-                        onChanged: (bool? value) {
-                          setState(() {
-                            _selectAll = !_selectAll;
-                          });
-                        },
-                      ),
-                      const SizedBox(width: 30),
-                      for (final String column in _columns) ...<Widget>[
-                        Text(column, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
-                        const SizedBox(width: 10),
-                        const Icon(FontAwesome.sort_solid, size: 15, color: purpleColor),
-                        const SizedBox(width: 60),
-                      ],
-                      Text("ACTION", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
-                    ],
-                  ),
-                ),
-                Container(width: MediaQuery.sizeOf(context).width, height: .5, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),
                 Expanded(
-                  child: ListView.separated(
-                    itemBuilder: (BuildContext context, int index) {
-                      return SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            Checkbox(
-                              value: _selectAll,
-                              checkColor: purpleColor,
-                              onChanged: (bool? value) {
-                                setState(() {
-                                  _selectAll = !_selectAll;
-                                });
-                              },
-                            ),
-                            const SizedBox(width: 30),
-                            for (final String column in _columns) ...<Widget>[
-                              Text(column, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
-                              const SizedBox(width: 85),
-                            ],
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: const Icon(FontAwesome.eye_solid, color: greenColor, size: 15),
-                                ),
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: const Icon(FontAwesome.pen_solid, color: purpleColor, size: 15),
-                                ),
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: const Icon(FontAwesome.circle_xmark_solid, color: redColor, size: 15),
-                                ),
+                  child: Container(
+                    width: MediaQuery.sizeOf(context).width,
+                    padding: const EdgeInsets.all(24),
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), color: darkColor),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Checkbox(
+                                value: _selectAll,
+                                checkColor: purpleColor,
+                                onChanged: (bool? value) {
+                                  setState(() {
+                                    _selectAll = !_selectAll;
+                                  });
+                                },
+                              ),
+                              const SizedBox(width: 30),
+                              for (final String column in _columns) ...<Widget>[
+                                Text(column, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
+                                const SizedBox(width: 10),
+                                const Icon(FontAwesome.sort_solid, size: 15, color: purpleColor),
+                                const SizedBox(width: 60),
                               ],
-                            ),
-                          ],
+                              Text("ACTION", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
+                            ],
+                          ),
                         ),
-                      );
-                    },
-                    separatorBuilder: (BuildContext context, int index) => Container(width: MediaQuery.sizeOf(context).width, height: .3, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),
-                    itemCount: 1000,
+                        Container(width: MediaQuery.sizeOf(context).width, height: .5, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),
+                        Expanded(
+                          child: StatefulBuilder(
+                            builder: (BuildContext context, void Function(void Function()) _) {
+                              final List<List<Map<String, dynamic>>> data = splitter(_data);
+                              return PageView.builder(
+                                physics: const NeverScrollableScrollPhysics(),
+                                onPageChanged: (int value) {},
+                                itemCount: data.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        Checkbox(
+                                          value: _selectAll,
+                                          checkColor: purpleColor,
+                                          onChanged: (bool? value) => setState(() => _selectAll = !_selectAll),
+                                        ),
+                                        const SizedBox(width: 30),
+                                        for (final String column in _columns) ...<Widget>[
+                                          Text(column, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
+                                          const SizedBox(width: 85),
+                                        ],
+                                        Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: <Widget>[
+                                            IconButton(
+                                              onPressed: () {},
+                                              icon: const Icon(FontAwesome.eye_solid, color: greenColor, size: 15),
+                                            ),
+                                            IconButton(
+                                              onPressed: () {},
+                                              icon: const Icon(FontAwesome.pen_solid, color: purpleColor, size: 15),
+                                            ),
+                                            IconButton(
+                                              onPressed: () {},
+                                              icon: const Icon(FontAwesome.circle_xmark_solid, color: redColor, size: 15),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                        ),
+                        /*Expanded(
+                          child: ListView.separated(
+                            itemBuilder: (BuildContext context, int index) {
+                              return SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    Checkbox(
+                                      value: _selectAll,
+                                      checkColor: purpleColor,
+                                      onChanged: (bool? value) {
+                                        setState(() {
+                                          _selectAll = !_selectAll;
+                                        });
+                                      },
+                                    ),
+                                    const SizedBox(width: 30),
+                                    for (final String column in _columns) ...<Widget>[
+                                      Text(column, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
+                                      const SizedBox(width: 85),
+                                    ],
+                                    Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        IconButton(
+                                          onPressed: () {},
+                                          icon: const Icon(FontAwesome.eye_solid, color: greenColor, size: 15),
+                                        ),
+                                        IconButton(
+                                          onPressed: () {},
+                                          icon: const Icon(FontAwesome.pen_solid, color: purpleColor, size: 15),
+                                        ),
+                                        IconButton(
+                                          onPressed: () {},
+                                          icon: const Icon(FontAwesome.circle_xmark_solid, color: redColor, size: 15),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                            separatorBuilder: (BuildContext context, int index) => Container(width: MediaQuery.sizeOf(context).width, height: .3, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),
+                            itemCount: 1000,
+                          ),
+                        ),*/
+                      ],
+                    ),
                   ),
                 ),
               ],
