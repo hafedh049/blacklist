@@ -22,9 +22,9 @@ class _CategoryListState extends State<CategoryList> {
       "category_name": "Category ${index + 1}",
       "total_products": Random().nextInt(4000),
       "total_articles": Random().nextInt(20),
+      "state": false,
     },
   );
-  final List<bool> _checksList = List<bool>.generate(20, (int index) => false);
   bool _deleteState = false;
   @override
   Widget build(BuildContext context) {
@@ -47,7 +47,7 @@ class _CategoryListState extends State<CategoryList> {
                               mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
                                 AnimatedButton(
-                                  width: 80,
+                                  width: 100,
                                   height: 30,
                                   text: 'SELECT ALL',
                                   selectedTextColor: whiteColor,
@@ -55,10 +55,17 @@ class _CategoryListState extends State<CategoryList> {
                                   animationDuration: 500.ms,
                                   isReverse: true,
                                   selectedBackgroundColor: darkColor,
-                                  backgroundColor: purpleColor,
+                                  backgroundColor: greenColor,
                                   transitionType: TransitionType.TOP_TO_BOTTOM,
                                   textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                                  onPress: () {},
+                                  onPress: () {
+                                  if(){
+  for (Map<String, dynamic> item in _categories) {
+                                      item["state"] = true;
+                                    }
+                                  }else{}
+                                    setState(() {});
+                                  },
                                 ),
                                 const SizedBox(width: 20),
                                 AnimatedButton(
@@ -70,10 +77,15 @@ class _CategoryListState extends State<CategoryList> {
                                   animationDuration: 500.ms,
                                   isReverse: true,
                                   selectedBackgroundColor: darkColor,
-                                  backgroundColor: purpleColor,
+                                  backgroundColor: redColor,
                                   transitionType: TransitionType.TOP_TO_BOTTOM,
                                   textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                                  onPress: () {},
+                                  onPress: () {
+                                    for (Map<String, dynamic> item in _categories) {
+                                      item["state"] = false;
+                                    }
+                                    setState(() => _deleteState = false);
+                                  },
                                 ),
                               ],
                             )
@@ -107,7 +119,7 @@ class _CategoryListState extends State<CategoryList> {
                                   backgroundColor: redColor,
                                   transitionType: TransitionType.TOP_TO_BOTTOM,
                                   textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                                  onPress: () {},
+                                  onPress: () => setState(() => _deleteState = true),
                                 ),
                               ],
                             );
@@ -124,7 +136,7 @@ class _CategoryListState extends State<CategoryList> {
                   runSpacing: 20,
                   spacing: 20,
                   children: <Widget>[
-                    for (final Map<String, dynamic> item in _categories)
+                    for (Map<String, dynamic> item in _categories)
                       InkWell(
                         splashColor: transparentColor,
                         hoverColor: transparentColor,
@@ -140,33 +152,48 @@ class _CategoryListState extends State<CategoryList> {
                             color: darkColor,
                             image: DecorationImage(image: AssetImage(item["background_image"]), fit: BoxFit.cover),
                           ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
+                          child: Stack(
+                            alignment: Alignment.topRight,
                             children: <Widget>[
-                              Row(
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
-                                  Text("Category", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
-                                  const SizedBox(width: 10),
-                                  Text(item["category_name"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: blueColor)),
+                                  Row(
+                                    children: <Widget>[
+                                      Text("Category", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
+                                      const SizedBox(width: 10),
+                                      Text(item["category_name"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: blueColor)),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    children: <Widget>[
+                                      Text("Total Articles", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
+                                      const SizedBox(width: 10),
+                                      Text(item["total_articles"].toString(), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greenColor)),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    children: <Widget>[
+                                      Text("Total Products", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
+                                      const SizedBox(width: 10),
+                                      Text(item["total_products"].toString(), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
+                                    ],
+                                  ),
                                 ],
                               ),
-                              const SizedBox(height: 10),
-                              Row(
-                                children: <Widget>[
-                                  Text("Total Articles", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
-                                  const SizedBox(width: 10),
-                                  Text(item["total_articles"].toString(), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greenColor)),
-                                ],
-                              ),
-                              const SizedBox(height: 10),
-                              Row(
-                                children: <Widget>[
-                                  Text("Total Products", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
-                                  const SizedBox(width: 10),
-                                  Text(item["total_products"].toString(), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
-                                ],
-                              ),
+                              if (_deleteState)
+                                StatefulBuilder(
+                                  builder: (BuildContext context, void Function(void Function()) _) {
+                                    return Checkbox(
+                                      activeColor: purpleColor,
+                                      value: item["state"],
+                                      onChanged: (bool? value) => _(() => item["state"] = value),
+                                    );
+                                  },
+                                ),
                             ],
                           ),
                         ),
