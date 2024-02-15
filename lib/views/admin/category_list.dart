@@ -249,7 +249,7 @@ class _CategoryListState extends State<CategoryList> {
                         hoverColor: transparentColor,
                         highlightColor: transparentColor,
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const AsyncPaginatedDataTable2Demo()));
+                          Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const ProductsTable()));
                         },
                         child: Container(
                           width: 300,

@@ -192,17 +192,17 @@ class DessertDataSource extends DataTableSource {
 /// saync data fetching scenarious by paginated table (such as using Web API)
 class DessertDataSourceAsync extends AsyncDataTableSource {
   DessertDataSourceAsync() {
-    print('DessertDataSourceAsync created');
+    debugPrint('DessertDataSourceAsync created');
   }
 
   DessertDataSourceAsync.empty() {
     _empty = true;
-    print('DessertDataSourceAsync.empty created');
+    debugPrint('DessertDataSourceAsync.empty created');
   }
 
   DessertDataSourceAsync.error() {
     _errorCounter = 0;
-    print('DessertDataSourceAsync.error created');
+    debugPrint('DessertDataSourceAsync.error created');
   }
 
   bool _empty = false;

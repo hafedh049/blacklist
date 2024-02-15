@@ -2,28 +2,32 @@
 
 import 'dart:async';
 
+import 'package:blacklist/utils/shared.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-import 'helper.dart';
-import 'nav_helper.dart';
-import 'custom_pager.dart';
-import 'data_sources.dart';
+import '../../utils/helpers/helper.dart';
+import '../../utils/helpers/nav_helper.dart';
+import '../../utils/helpers/custom_pager.dart';
+import '../../utils/helpers/data_sources.dart';
 
-class AsyncPaginatedDataTable2Demo extends StatefulWidget {
-  const AsyncPaginatedDataTable2Demo({super.key});
+class ProductsTable extends StatefulWidget {
+  const ProductsTable({super.key});
 
   @override
-  AsyncPaginatedDataTable2DemoState createState() => AsyncPaginatedDataTable2DemoState();
+  State<ProductsTable> createState() => _ProductsTableState();
 }
 
-class AsyncPaginatedDataTable2DemoState extends State<AsyncPaginatedDataTable2Demo> {
-  int _rowsPerPage = PaginatedDataTable.defaultRowsPerPage;
+class _ProductsTableState extends State<ProductsTable> {
+  int _rowsPerPage = 20; //PaginatedDataTable.defaultRowsPerPage;
   bool _sortAscending = true;
   int? _sortColumnIndex;
   DessertDataSourceAsync? _dessertsDataSource;
   final PaginatorController _controller = PaginatorController();
+
+  final List<String> _columnsNames = const <String>["DATE", "REFERENCE", "PRODUCT NAME", "CATEGORY", "REAL PRICE", "NEW PRICE", "QUANTITY", "STOCK ALERT", "ACTIONS"];
 
   bool _dataSourceLoading = false;
   int _initialRow = 0;
@@ -39,42 +43,20 @@ class AsyncPaginatedDataTable2DemoState extends State<AsyncPaginatedDataTable2De
 
     if (getCurrentRouteOption(context) == goToLast) {
       _dataSourceLoading = true;
-      _dessertsDataSource!.getTotalRecords().then((count) => setState(() {
-            _initialRow = count - _rowsPerPage;
-            _dataSourceLoading = false;
-          }));
+      _dessertsDataSource!.getTotalRecords().then(
+            (int count) => setState(
+              () {
+                _initialRow = count - _rowsPerPage;
+                _dataSourceLoading = false;
+              },
+            ),
+          );
     }
     super.didChangeDependencies();
   }
 
-  void sort(
-    int columnIndex,
-    bool ascending,
-  ) {
-    var columnName = "name";
-    switch (columnIndex) {
-      case 1:
-        columnName = "calories";
-        break;
-      case 2:
-        columnName = "fat";
-        break;
-      case 3:
-        columnName = "carbs";
-        break;
-      case 4:
-        columnName = "protein";
-        break;
-      case 5:
-        columnName = "sodium";
-        break;
-      case 6:
-        columnName = "calcium";
-        break;
-      case 7:
-        columnName = "iron";
-        break;
-    }
+  void sort(int columnIndex, bool ascending) {
+    String columnName = _columnsNames[columnIndex];
     _dessertsDataSource!.sort(columnName, ascending);
     setState(() {
       _sortColumnIndex = columnIndex;
@@ -89,47 +71,13 @@ class AsyncPaginatedDataTable2DemoState extends State<AsyncPaginatedDataTable2De
   }
 
   List<DataColumn> get _columns {
-    return [
-      DataColumn(
-        label: const Text('Desert'),
-        onSort: (columnIndex, ascending) => sort(columnIndex, ascending),
+    return List<DataColumn>.generate(
+      _columnsNames.length,
+      (int index) => DataColumn(
+        label: Text(_columnsNames[index], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
+        onSort: (int columnIndex, bool ascending) => sort(columnIndex, ascending),
       ),
-      DataColumn(
-        label: const Text('Calories'),
-        numeric: true,
-        onSort: (columnIndex, ascending) => sort(columnIndex, ascending),
-      ),
-      DataColumn(
-        label: const Text('Fat (gm)'),
-        numeric: true,
-        onSort: (columnIndex, ascending) => sort(columnIndex, ascending),
-      ),
-      DataColumn(
-        label: const Text('Carbs (gm)'),
-        numeric: true,
-        onSort: (columnIndex, ascending) => sort(columnIndex, ascending),
-      ),
-      DataColumn(
-        label: const Text('Protein (gm)'),
-        numeric: true,
-        onSort: (columnIndex, ascending) => sort(columnIndex, ascending),
-      ),
-      DataColumn(
-        label: const Text('Sodium (mg)'),
-        numeric: true,
-        onSort: (columnIndex, ascending) => sort(columnIndex, ascending),
-      ),
-      DataColumn(
-        label: const Text('Calcium (%)'),
-        numeric: true,
-        onSort: (columnIndex, ascending) => sort(columnIndex, ascending),
-      ),
-      DataColumn(
-        label: const Text('Iron (%)'),
-        numeric: true,
-        onSort: (columnIndex, ascending) => sort(columnIndex, ascending),
-      ),
-    ];
+    );
   }
 
   // Use global key to avoid rebuilding state of _TitledRangeSelector
@@ -140,20 +88,23 @@ class AsyncPaginatedDataTable2DemoState extends State<AsyncPaginatedDataTable2De
   Widget build(BuildContext context) {
     // Last ppage example uses extra API call to get the number of items in datasource
     return Scaffold(
-      body: (_dataSourceLoading)
+      body: _dataSourceLoading
           ? const SizedBox()
           : Stack(
               alignment: Alignment.bottomCenter,
-              children: [
+              children: <Widget>[
                 AsyncPaginatedDataTable2(
-                    horizontalMargin: 20,
-                    checkboxHorizontalMargin: 12,
-                    columnSpacing: 0,
-                    wrapInCard: false,
-                    header: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, mainAxisSize: MainAxisSize.max, children: [
+                  horizontalMargin: 20,
+                  checkboxHorizontalMargin: 12,
+                  columnSpacing: 0,
+                  wrapInCard: false,
+                  header: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisSize: MainAxisSize.max,
+                    children: <Widget>[
                       _TitledRangeSelector(
                           range: const RangeValues(150, 600),
-                          onChanged: (v) {
+                          onChanged: (RangeValues v) {
                             // If the curren row/current page happens to be larger than
                             // the total rows/total number of pages what would happen is determined by
                             // [pageSyncApproach] field
@@ -163,43 +114,45 @@ class AsyncPaginatedDataTable2DemoState extends State<AsyncPaginatedDataTable2De
                           title: 'AsyncPaginatedDataTable2',
                           caption: 'Calories'),
                       if (kDebugMode && getCurrentRouteOption(context) == custPager) Row(children: [OutlinedButton(onPressed: () => _controller.goToPageWithRow(25), child: const Text('Go to row 25')), OutlinedButton(onPressed: () => _controller.goToRow(5), child: const Text('Go to row 5'))]),
-                      if (getCurrentRouteOption(context) == custPager) PageNumber(controller: _controller)
-                    ]),
-                    rowsPerPage: _rowsPerPage,
-                    autoRowsToHeight: getCurrentRouteOption(context) == autoRows,
-                    // Default - do nothing, autoRows - goToLast, other - goToFirst
-                    pageSyncApproach: getCurrentRouteOption(context) == dflt
-                        ? PageSyncApproach.doNothing
-                        : getCurrentRouteOption(context) == autoRows
-                            ? PageSyncApproach.goToLast
-                            : PageSyncApproach.goToFirst,
-                    minWidth: 800,
-                    fit: FlexFit.tight,
-                    border: TableBorder(top: const BorderSide(color: Colors.black), bottom: BorderSide(color: Colors.grey[300]!), left: BorderSide(color: Colors.grey[300]!), right: BorderSide(color: Colors.grey[300]!), verticalInside: BorderSide(color: Colors.grey[300]!), horizontalInside: const BorderSide(color: Colors.grey, width: 1)),
-                    onRowsPerPageChanged: (value) {
-                      // No need to wrap into setState, it will be called inside the widget
-                      // and trigger rebuild
-                      //setState(() {
-                      print('Row per page changed to $value');
-                      _rowsPerPage = value!;
-                      //});
-                    },
-                    initialFirstRowIndex: _initialRow,
-                    onPageChanged: (rowIndex) {
-                      //print(rowIndex / _rowsPerPage);
-                    },
-                    sortColumnIndex: _sortColumnIndex,
-                    sortAscending: _sortAscending,
-                    sortArrowIcon: Icons.keyboard_arrow_up,
-                    sortArrowAnimationDuration: const Duration(milliseconds: 0),
-                    onSelectAll: (select) => select != null && select ? (getCurrentRouteOption(context) != selectAllPage ? _dessertsDataSource!.selectAll() : _dessertsDataSource!.selectAllOnThePage()) : (getCurrentRouteOption(context) != selectAllPage ? _dessertsDataSource!.deselectAll() : _dessertsDataSource!.deselectAllOnThePage()),
-                    controller: _controller,
-                    hidePaginator: getCurrentRouteOption(context) == custPager,
-                    columns: _columns,
-                    empty: Center(child: Container(padding: const EdgeInsets.all(20), color: Colors.grey[200], child: const Text('No data'))),
-                    loading: _Loading(),
-                    errorBuilder: (e) => _ErrorAndRetry(e.toString(), () => _dessertsDataSource!.refreshDatasource()),
-                    source: _dessertsDataSource!),
+                      if (getCurrentRouteOption(context) == custPager) PageNumber(controller: _controller),
+                    ],
+                  ),
+                  rowsPerPage: _rowsPerPage,
+                  autoRowsToHeight: getCurrentRouteOption(context) == autoRows,
+                  // Default - do nothing, autoRows - goToLast, other - goToFirst
+                  pageSyncApproach: getCurrentRouteOption(context) == dflt
+                      ? PageSyncApproach.doNothing
+                      : getCurrentRouteOption(context) == autoRows
+                          ? PageSyncApproach.goToLast
+                          : PageSyncApproach.goToFirst,
+                  minWidth: 800,
+                  fit: FlexFit.tight,
+                  border: const TableBorder(bottom: BorderSide(color: greyColor)),
+                  onRowsPerPageChanged: (value) {
+                    // No need to wrap into setState, it will be called inside the widget
+                    // and trigger rebuild
+                    //setState(() {
+                    print('Row per page changed to $value');
+                    _rowsPerPage = value!;
+                    //});
+                  },
+                  initialFirstRowIndex: _initialRow,
+                  onPageChanged: (rowIndex) {
+                    //print(rowIndex / _rowsPerPage);
+                  },
+                  sortColumnIndex: _sortColumnIndex,
+                  sortAscending: _sortAscending,
+                  sortArrowIcon: Icons.keyboard_arrow_up,
+                  sortArrowAnimationDuration: const Duration(milliseconds: 0),
+                  onSelectAll: (select) => select != null && select ? (getCurrentRouteOption(context) != selectAllPage ? _dessertsDataSource!.selectAll() : _dessertsDataSource!.selectAllOnThePage()) : (getCurrentRouteOption(context) != selectAllPage ? _dessertsDataSource!.deselectAll() : _dessertsDataSource!.deselectAllOnThePage()),
+                  controller: _controller,
+                  hidePaginator: getCurrentRouteOption(context) == custPager,
+                  columns: _columns,
+                  empty: Center(child: Container(padding: const EdgeInsets.all(20), color: Colors.grey[200], child: const Text('No data'))),
+                  loading: _Loading(),
+                  errorBuilder: (e) => _ErrorAndRetry(e.toString(), () => _dessertsDataSource!.refreshDatasource()),
+                  source: _dessertsDataSource!,
+                ),
                 if (getCurrentRouteOption(context) == custPager) Positioned(bottom: 16, child: CustomPager(_controller))
               ],
             ),
