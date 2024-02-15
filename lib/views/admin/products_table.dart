@@ -1,260 +1,81 @@
-/*import 'package:blacklist/utils/shared.dart';
-import 'package:data_table_2/data_table_2.dart';
+// ignore_for_file: avoid_print
+
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:icons_plus/icons_plus.dart';
-
-import '../../utils/callbacks.dart';
-
-class ProductsTable extends StatefulWidget {
-  const ProductsTable({super.key});
-
-  @override
-  State<ProductsTable> createState() => _ProductsTableState();
-}
-
-class _ProductsTableState extends State<ProductsTable> {
-  bool _selectAll = false;
-  final List<String> _columns = const <String>["CHECKBOX", "DATE", "REFERENCE", "PRODUCT NAME", "CATEGORY", "REAL PRICE", "NEW PRICE", "QUANTITY", "STOCK ALERT", "ACTIONS"];
-  late final List<Map<String, dynamic>> _data;
-
-  final PageController _pageController = PageController();
-  int _currentPageIndex = 0;
-  final GlobalKey<State> _currentPageIndexKey = GlobalKey<State>();
-
-  @override
-  void initState() {
-    _data = List<Map<String, dynamic>>.generate(1000, (int index) => <String, dynamic>{for (final String key in _columns) key: key});
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: scaffoldColor,
-      body: Container(
-        width: MediaQuery.sizeOf(context).width,
-        height: MediaQuery.sizeOf(context).height,
-        padding: const EdgeInsets.all(24),
-        child: StatefulBuilder(
-          builder: (BuildContext context, void Function(void Function()) _) {
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    Text("PRODUCTS LIST", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
-                    const Spacer(),
-                    RichText(
-                      text: TextSpan(
-                        children: <TextSpan>[
-                          TextSpan(text: "Dashboard", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
-                          TextSpan(text: " / Products List", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                Container(width: MediaQuery.sizeOf(context).width, height: .3, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),
-                Expanded(
-                  child: Container(
-                    width: MediaQuery.sizeOf(context).width,
-                    padding: const EdgeInsets.all(24),
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), color: darkColor),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Expanded(
-                          child: StatefulBuilder(
-                            builder: (BuildContext context, void Function(void Function()) _) {
-                              final List<List<Map<String, dynamic>>> data = splitter(_data);
-                              return PageView.builder(
-                                controller: _pageController,
-                                physics: const NeverScrollableScrollPhysics(),
-                                onPageChanged: (int value) => _currentPageIndexKey.currentState!.setState(() => _currentPageIndex = value),
-                                itemCount: data.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return DataTable2(
-                                    empty: null,
-                                    isHorizontalScrollBarVisible: true,
-                                    isVerticalScrollBarVisible: true,
-                                    onSelectAll: (bool? value) {},
-                                    showCheckboxColumn: true,
-                                    columns: _columns
-                                        .map(
-                                          (String e) => DataColumn2(
-                                            size: ColumnSize.L,
-                                            fixedWidth: 60,
-                                            tooltip: e,
-                                            label: e == "CHECKBOX"
-                                                ? Checkbox(
-                                                    value: _selectAll,
-                                                    checkColor: purpleColor,
-                                                    onChanged: (bool? value) => setState(() => _selectAll = !_selectAll),
-                                                  )
-                                                : Text(e, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
-                                          ),
-                                        )
-                                        .toList(),
-                                    rows: data[index]
-                                        .map(
-                                          (Map<String, dynamic> e) => DataRow2(
-                                            specificRowHeight: 40,
-                                            cells: e.keys
-                                                .map(
-                                                  (String e) => DataCell(
-                                                    Text(e, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
-                                                  ),
-                                                )
-                                                .toList(),
-                                          ),
-                                        )
-                                        .toList(),
-                                  );
-
-                                  return SingleChildScrollView(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        for (Map<String, dynamic> map in data[index]) ...<Widget>[
-                                          Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: <Widget>[
-                                              Checkbox(
-                                                value: _selectAll,
-                                                checkColor: purpleColor,
-                                                onChanged: (bool? value) => setState(() => _selectAll = !_selectAll),
-                                              ),
-                                              const SizedBox(width: 30),
-                                              for (final String key in map.keys) ...<Widget>[
-                                                Text(key, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
-                                                const SizedBox(width: 85),
-                                              ],
-                                              Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: <Widget>[
-                                                  IconButton(
-                                                    onPressed: () {},
-                                                    icon: const Icon(FontAwesome.eye_solid, color: greenColor, size: 15),
-                                                  ),
-                                                  IconButton(
-                                                    onPressed: () {},
-                                                    icon: const Icon(FontAwesome.pen_solid, color: purpleColor, size: 15),
-                                                  ),
-                                                  IconButton(
-                                                    onPressed: () {},
-                                                    icon: const Icon(FontAwesome.circle_xmark_solid, color: redColor, size: 15),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                          if (map != data[index].last) ...<Widget>[
-                                            const SizedBox(height: 20),
-                                            const Divider(thickness: .3, height: .3, color: greyColor),
-                                            const SizedBox(height: 20),
-                                          ],
-                                        ],
-                                      ],
-                                    ),
-                                  );
-                                },
-                              );
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  children: <Widget>[
-                    const Spacer(),
-                    IconButton(
-                      onPressed: () {
-                        _pageController.previousPage(duration: 200.ms, curve: Curves.linear);
-                      },
-                      icon: const Icon(FontAwesome.chevron_left_solid, color: purpleColor, size: 15),
-                    ),
-                    StatefulBuilder(
-                      key: _currentPageIndexKey,
-                      builder: (BuildContext context, void Function(void Function()) _) {
-                        return Text((_currentPageIndex + 1).toString(), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor));
-                      },
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        _pageController.nextPage(duration: 200.ms, curve: Curves.linear);
-                      },
-                      icon: const Icon(FontAwesome.chevron_right_solid, color: purpleColor, size: 15),
-                    ),
-                  ],
-                ),
-              ],
-            );
-          },
-        ),
-      ),
-    );
-  }
-}*/
 import 'package:data_table_2/data_table_2.dart';
-import 'package:flutter/material.dart';
 
-import '../data_sources.dart';
-import '../nav_helper.dart';
+import 'helper.dart';
+import 'nav_helper.dart';
+import 'custom_pager.dart';
+import 'data_sources.dart';
 
-// Copyright 2019 The Flutter team. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
-// The file was extracted from GitHub: https://github.com/flutter/gallery
-// Changes and modifications by Maxim Saplin, 2021
-
-class DataTable2Demo extends StatefulWidget {
-  const DataTable2Demo({super.key});
+class AsyncPaginatedDataTable2Demo extends StatefulWidget {
+  const AsyncPaginatedDataTable2Demo({super.key});
 
   @override
-  DataTable2DemoState createState() => DataTable2DemoState();
+  AsyncPaginatedDataTable2DemoState createState() => AsyncPaginatedDataTable2DemoState();
 }
 
-class DataTable2DemoState extends State<DataTable2Demo> {
+class AsyncPaginatedDataTable2DemoState extends State<AsyncPaginatedDataTable2Demo> {
+  int _rowsPerPage = PaginatedDataTable.defaultRowsPerPage;
   bool _sortAscending = true;
   int? _sortColumnIndex;
-  late DessertDataSource _dessertsDataSource;
-  bool _initialized = false;
-  bool showCustomArrow = false;
-  bool sortArrowsAlwaysVisible = false;
+  DessertDataSourceAsync? _dessertsDataSource;
+  final PaginatorController _controller = PaginatorController();
+
+  bool _dataSourceLoading = false;
+  int _initialRow = 0;
 
   @override
   void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (!_initialized) {
-      final currentRouteOption = getCurrentRouteOption(context);
-      _dessertsDataSource = DessertDataSource(context, false, currentRouteOption == rowTaps, currentRouteOption == rowHeightOverrides, currentRouteOption == showBordersWithZebraStripes);
-      _initialized = true;
-      _dessertsDataSource.addListener(() {
-        setState(() {});
-      });
+    // initState is to early to access route options, context is invalid at that stage
+    _dessertsDataSource ??= getCurrentRouteOption(context) == noData
+        ? DessertDataSourceAsync.empty()
+        : getCurrentRouteOption(context) == asyncErrors
+            ? DessertDataSourceAsync.error()
+            : DessertDataSourceAsync();
+
+    if (getCurrentRouteOption(context) == goToLast) {
+      _dataSourceLoading = true;
+      _dessertsDataSource!.getTotalRecords().then((count) => setState(() {
+            _initialRow = count - _rowsPerPage;
+            _dataSourceLoading = false;
+          }));
     }
+    super.didChangeDependencies();
   }
 
-  void _sort<T>(
-    Comparable<T> Function(Dessert d) getField,
+  void sort(
     int columnIndex,
     bool ascending,
   ) {
-    _dessertsDataSource.sort<T>(getField, ascending);
+    var columnName = "name";
+    switch (columnIndex) {
+      case 1:
+        columnName = "calories";
+        break;
+      case 2:
+        columnName = "fat";
+        break;
+      case 3:
+        columnName = "carbs";
+        break;
+      case 4:
+        columnName = "protein";
+        break;
+      case 5:
+        columnName = "sodium";
+        break;
+      case 6:
+        columnName = "calcium";
+        break;
+      case 7:
+        columnName = "iron";
+        break;
+    }
+    _dessertsDataSource!.sort(columnName, ascending);
     setState(() {
       _sortColumnIndex = columnIndex;
       _sortAscending = ascending;
@@ -263,124 +84,265 @@ class DataTable2DemoState extends State<DataTable2Demo> {
 
   @override
   void dispose() {
-    _dessertsDataSource.dispose();
+    _dessertsDataSource!.dispose();
     super.dispose();
   }
 
+  List<DataColumn> get _columns {
+    return [
+      DataColumn(
+        label: const Text('Desert'),
+        onSort: (columnIndex, ascending) => sort(columnIndex, ascending),
+      ),
+      DataColumn(
+        label: const Text('Calories'),
+        numeric: true,
+        onSort: (columnIndex, ascending) => sort(columnIndex, ascending),
+      ),
+      DataColumn(
+        label: const Text('Fat (gm)'),
+        numeric: true,
+        onSort: (columnIndex, ascending) => sort(columnIndex, ascending),
+      ),
+      DataColumn(
+        label: const Text('Carbs (gm)'),
+        numeric: true,
+        onSort: (columnIndex, ascending) => sort(columnIndex, ascending),
+      ),
+      DataColumn(
+        label: const Text('Protein (gm)'),
+        numeric: true,
+        onSort: (columnIndex, ascending) => sort(columnIndex, ascending),
+      ),
+      DataColumn(
+        label: const Text('Sodium (mg)'),
+        numeric: true,
+        onSort: (columnIndex, ascending) => sort(columnIndex, ascending),
+      ),
+      DataColumn(
+        label: const Text('Calcium (%)'),
+        numeric: true,
+        onSort: (columnIndex, ascending) => sort(columnIndex, ascending),
+      ),
+      DataColumn(
+        label: const Text('Iron (%)'),
+        numeric: true,
+        onSort: (columnIndex, ascending) => sort(columnIndex, ascending),
+      ),
+    ];
+  }
+
+  // Use global key to avoid rebuilding state of _TitledRangeSelector
+  // upon AsyncPaginatedDataTable2 refreshes, e.g. upon page switches
+  final GlobalKey _rangeSelectorKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
-    const alwaysShowArrows = false;
-
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Theme(
-          // Using themes to override scroll bar appearence, note that iOS scrollbars do not support color overrides
-          data: ThemeData(
-              iconTheme: const IconThemeData(color: Colors.white),
-              scrollbarTheme: ScrollbarThemeData(
-                thickness: MaterialStateProperty.all(5),
-                // thumbVisibility: MaterialStateProperty.all(true),
-                // thumbColor: MaterialStateProperty.all<Color>(Colors.yellow)
-              )),
-          child: DataTable2(
-            // Forcing all scrollbars to be visible, alternatively themes can be used (see above)
-            headingRowColor: MaterialStateColor.resolveWith((states) => Colors.grey[850]!),
-            headingTextStyle: const TextStyle(color: Colors.white),
-            headingCheckboxTheme: const CheckboxThemeData(side: BorderSide(color: Colors.white, width: 2.0)),
-            //checkboxAlignment: Alignment.topLeft,
-            isHorizontalScrollBarVisible: true,
-            isVerticalScrollBarVisible: true,
-            columnSpacing: 12,
-            horizontalMargin: 12,
-            sortArrowBuilder: getCurrentRouteOption(context) == custArrows
-                ? (ascending, sorted) => sorted || alwaysShowArrows
-                    ? Stack(
-                        children: [
-                          Padding(padding: const EdgeInsets.only(right: 0), child: _SortIcon(ascending: true, active: sorted && ascending)),
-                          Padding(padding: const EdgeInsets.only(left: 10), child: _SortIcon(ascending: false, active: sorted && !ascending)),
-                        ],
-                      )
-                    : null
-                : null,
-            border: getCurrentRouteOption(context) == fixedColumnWidth ? TableBorder(top: const BorderSide(color: Colors.black), bottom: BorderSide(color: Colors.grey[300]!), left: BorderSide(color: Colors.grey[300]!), right: BorderSide(color: Colors.grey[300]!), verticalInside: BorderSide(color: Colors.grey[300]!), horizontalInside: const BorderSide(color: Colors.grey, width: 1)) : (getCurrentRouteOption(context) == showBordersWithZebraStripes ? TableBorder.all() : null),
-            dividerThickness: 1, // this one will be ignored if [border] is set above
-            bottomMargin: 10,
-            minWidth: 900,
-            sortColumnIndex: _sortColumnIndex,
-            sortAscending: _sortAscending,
-            sortArrowIcon: Icons.keyboard_arrow_up, // custom arrow
-            sortArrowAnimationDuration: const Duration(milliseconds: 500), // custom animation duration
-            onSelectAll: (val) => setState(() => _dessertsDataSource.selectAll(val)),
-            columns: [
-              DataColumn2(
-                label: const Text('Desert'),
-                size: ColumnSize.S,
-                // example of fixed 1st row
-                fixedWidth: getCurrentRouteOption(context) == fixedColumnWidth ? 200 : null,
-                onSort: (columnIndex, ascending) => _sort<String>((d) => d.name, columnIndex, ascending),
-              ),
-              DataColumn2(
-                label: const Text('Calories'),
-                size: ColumnSize.S,
-                numeric: true,
-                onSort: (columnIndex, ascending) => _sort<num>((d) => d.calories, columnIndex, ascending),
-              ),
-              DataColumn2(
-                label: const Text('Fat (gm)'),
-                size: ColumnSize.S,
-                numeric: true,
-                onSort: (columnIndex, ascending) => _sort<num>((d) => d.fat, columnIndex, ascending),
-              ),
-              DataColumn2(
-                label: const Text('Carbs (gm)'),
-                size: ColumnSize.S,
-                numeric: true,
-                onSort: (columnIndex, ascending) => _sort<num>((d) => d.carbs, columnIndex, ascending),
-              ),
-              DataColumn2(
-                label: const Text('Protein (gm)'),
-                size: ColumnSize.S,
-                numeric: true,
-                onSort: (columnIndex, ascending) => _sort<num>((d) => d.protein, columnIndex, ascending),
-              ),
-              DataColumn2(
-                label: const Text('Sodium (mg)'),
-                size: ColumnSize.S,
-                numeric: true,
-                onSort: (columnIndex, ascending) => _sort<num>((d) => d.sodium, columnIndex, ascending),
-              ),
-              DataColumn2(
-                label: const Text('Calcium (%)'),
-                size: ColumnSize.S,
-                numeric: true,
-                onSort: (columnIndex, ascending) => _sort<num>((d) => d.calcium, columnIndex, ascending),
-              ),
-              DataColumn2(
-                label: const Text('Iron (%)'),
-                size: ColumnSize.S,
-                numeric: true,
-                onSort: (columnIndex, ascending) => _sort<num>((d) => d.iron, columnIndex, ascending),
-              ),
-            ],
-            empty: Center(child: Container(padding: const EdgeInsets.all(20), color: Colors.grey[200], child: const Text('No data'))),
-            rows: getCurrentRouteOption(context) == noData ? [] : List<DataRow>.generate(_dessertsDataSource.rowCount, (index) => _dessertsDataSource.getRow(index)),
-          )),
+    // Last ppage example uses extra API call to get the number of items in datasource
+    return Scaffold(
+      body: (_dataSourceLoading)
+          ? const SizedBox()
+          : Stack(
+              alignment: Alignment.bottomCenter,
+              children: [
+                AsyncPaginatedDataTable2(
+                    horizontalMargin: 20,
+                    checkboxHorizontalMargin: 12,
+                    columnSpacing: 0,
+                    wrapInCard: false,
+                    header: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, mainAxisSize: MainAxisSize.max, children: [
+                      _TitledRangeSelector(
+                          range: const RangeValues(150, 600),
+                          onChanged: (v) {
+                            // If the curren row/current page happens to be larger than
+                            // the total rows/total number of pages what would happen is determined by
+                            // [pageSyncApproach] field
+                            _dessertsDataSource!.caloriesFilter = v;
+                          },
+                          key: _rangeSelectorKey,
+                          title: 'AsyncPaginatedDataTable2',
+                          caption: 'Calories'),
+                      if (kDebugMode && getCurrentRouteOption(context) == custPager) Row(children: [OutlinedButton(onPressed: () => _controller.goToPageWithRow(25), child: const Text('Go to row 25')), OutlinedButton(onPressed: () => _controller.goToRow(5), child: const Text('Go to row 5'))]),
+                      if (getCurrentRouteOption(context) == custPager) PageNumber(controller: _controller)
+                    ]),
+                    rowsPerPage: _rowsPerPage,
+                    autoRowsToHeight: getCurrentRouteOption(context) == autoRows,
+                    // Default - do nothing, autoRows - goToLast, other - goToFirst
+                    pageSyncApproach: getCurrentRouteOption(context) == dflt
+                        ? PageSyncApproach.doNothing
+                        : getCurrentRouteOption(context) == autoRows
+                            ? PageSyncApproach.goToLast
+                            : PageSyncApproach.goToFirst,
+                    minWidth: 800,
+                    fit: FlexFit.tight,
+                    border: TableBorder(top: const BorderSide(color: Colors.black), bottom: BorderSide(color: Colors.grey[300]!), left: BorderSide(color: Colors.grey[300]!), right: BorderSide(color: Colors.grey[300]!), verticalInside: BorderSide(color: Colors.grey[300]!), horizontalInside: const BorderSide(color: Colors.grey, width: 1)),
+                    onRowsPerPageChanged: (value) {
+                      // No need to wrap into setState, it will be called inside the widget
+                      // and trigger rebuild
+                      //setState(() {
+                      print('Row per page changed to $value');
+                      _rowsPerPage = value!;
+                      //});
+                    },
+                    initialFirstRowIndex: _initialRow,
+                    onPageChanged: (rowIndex) {
+                      //print(rowIndex / _rowsPerPage);
+                    },
+                    sortColumnIndex: _sortColumnIndex,
+                    sortAscending: _sortAscending,
+                    sortArrowIcon: Icons.keyboard_arrow_up,
+                    sortArrowAnimationDuration: const Duration(milliseconds: 0),
+                    onSelectAll: (select) => select != null && select ? (getCurrentRouteOption(context) != selectAllPage ? _dessertsDataSource!.selectAll() : _dessertsDataSource!.selectAllOnThePage()) : (getCurrentRouteOption(context) != selectAllPage ? _dessertsDataSource!.deselectAll() : _dessertsDataSource!.deselectAllOnThePage()),
+                    controller: _controller,
+                    hidePaginator: getCurrentRouteOption(context) == custPager,
+                    columns: _columns,
+                    empty: Center(child: Container(padding: const EdgeInsets.all(20), color: Colors.grey[200], child: const Text('No data'))),
+                    loading: _Loading(),
+                    errorBuilder: (e) => _ErrorAndRetry(e.toString(), () => _dessertsDataSource!.refreshDatasource()),
+                    source: _dessertsDataSource!),
+                if (getCurrentRouteOption(context) == custPager) Positioned(bottom: 16, child: CustomPager(_controller))
+              ],
+            ),
     );
   }
 }
 
-class _SortIcon extends StatelessWidget {
-  final bool ascending;
-  final bool active;
+class _ErrorAndRetry extends StatelessWidget {
+  const _ErrorAndRetry(this.errorMessage, this.retry);
 
-  const _SortIcon({required this.ascending, required this.active});
+  final String errorMessage;
+  final void Function() retry;
+
+  @override
+  Widget build(BuildContext context) => Center(
+        child: Container(
+            padding: const EdgeInsets.all(10),
+            height: 70,
+            color: Colors.red,
+            child: Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              Text('Oops! $errorMessage', style: const TextStyle(color: Colors.white)),
+              TextButton(
+                  onPressed: retry,
+                  child: const Row(mainAxisSize: MainAxisSize.min, children: [
+                    Icon(
+                      Icons.refresh,
+                      color: Colors.white,
+                    ),
+                    Text('Retry', style: TextStyle(color: Colors.white))
+                  ]))
+            ])),
+      );
+}
+
+class _Loading extends StatefulWidget {
+  @override
+  __LoadingState createState() => __LoadingState();
+}
+
+class __LoadingState extends State<_Loading> {
+  @override
+  Widget build(BuildContext context) {
+    return ColoredBox(
+        color: Colors.white.withAlpha(128),
+        // at first show shade, if loading takes longer than 0,5s show spinner
+        child: FutureBuilder(
+            future: Future.delayed(const Duration(milliseconds: 500), () => true),
+            builder: (context, snapshot) {
+              return !snapshot.hasData
+                  ? const SizedBox()
+                  : Center(
+                      child: Container(
+                      color: Colors.yellow,
+                      padding: const EdgeInsets.all(7),
+                      width: 150,
+                      height: 50,
+                      child: const Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+                        CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.black,
+                        ),
+                        Text('Loading..')
+                      ]),
+                    ));
+            }));
+  }
+}
+
+class _TitledRangeSelector extends StatefulWidget {
+  const _TitledRangeSelector({super.key, required this.onChanged, this.title = "", this.caption = "", this.range = const RangeValues(0, 100)});
+
+  final String title;
+  final String caption;
+  final Duration titleToSelectorSwitch = const Duration(seconds: 2);
+  final RangeValues range;
+  final Function(RangeValues) onChanged;
+
+  @override
+  State<_TitledRangeSelector> createState() => _TitledRangeSelectorState();
+}
+
+class _TitledRangeSelectorState extends State<_TitledRangeSelector> {
+  bool _titleVisible = true;
+  RangeValues _values = const RangeValues(0, 100);
+
+  @override
+  void initState() {
+    super.initState();
+
+    _values = widget.range;
+
+    Timer(widget.titleToSelectorSwitch, () {
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        _titleVisible = false;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Icon(
-      ascending ? Icons.arrow_drop_up_rounded : Icons.arrow_drop_down_rounded,
-      size: 28,
-      color: active ? Colors.cyan : null,
-    );
+    return Stack(alignment: Alignment.centerLeft, children: [
+      AnimatedOpacity(opacity: _titleVisible ? 1 : 0, duration: const Duration(milliseconds: 1000), child: Align(alignment: Alignment.centerLeft, child: Text(widget.title))),
+      AnimatedOpacity(
+          opacity: _titleVisible ? 0 : 1,
+          duration: const Duration(milliseconds: 1000),
+          child: SizedBox(
+              width: 340,
+              child: Theme(
+                  data: blackSlider(context),
+                  child: Column(mainAxisAlignment: MainAxisAlignment.center, mainAxisSize: MainAxisSize.max, children: [
+                    DefaultTextStyle(
+                        style: const TextStyle(fontSize: 15, color: Colors.black),
+                        child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                              Text(
+                                _values.start.toStringAsFixed(0),
+                              ),
+                              Text(
+                                widget.caption,
+                              ),
+                              Text(
+                                _values.end.toStringAsFixed(0),
+                              )
+                            ]))),
+                    SizedBox(
+                        height: 24,
+                        child: RangeSlider(
+                          values: _values,
+                          divisions: 9,
+                          min: widget.range.start,
+                          max: widget.range.end,
+                          onChanged: (v) {
+                            setState(() {
+                              _values = v;
+                            });
+                            widget.onChanged(v);
+                          },
+                        ))
+                  ]))))
+    ]);
   }
 }
