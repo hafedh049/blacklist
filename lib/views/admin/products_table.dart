@@ -17,6 +17,7 @@ class ProductTableState extends State<ProductTable> with RestorationMixin {
   final RestorableIntN _sortColumnIndex = RestorableIntN(null);
   late ProductDataSource _productsDataSource;
   bool initialized = false;
+  final List<String> _columns = const <String>["Date", "Reference", "Name", "Category", "Real Price", "New Price", "Quantity", "Stock Alert", "Actions"];
 
   @override
   String get restorationId => 'paginated_product_table';
@@ -101,40 +102,42 @@ class ProductTableState extends State<ProductTable> with RestorationMixin {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      restorationId: 'paginated_data_table_list_view',
-      padding: const EdgeInsets.all(16),
-      children: <Widget>[
-        PaginatedDataTable(
-          header: const Text('PaginatedDataTable'),
-          rowsPerPage: _rowsPerPage.value,
-          onRowsPerPageChanged: (int? value) {
-            setState(
-              () {
-                _rowsPerPage.value = value!;
-              },
-            );
-          },
-          initialFirstRowIndex: _rowIndex.value,
-          onPageChanged: (int rowIndex) {
-            setState(
-              () {
-                _rowIndex.value = rowIndex;
-              },
-            );
-          },
-          sortColumnIndex: _sortColumnIndex.value,
-          sortAscending: _sortAscending.value,
-          onSelectAll: _productsDataSource.selectAll,
-          columns: <DataColumn>[
-            DataColumn(
-              label: const Text('Desert'),
-              onSort: (int columnIndex, bool ascending) => sort<String>((d) => d.name, columnIndex, ascending),
-            ),
-          ],
-          source: _productsDataSource,
-        ),
-      ],
+    return Scaffold(
+      body: ListView(
+        restorationId: 'paginated_data_table_list_view',
+        padding: const EdgeInsets.all(16),
+        children: <Widget>[
+          PaginatedDataTable(
+            rowsPerPage: _rowsPerPage.value,
+            onRowsPerPageChanged: (int? value) {
+              setState(
+                () {
+                  _rowsPerPage.value = value!;
+                },
+              );
+            },
+            initialFirstRowIndex: _rowIndex.value,
+            onPageChanged: (int rowIndex) {
+              setState(
+                () {
+                  _rowIndex.value = rowIndex;
+                },
+              );
+            },
+            sortColumnIndex: _sortColumnIndex.value,
+            sortAscending: _sortAscending.value,
+            onSelectAll: _productsDataSource.selectAll,
+            columns: <DataColumn>[
+              for (final String column in _columns)
+                DataColumn(
+                  label: Text(column),
+                  onSort: (int columnIndex, bool ascending) => sort<String>((Product p) => p.name, columnIndex, ascending),
+                ),
+            ],
+            source: _productsDataSource,
+          ),
+        ],
+      ),
     );
   }
 }
