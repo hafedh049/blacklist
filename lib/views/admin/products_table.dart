@@ -1,5 +1,6 @@
 import 'package:blacklist/utils/shared.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../utils/helpers/data_sources.dart';
@@ -18,8 +19,9 @@ class ProductTableState extends State<ProductTable> with RestorationMixin {
   final RestorableBool _sortAscending = RestorableBool(true);
   final RestorableIntN _sortColumnIndex = RestorableIntN(null);
   late ProductDataSource _productsDataSource;
-  bool initialized = false;
+  bool _initialized = false;
   final List<String> _columns = const <String>["Date", "Reference", "Name", "Category", "Real Price", "New Price", "Quantity", "Stock Alert", "Actions"];
+  final GlobalKey<State> _pager = GlobalKey<State>();
 
   @override
   String get restorationId => 'paginated_product_table';
@@ -32,9 +34,9 @@ class ProductTableState extends State<ProductTable> with RestorationMixin {
     registerForRestoration(_sortAscending, 'sort_ascending');
     registerForRestoration(_sortColumnIndex, 'sort_column_index');
 
-    if (!initialized) {
+    if (!_initialized) {
       _productsDataSource = ProductDataSource(context, true, true, true, true);
-      initialized = true;
+      _initialized = true;
     }
     switch (_sortColumnIndex.value) {
       case 0:
@@ -71,9 +73,9 @@ class ProductTableState extends State<ProductTable> with RestorationMixin {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (!initialized) {
+    if (!_initialized) {
       _productsDataSource = ProductDataSource(context);
-      initialized = true;
+      _initialized = true;
     }
     _productsDataSource.addListener(_updateSelectedproductRowListener);
   }
@@ -84,7 +86,7 @@ class ProductTableState extends State<ProductTable> with RestorationMixin {
 
   void sort<T>(Comparable<T> Function(Product p) getField, int columnIndex, bool ascending) {
     _productsDataSource.sort<T>(getField, ascending);
-    setState(
+    _pager.currentState!.setState(
       () {
         _sortColumnIndex.value = columnIndex;
         _sortAscending.value = ascending;
@@ -105,66 +107,71 @@ class ProductTableState extends State<ProductTable> with RestorationMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              Text("Products", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
-              const Spacer(),
-              RichText(
-                text: TextSpan(
-                  children: <TextSpan>[
-                    TextSpan(text: "Products", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
-                    TextSpan(text: " / List Products", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
-                  ],
+      body: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                Text("Products", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
+                const Spacer(),
+                RichText(
+                  text: TextSpan(
+                    children: <TextSpan>[
+                      TextSpan(text: "Products", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
+                      TextSpan(text: " / List Products", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-          Container(width: MediaQuery.sizeOf(context).width, height: .3, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), color: darkColor),
-              padding: const EdgeInsets.all(16),
+              ],
+            ),
+            Container(width: MediaQuery.sizeOf(context).width, height: .3, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),
+            Expanded(
               child: ListView(
                 restorationId: 'paginated_data_table_list_view',
                 children: <Widget>[
-                  PaginatedDataTable(
-                    availableRowsPerPage: const <int>[20, 30],
-                    arrowHeadColor: purpleColor,
-                    rowsPerPage: _rowsPerPage.value,
-                    onRowsPerPageChanged: (int? value) {
-                      setState(
-                        () {
-                          _rowsPerPage.value = value!;
+                  StatefulBuilder(
+                    key: _pager,
+                    builder: (BuildContext context, void Function(void Function()) _) {
+                      return PaginatedDataTable(
+                        availableRowsPerPage: const <int>[20, 30],
+                        arrowHeadColor: purpleColor,
+                        rowsPerPage: _rowsPerPage.value,
+                        onRowsPerPageChanged: (int? value) {
+                          _(
+                            () {
+                              _rowsPerPage.value = value!;
+                            },
+                          );
                         },
+                        initialFirstRowIndex: _rowIndex.value,
+                        onPageChanged: (int rowIndex) {
+                          _(
+                            () {
+                              _rowIndex.value = rowIndex;
+                            },
+                          );
+                        },
+                        sortColumnIndex: _sortColumnIndex.value,
+                        sortAscending: _sortAscending.value,
+                        onSelectAll: _productsDataSource.selectAll,
+                        columns: <DataColumn>[
+                          for (final String column in _columns)
+                            DataColumn(
+                              label: Text(column),
+                              onSort: (int columnIndex, bool ascending) => sort<String>((Product p) => p.name, columnIndex, ascending),
+                            ),
+                        ],
+                        source: _productsDataSource,
                       );
                     },
-                    initialFirstRowIndex: _rowIndex.value,
-                    onPageChanged: (int rowIndex) {
-                      setState(
-                        () {
-                          _rowIndex.value = rowIndex;
-                        },
-                      );
-                    },
-                    sortColumnIndex: _sortColumnIndex.value,
-                    sortAscending: _sortAscending.value,
-                    onSelectAll: _productsDataSource.selectAll,
-                    columns: <DataColumn>[
-                      for (final String column in _columns)
-                        DataColumn(
-                          label: Text(column),
-                          onSort: (int columnIndex, bool ascending) => sort<String>((Product p) => p.name, columnIndex, ascending),
-                        ),
-                    ],
-                    source: _productsDataSource,
                   ),
                 ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
