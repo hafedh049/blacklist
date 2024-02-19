@@ -41,12 +41,8 @@ class RestorableProductSelections extends RestorableProperty<Set<int>> {
   Object toPrimitives() => _productSelections.toList();
 }
 
-int _idCounter = 0;
-
 class Product {
   Product(this.name, this.category, this.date, this.reference, this.realPrice, this.newPrice, this.quantity, this.stockAlert, this.actions);
-
-  final int id = _idCounter++;
 
   final String name;
   final String category;
@@ -81,8 +77,8 @@ class ProductDataSource extends DataTableSource {
   void sort<T>(Comparable<T> Function(Product p) getField, bool ascending) {
     products.sort(
       (Product a, Product b) {
-        final aValue = getField(a);
-        final bValue = getField(b);
+        final Comparable<T> aValue = getField(a);
+        final Comparable<T> bValue = getField(b);
         return ascending ? Comparable.compare(aValue, bValue) : Comparable.compare(bValue, aValue);
       },
     );
@@ -124,10 +120,10 @@ class ProductDataSource extends DataTableSource {
       onDoubleTap: hasRowTaps ? () => _showSnackbar(context, 'Double Tapped on row ${product.name}') : null,
       onLongPress: hasRowTaps ? () => _showSnackbar(context, 'Long pressed on row ${product.name}') : null,
       onSecondaryTap: hasRowTaps ? () => _showSnackbar(context, 'Right clicked on row ${product.name}') : null,
-      onSecondaryTapDown: hasRowTaps ? (d) => _showSnackbar(context, 'Right button down on row ${product.name}') : null,
+      onSecondaryTapDown: hasRowTaps ? (TapDownDetails d) => _showSnackbar(context, 'Right button down on row ${product.name}') : null,
       specificRowHeight: hasRowHeightOverrides && product.quantity >= 25 ? 100 : null,
       cells: <DataCell>[
-        DataCell(Text(formatDate(product.date, <String>[yyyy, "-", MM, "-", dd]))),
+        DataCell(Text(formatDate(product.date, <String>[yyyy, " ", MM, " ", dd]))),
         DataCell(Text(product.reference), onTap: () => _showSnackbar(context, 'Tapped on a cell with "${product.reference}"', Colors.red)),
         DataCell(Text(product.name)),
         DataCell(Text(product.category)),

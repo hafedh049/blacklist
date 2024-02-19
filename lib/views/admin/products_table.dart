@@ -1,3 +1,4 @@
+import 'package:blacklist/utils/shared.dart';
 import 'package:flutter/material.dart';
 
 import '../../utils/helpers/data_sources.dart';
@@ -12,7 +13,7 @@ class ProductTable extends StatefulWidget {
 class ProductTableState extends State<ProductTable> with RestorationMixin {
   final RestorableProductSelections _productSelections = RestorableProductSelections();
   final RestorableInt _rowIndex = RestorableInt(0);
-  final RestorableInt _rowsPerPage = RestorableInt(PaginatedDataTable.defaultRowsPerPage);
+  final RestorableInt _rowsPerPage = RestorableInt(PaginatedDataTable.defaultRowsPerPage + 10);
   final RestorableBool _sortAscending = RestorableBool(true);
   final RestorableIntN _sortColumnIndex = RestorableIntN(null);
   late ProductDataSource _productsDataSource;
@@ -31,7 +32,7 @@ class ProductTableState extends State<ProductTable> with RestorationMixin {
     registerForRestoration(_sortColumnIndex, 'sort_column_index');
 
     if (!initialized) {
-      _productsDataSource = ProductDataSource(context);
+      _productsDataSource = ProductDataSource(context, true, true, true, true);
       initialized = true;
     }
     switch (_sortColumnIndex.value) {
@@ -108,6 +109,8 @@ class ProductTableState extends State<ProductTable> with RestorationMixin {
         padding: const EdgeInsets.all(16),
         children: <Widget>[
           PaginatedDataTable(
+            availableRowsPerPage: const <int>[20, 30],
+            arrowHeadColor: purpleColor,
             rowsPerPage: _rowsPerPage.value,
             onRowsPerPageChanged: (int? value) {
               setState(
