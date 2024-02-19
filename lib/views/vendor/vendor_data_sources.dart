@@ -80,6 +80,20 @@ class ProductDataSource extends DataTableSource {
     notifyListeners();
   }
 
+  void updateSelectedProducts(RestorableProductSelections selectedRows) {
+    _selectedCount = 0;
+    for (int index = 0; index < products.length; index += 1) {
+      Product product = products[index];
+      if (selectedRows.isSelected(index)) {
+        product.selected = true;
+        _selectedCount += 1;
+      } else {
+        product.selected = false;
+      }
+    }
+    notifyListeners();
+  }
+
   @override
   DataRow2 getRow(int index, [Color? color]) {
     assert(index >= 0);

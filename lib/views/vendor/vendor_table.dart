@@ -55,6 +55,8 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
       _initialized = true;
     }
     _map[_sortColumnIndex.value];
+    _productsDataSource.updateSelectedProducts(_productSelections);
+    _productsDataSource.addListener(_updateSelectedproductRowListener);
   }
 
   @override
@@ -162,7 +164,6 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
                         onRowsPerPageChanged: (int? value) => _(() => _rowsPerPage.value = value!),
                         initialFirstRowIndex: _rowIndex.value,
                         onPageChanged: (int rowIndex) => _(() => _rowIndex.value = rowIndex),
-                        showCheckboxColumn: false,
                         sortColumnIndex: _sortColumnIndex.value,
                         sortAscending: _sortAscending.value,
                         columns: <DataColumn>[for (final String column in _columns) DataColumn(label: Text(column), onSort: (int columnIndex, bool ascending) => _map[columnIndex])],
