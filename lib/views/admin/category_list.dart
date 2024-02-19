@@ -258,7 +258,7 @@ class _CategoryListState extends State<CategoryList> {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5),
                             color: darkColor,
-                            image: DecorationImage(image: AssetImage(item["background_image"]), fit: BoxFit.cover),
+                            //   image: DecorationImage(image: AssetImage(item["background_image"]), fit: BoxFit.cover),
                           ),
                           child: Stack(
                             alignment: Alignment.topRight,
