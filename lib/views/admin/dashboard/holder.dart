@@ -32,7 +32,7 @@ class _HolderState extends State<Holder> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    _animationController = AnimationController(vsync: this, duration: 200.ms);
+    _animationController = AnimationController(vsync: this, duration: 1000.ms);
     super.initState();
   }
 
@@ -52,7 +52,7 @@ class _HolderState extends State<Holder> with TickerProviderStateMixin {
         controller: _zoomController,
         style: DrawerStyle.defaultStyle,
         menuScreen: Container(
-          color: purpleColor,
+          color: purpleColor.withOpacity(.3),
           child: Padding(
             padding: const EdgeInsets.all(24),
             child: StatefulBuilder(
@@ -78,7 +78,7 @@ class _HolderState extends State<Holder> with TickerProviderStateMixin {
                         child: Container(
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: _selectedScreen == item["title"] ? darkColor : transparentColor),
-                          child: Text(item["title"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.bold, color: greyColor)),
+                          child: Text(item["title"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.bold, color: whiteColor)),
                         ),
                       ),
                   ],
@@ -96,21 +96,25 @@ class _HolderState extends State<Holder> with TickerProviderStateMixin {
               itemBuilder: (BuildContext context, int index) => _screens[index]["screen"],
               itemCount: _screens.length,
             ),
-            IconButton(
-              onPressed: () async {
-                if (_zoomController.isOpen!()) {
-                  _animationController.reverse();
-                } else {
-                  _animationController.forward();
-                }
-                _zoomController.open!();
+            StatefulBuilder(
+              builder: (BuildContext context, void Function(void Function()) _) {
+                return IconButton(
+                  onPressed: () async {
+                    if (_zoomController.isOpen!()) {
+                      _animationController.reverse();
+                    } else {
+                      _animationController.forward();
+                    }
+                    _zoomController.open!();
+                  },
+                  icon: AnimatedIcon(
+                    icon: _zoomController.isOpen!() ? AnimatedIcons.close_menu : AnimatedIcons.menu_close,
+                    color: purpleColor,
+                    size: 25,
+                    progress: _animationController,
+                  ),
+                );
               },
-              icon: AnimatedIcon(
-                icon: _zoomController.isOpen!() ? AnimatedIcons.close_menu : AnimatedIcons.menu_close,
-                color: purpleColor,
-                size: 25,
-                progress: _animationController,
-              ),
             ),
           ],
         ),

@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:blacklist/utils/shared.dart';
-import 'package:blacklist/views/admin/category_list.dart';
+import 'package:blacklist/views/admin/dashboard/holder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_animated_button/flutter_animated_button.dart';
@@ -55,7 +55,7 @@ class _StoresListState extends State<StoresList> {
                         hoverColor: transparentColor,
                         highlightColor: transparentColor,
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const CategoryList()));
+                          Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const Holder()));
                         },
                         child: Container(
                           width: 300,

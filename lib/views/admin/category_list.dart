@@ -39,6 +39,7 @@ class _CategoryListState extends State<CategoryList> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
+              const SizedBox(height: 30),
               Row(
                 children: <Widget>[
                   Text("CATEGORIES LIST", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),

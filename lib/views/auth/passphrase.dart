@@ -5,7 +5,6 @@ import 'dart:convert';
 import 'package:animated_loading_border/animated_loading_border.dart';
 import 'package:blacklist/utils/callbacks.dart';
 import 'package:blacklist/utils/shared.dart';
-import 'package:blacklist/views/admin/dashboard/holder.dart';
 import 'package:blacklist/views/admin/stores.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
@@ -52,7 +51,7 @@ class _PassphraseState extends State<Passphrase> {
         key.currentState!.setState(() => _adminButtonState = false);
         if (sha512.convert(utf8.encode(_adminPassphraseController.text)) == sha512.convert(utf8.encode(_adminPassphrase))) {
           showToast("Welcome ADMIN", greenColor);
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => const Holder()));
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => const StoresList()));
         } else {
           showToast("Wrong Credentials", redColor);
           _adminPassphraseFocus.requestFocus();
@@ -67,7 +66,7 @@ class _PassphraseState extends State<Passphrase> {
         key.currentState!.setState(() => _vendorButtonState = false);
         if (sha512.convert(utf8.encode(_vendorPassphraseController.text)) == sha512.convert(utf8.encode(_vendorPassphrase))) {
           showToast("Welcome VENDOR", greenColor);
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => const StoresList()));
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => Container()));
         } else {
           showToast("Wrong Credentials", redColor);
           _vendorPassphraseFocus.requestFocus();

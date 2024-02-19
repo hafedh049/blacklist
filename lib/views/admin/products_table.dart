@@ -138,21 +138,9 @@ class ProductTableState extends State<ProductTable> with RestorationMixin {
                         availableRowsPerPage: const <int>[20, 30],
                         arrowHeadColor: purpleColor,
                         rowsPerPage: _rowsPerPage.value,
-                        onRowsPerPageChanged: (int? value) {
-                          _(
-                            () {
-                              _rowsPerPage.value = value!;
-                            },
-                          );
-                        },
+                        onRowsPerPageChanged: (int? value) => _(() => _rowsPerPage.value = value!),
                         initialFirstRowIndex: _rowIndex.value,
-                        onPageChanged: (int rowIndex) {
-                          _(
-                            () {
-                              _rowIndex.value = rowIndex;
-                            },
-                          );
-                        },
+                        onPageChanged: (int rowIndex) => _(() => _rowIndex.value = rowIndex),
                         sortColumnIndex: _sortColumnIndex.value,
                         sortAscending: _sortAscending.value,
                         onSelectAll: _productsDataSource.selectAll,
