@@ -32,13 +32,14 @@ class _HolderState extends State<Holder> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    _animationController = AnimationController(vsync: this);
+    _animationController = AnimationController(vsync: this, duration: 200.ms);
     super.initState();
   }
 
   @override
   void dispose() {
     _screensController.dispose();
+    _animationController.dispose();
     super.dispose();
   }
 
@@ -67,6 +68,11 @@ class _HolderState extends State<Holder> with TickerProviderStateMixin {
                             _screensController.jumpToPage(_screens.indexOf(item));
                           }
                           await Future.delayed(100.ms);
+                          if (_zoomController.isOpen!()) {
+                            _animationController.reverse();
+                          } else {
+                            _animationController.forward();
+                          }
                           await _zoomController.toggle!();
                         },
                         child: Container(
@@ -84,22 +90,27 @@ class _HolderState extends State<Holder> with TickerProviderStateMixin {
         mainScreen: Stack(
           alignment: Alignment.topLeft,
           children: <Widget>[
-            StatefulBuilder(
-              builder: (BuildContext context, void Function(void Function()) _) {
-                return IconButton(
-                  onPressed: () async {
-                    _(() {});
-                    _zoomController.toggle!();
-                  },
-                  icon: AnimatedIcon(icon: _zoomController.isOpen!() ? AnimatedIcons.close_menu : AnimatedIcons.menu_close, progress: _animationController),
-                );
-              },
-            ),
             PageView.builder(
               controller: _screensController,
               physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (BuildContext context, int index) => _screens[index]["screen"],
               itemCount: _screens.length,
+            ),
+            IconButton(
+              onPressed: () async {
+                if (_zoomController.isOpen!()) {
+                  _animationController.reverse();
+                } else {
+                  _animationController.forward();
+                }
+                _zoomController.open!();
+              },
+              icon: AnimatedIcon(
+                icon: _zoomController.isOpen!() ? AnimatedIcons.close_menu : AnimatedIcons.menu_close,
+                color: purpleColor,
+                size: 25,
+                progress: _animationController,
+              ),
             ),
           ],
         ),
