@@ -13,7 +13,7 @@ class Holder extends StatefulWidget {
   State<Holder> createState() => _HolderState();
 }
 
-class _HolderState extends State<Holder> {
+class _HolderState extends State<Holder> with TickerProviderStateMixin {
   final List<Map<String, dynamic>> _screens = const <Map<String, dynamic>>[
     <String, dynamic>{
       "screen": Dashboard(),
@@ -28,6 +28,13 @@ class _HolderState extends State<Holder> {
 
   final ZoomDrawerController _zoomController = ZoomDrawerController();
   final PageController _screensController = PageController();
+  late final AnimationController _animationController;
+
+  @override
+  void initState() {
+    _animationController = AnimationController(vsync: this);
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -74,10 +81,27 @@ class _HolderState extends State<Holder> {
             ),
           ),
         ),
-        mainScreen: PageView.builder(
-          controller: _screensController,
-          physics: const NeverScrollableScrollPhysics(),
-          itemBuilder: (BuildContext context, int index) => _screens[index]["screen"],
+        mainScreen: Stack(
+          alignment: Alignment.topLeft,
+          children: <Widget>[
+            StatefulBuilder(
+              builder: (BuildContext context, void Function(void Function()) _) {
+                return IconButton(
+                  onPressed: () async {
+                    _(() {});
+                    _zoomController.toggle!();
+                  },
+                  icon: AnimatedIcon(icon: _zoomController.isOpen!() ? AnimatedIcons.close_menu : AnimatedIcons.menu_close, progress: _animationController),
+                );
+              },
+            ),
+            PageView.builder(
+              controller: _screensController,
+              physics: const NeverScrollableScrollPhysics(),
+              itemBuilder: (BuildContext context, int index) => _screens[index]["screen"],
+              itemCount: _screens.length,
+            ),
+          ],
         ),
         borderRadius: 24.0,
         showShadow: true,
