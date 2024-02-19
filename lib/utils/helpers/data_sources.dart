@@ -61,7 +61,7 @@ class ProductDataSource extends DataTableSource {
     products = <Product>[];
   }
 
-  ProductDataSource(this.context, this.products, [sortedByNames = false, this.hasRowTaps = false, this.hasRowHeightOverrides = false, this.hasZebraStripes = false]) {
+  ProductDataSource(this.context, this.products, [sortedByNames = true, this.hasRowTaps = true, this.hasRowHeightOverrides = true, this.hasZebraStripes = true]) {
     if (sortedByNames) {
       sort((Product p) => p.name, true);
     }
@@ -69,9 +69,9 @@ class ProductDataSource extends DataTableSource {
 
   final BuildContext context;
   late List<Product> products;
-  bool hasRowTaps = false;
-  bool hasRowHeightOverrides = false;
-  bool hasZebraStripes = false;
+  bool hasRowTaps = true;
+  bool hasRowHeightOverrides = true;
+  bool hasZebraStripes = true;
 
   void sort<T>(Comparable<T> Function(Product p) getField, bool ascending) {
     products.sort(
@@ -116,14 +116,9 @@ class ProductDataSource extends DataTableSource {
         }
       },
       onTap: hasRowTaps ? () => _showSnackbar(context, 'Tapped on row ${product.name}') : null,
-      onDoubleTap: hasRowTaps ? () => _showSnackbar(context, 'Double Tapped on row ${product.name}') : null,
-      onLongPress: hasRowTaps ? () => _showSnackbar(context, 'Long pressed on row ${product.name}') : null,
-      onSecondaryTap: hasRowTaps ? () => _showSnackbar(context, 'Right clicked on row ${product.name}') : null,
-      onSecondaryTapDown: hasRowTaps ? (TapDownDetails d) => _showSnackbar(context, 'Right button down on row ${product.name}') : null,
-      specificRowHeight: hasRowHeightOverrides && product.quantity >= 25 ? 100 : null,
       cells: <DataCell>[
         DataCell(Text(formatDate(product.date, <String>[yyyy, " ", MM, " ", dd]))),
-        DataCell(Text(product.reference), onTap: () => _showSnackbar(context, 'Tapped on a cell with "${product.reference}"', Colors.red)),
+        DataCell(Text(product.reference)),
         DataCell(Text(product.name)),
         DataCell(Text(product.category)),
         DataCell(Text(product.realPrice.toStringAsFixed(2))),

@@ -19,7 +19,7 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
   final RestorableIntN _sortColumnIndex = RestorableIntN(null);
   late ProductDataSource _productsDataSource;
   bool _initialized = false;
-  final List<String> _columns = const <String>["Date", "Reference", "Name", "Category", "Real Price", "New Price", "Quantity", "Stock Alert", "Actions"];
+  final List<String> _columns = const <String>["Date", "Reference", "Name", "Category", "New Price", "Quantity"];
   final GlobalKey<State> _pagerKey = GlobalKey<State>();
   final GlobalKey<State> _searchKey = GlobalKey<State>();
   final TextEditingController _searchController = TextEditingController();
@@ -55,8 +55,6 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
       _initialized = true;
     }
     _map[_sortColumnIndex.value];
-    _productsDataSource.updateSelectedProducts(_productSelections);
-    _productsDataSource.addListener(_updateSelectedproductRowListener);
   }
 
   @override
@@ -164,9 +162,9 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
                         onRowsPerPageChanged: (int? value) => _(() => _rowsPerPage.value = value!),
                         initialFirstRowIndex: _rowIndex.value,
                         onPageChanged: (int rowIndex) => _(() => _rowIndex.value = rowIndex),
+                        showCheckboxColumn: false,
                         sortColumnIndex: _sortColumnIndex.value,
                         sortAscending: _sortAscending.value,
-                        onSelectAll: _productsDataSource.selectAll,
                         columns: <DataColumn>[for (final String column in _columns) DataColumn(label: Text(column), onSort: (int columnIndex, bool ascending) => _map[columnIndex])],
                         source: _productsDataSource,
                       );

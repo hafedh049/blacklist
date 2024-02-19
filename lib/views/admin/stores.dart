@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:blacklist/utils/shared.dart';
 import 'package:blacklist/views/admin/dashboard/holder.dart';
+import 'package:blacklist/views/auth/passphrase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_animated_button/flutter_animated_button.dart';
@@ -30,6 +31,23 @@ class _StoresListState extends State<StoresList> {
                 children: <Widget>[
                   Text("Stores", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
                   const Spacer(),
+                  AnimatedButton(
+                    width: 100,
+                    height: 35,
+                    text: 'Sign-Out',
+                    selectedTextColor: darkColor,
+                    animatedOn: AnimatedOn.onHover,
+                    animationDuration: 500.ms,
+                    isReverse: true,
+                    selectedBackgroundColor: redColor,
+                    backgroundColor: purpleColor,
+                    transitionType: TransitionType.TOP_TO_BOTTOM,
+                    textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                    onPress: () {
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => const Passphrase()));
+                    },
+                  ),
+                  const SizedBox(width: 20),
                   RichText(
                     text: TextSpan(
                       children: <TextSpan>[

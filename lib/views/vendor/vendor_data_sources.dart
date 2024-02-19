@@ -1,8 +1,6 @@
-import 'package:blacklist/utils/shared.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:icons_plus/icons_plus.dart';
 import 'package:data_table_2/data_table_2.dart';
 
 class RestorableProductSelections extends RestorableProperty<Set<int>> {
@@ -59,7 +57,7 @@ class ProductDataSource extends DataTableSource {
     products = <Product>[];
   }
 
-  ProductDataSource(this.context, this.products, [sortedByNames = false, this.hasRowTaps = false, this.hasRowHeightOverrides = false, this.hasZebraStripes = false]) {
+  ProductDataSource(this.context, this.products, [sortedByNames = true, this.hasRowTaps = true, this.hasRowHeightOverrides = true, this.hasZebraStripes = true]) {
     if (sortedByNames) {
       sort((Product p) => p.name, true);
     }
@@ -67,9 +65,9 @@ class ProductDataSource extends DataTableSource {
 
   final BuildContext context;
   late List<Product> products;
-  bool hasRowTaps = false;
-  bool hasRowHeightOverrides = false;
-  bool hasZebraStripes = false;
+  bool hasRowTaps = true;
+  bool hasRowHeightOverrides = true;
+  bool hasZebraStripes = true;
 
   void sort<T>(Comparable<T> Function(Product p) getField, bool ascending) {
     products.sort(
@@ -79,20 +77,6 @@ class ProductDataSource extends DataTableSource {
         return ascending ? Comparable.compare(aValue, bValue) : Comparable.compare(bValue, aValue);
       },
     );
-    notifyListeners();
-  }
-
-  void updateSelectedProducts(RestorableProductSelections selectedRows) {
-    _selectedCount = 0;
-    for (int index = 0; index < products.length; index += 1) {
-      Product product = products[index];
-      if (selectedRows.isSelected(index)) {
-        product.selected = true;
-        _selectedCount += 1;
-      } else {
-        product.selected = false;
-      }
-    }
     notifyListeners();
   }
 
@@ -114,33 +98,13 @@ class ProductDataSource extends DataTableSource {
         }
       },
       onTap: hasRowTaps ? () => _showSnackbar(context, 'Tapped on row ${product.name}') : null,
-      onDoubleTap: hasRowTaps ? () => _showSnackbar(context, 'Double Tapped on row ${product.name}') : null,
-      onLongPress: hasRowTaps ? () => _showSnackbar(context, 'Long pressed on row ${product.name}') : null,
-      onSecondaryTap: hasRowTaps ? () => _showSnackbar(context, 'Right clicked on row ${product.name}') : null,
-      onSecondaryTapDown: hasRowTaps ? (TapDownDetails d) => _showSnackbar(context, 'Right button down on row ${product.name}') : null,
-      specificRowHeight: hasRowHeightOverrides && product.quantity >= 25 ? 100 : null,
       cells: <DataCell>[
         DataCell(Text(formatDate(product.date, <String>[yyyy, " ", MM, " ", dd]))),
-        DataCell(Text(product.reference), onTap: () => _showSnackbar(context, 'Tapped on a cell with "${product.reference}"', Colors.red)),
+        DataCell(Text(product.reference)),
         DataCell(Text(product.name)),
         DataCell(Text(product.category)),
         DataCell(Text(product.newPrice.toStringAsFixed(2))),
         DataCell(Text(product.quantity.toString())),
-        DataCell(
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(FontAwesome.pen_solid, color: purpleColor, size: 15),
-              ),
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(FontAwesome.x_solid, color: redColor, size: 15),
-              ),
-            ],
-          ),
-        ),
       ],
     );
   }

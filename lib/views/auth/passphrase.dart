@@ -67,7 +67,7 @@ class _PassphraseState extends State<Passphrase> {
         key.currentState!.setState(() => _vendorButtonState = false);
         if (sha512.convert(utf8.encode(_vendorPassphraseController.text)) == sha512.convert(utf8.encode(_vendorPassphrase))) {
           showToast("Welcome VENDOR", greenColor);
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) =>CONST  VendorTable()));
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => const VendorTable()));
         } else {
           showToast("Wrong Credentials", redColor);
           _vendorPassphraseFocus.requestFocus();
