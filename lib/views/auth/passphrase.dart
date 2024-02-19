@@ -5,7 +5,7 @@ import 'dart:convert';
 import 'package:animated_loading_border/animated_loading_border.dart';
 import 'package:blacklist/utils/callbacks.dart';
 import 'package:blacklist/utils/shared.dart';
-import 'package:blacklist/views/admin/dashboard/dashboard.dart';
+import 'package:blacklist/views/admin/dashboard/holder.dart';
 import 'package:blacklist/views/admin/stores.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
@@ -52,7 +52,7 @@ class _PassphraseState extends State<Passphrase> {
         key.currentState!.setState(() => _adminButtonState = false);
         if (sha512.convert(utf8.encode(_adminPassphraseController.text)) == sha512.convert(utf8.encode(_adminPassphrase))) {
           showToast("Welcome ADMIN", greenColor);
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => const Dashboard()));
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => const Holder()));
         } else {
           showToast("Wrong Credentials", redColor);
           _adminPassphraseFocus.requestFocus();

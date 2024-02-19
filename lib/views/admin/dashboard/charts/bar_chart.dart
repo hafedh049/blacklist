@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 
-import '../../../utils/shared.dart';
+import '../../../../utils/shared.dart';
 
 class BarChart extends StatefulWidget {
   const BarChart({super.key});
