@@ -61,7 +61,7 @@ class ProductDataSource extends DataTableSource {
     products = <Product>[];
   }
 
-  ProductDataSource(this.context, this.products, [sortedByNames = false, this.hasRowTaps = false, this.hasRowHeightOverrides = false, this.hasZebraStripes = false, this.regex = ""]) {
+  ProductDataSource(this.context, this.products, [sortedByNames = false, this.hasRowTaps = false, this.hasRowHeightOverrides = false, this.hasZebraStripes = false]) {
     if (sortedByNames) {
       sort((Product p) => p.name, true);
     }
@@ -72,7 +72,6 @@ class ProductDataSource extends DataTableSource {
   bool hasRowTaps = false;
   bool hasRowHeightOverrides = false;
   bool hasZebraStripes = false;
-  String regex = "";
 
   void sort<T>(Comparable<T> Function(Product p) getField, bool ascending) {
     products.sort(
@@ -173,8 +172,6 @@ class ProductDataSource extends DataTableSource {
 }
 
 int _selectedCount = 0;
-
-List<Product> _products = <Product>[for (int index = 0; index < 100; index++) Product("P${index + 1}", "C${index + 1}", DateTime.now(), "Ref${index + 1}", 100, 150, 200, 20, true)];
 
 _showSnackbar(BuildContext context, String text, [Color? color]) {
   ScaffoldMessenger.of(context).showSnackBar(

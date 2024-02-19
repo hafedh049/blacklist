@@ -24,6 +24,7 @@ class ProductTableState extends State<ProductTable> with RestorationMixin {
   final GlobalKey<State> _pagerKey = GlobalKey<State>();
   final GlobalKey<State> _searchKey = GlobalKey<State>();
   final TextEditingController _searchController = TextEditingController();
+  final List<Product> _products = <Product>[for (int index = 0; index < 1000; index++) Product("P${index + 1}", "C${index + 1}", DateTime.now(), "Ref${index + 1}", 100, 150, 200, 20, true)];
 
   @override
   String get restorationId => 'paginated_product_table';
@@ -53,7 +54,7 @@ class ProductTableState extends State<ProductTable> with RestorationMixin {
     registerForRestoration(_sortColumnIndex, 'sort_column_index');
 
     if (!_initialized) {
-      _productsDataSource = ProductDataSource(context, true, true, true, true);
+      _productsDataSource = ProductDataSource(context, _products, true, true, true, true);
       _initialized = true;
     }
     _map[_sortColumnIndex.value];
@@ -65,7 +66,7 @@ class ProductTableState extends State<ProductTable> with RestorationMixin {
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (!_initialized) {
-      _productsDataSource = ProductDataSource(context);
+      _productsDataSource = ProductDataSource(context, _products);
       _initialized = true;
     }
     _productsDataSource.addListener(_updateSelectedproductRowListener);
@@ -125,7 +126,16 @@ class ProductTableState extends State<ProductTable> with RestorationMixin {
                 return TextField(
                   controller: _searchController,
                   onChanged: (String value) {
-                    _pagerKey.currentState!.setState(() {});
+                    _pagerKey.currentState!.setState(
+                      () => _productsDataSource = ProductDataSource(
+                        context,
+                        _products.where((Product element) => element.name.toLowerCase().startsWith(value.toLowerCase())).toList(),
+                        true,
+                        true,
+                        true,
+                        true,
+                      ),
+                    );
                   },
                   style: GoogleFonts.itim(fontSize: 16, color: whiteColor, fontWeight: FontWeight.w500),
                   decoration: InputDecoration(
@@ -136,7 +146,7 @@ class ProductTableState extends State<ProductTable> with RestorationMixin {
                     prefixIcon: const Icon(Icons.search, color: purpleColor, size: 25),
                     suffixIcon: IconButton(
                       onPressed: () => _searchController.clear(),
-                      icon: const Icon(FontAwesome.x_solid, size: 20, color: purpleColor),
+                      icon: const Icon(FontAwesome.x_solid, size: 18, color: purpleColor),
                     ),
                   ),
                 );
