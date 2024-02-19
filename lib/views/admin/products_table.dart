@@ -1,4 +1,3 @@
-import 'package:anim_search_bar/anim_search_bar.dart';
 import 'package:blacklist/utils/shared.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -23,8 +22,7 @@ class ProductTableState extends State<ProductTable> with RestorationMixin {
   bool _initialized = false;
   final List<String> _columns = const <String>["Date", "Reference", "Name", "Category", "Real Price", "New Price", "Quantity", "Stock Alert", "Actions"];
   final GlobalKey<State> _pagerKey = GlobalKey<State>();
-    final GlobalKey<State> _searchKey = GlobalKey<State>();
-s
+  final GlobalKey<State> _searchKey = GlobalKey<State>();
   final TextEditingController _searchController = TextEditingController();
 
   @override
@@ -126,14 +124,19 @@ s
               builder: (BuildContext context, void Function(void Function()) _) {
                 return TextField(
                   controller: _searchController,
+                  onChanged: (String value) {
+                    _pagerKey.currentState!.setState(() {});
+                  },
+                  style: GoogleFonts.itim(fontSize: 16, color: whiteColor, fontWeight: FontWeight.w500),
                   decoration: InputDecoration(
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: purpleColor)),
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    contentPadding: const EdgeInsets.all(16),
                     hintText: "Search Products",
+                    hintStyle: GoogleFonts.itim(fontSize: 16, color: whiteColor, fontWeight: FontWeight.w500),
                     prefixIcon: const Icon(Icons.search, color: purpleColor, size: 25),
                     suffixIcon: IconButton(
                       onPressed: () => _searchController.clear(),
-                      icon: const Icon(FontAwesome.x_solid, size: 25, color: purpleColor),
+                      icon: const Icon(FontAwesome.x_solid, size: 20, color: purpleColor),
                     ),
                   ),
                 );
