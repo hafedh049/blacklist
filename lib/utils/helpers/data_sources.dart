@@ -61,8 +61,7 @@ class ProductDataSource extends DataTableSource {
     products = <Product>[];
   }
 
-  ProductDataSource(this.context, [sortedByNames = false, this.hasRowTaps = false, this.hasRowHeightOverrides = false, this.hasZebraStripes = false]) {
-    products = _products;
+  ProductDataSource(this.context, this.products, [sortedByNames = false, this.hasRowTaps = false, this.hasRowHeightOverrides = false, this.hasZebraStripes = false, this.regex = ""]) {
     if (sortedByNames) {
       sort((Product p) => p.name, true);
     }
@@ -73,6 +72,7 @@ class ProductDataSource extends DataTableSource {
   bool hasRowTaps = false;
   bool hasRowHeightOverrides = false;
   bool hasZebraStripes = false;
+  String regex = "";
 
   void sort<T>(Comparable<T> Function(Product p) getField, bool ascending) {
     products.sort(
