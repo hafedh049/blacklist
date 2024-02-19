@@ -1,6 +1,5 @@
 import 'package:blacklist/utils/shared.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../utils/helpers/data_sources.dart';
@@ -25,6 +24,22 @@ class ProductTableState extends State<ProductTable> with RestorationMixin {
 
   @override
   String get restorationId => 'paginated_product_table';
+  late final Map<int, void Function()> _map;
+
+  @override
+  void initState() {
+    _map = <int, void Function()>{
+      0: () => _productsDataSource.sort<DateTime>((Product p) => p.date, _sortAscending.value),
+      1: () => _productsDataSource.sort<String>((Product p) => p.reference, _sortAscending.value),
+      2: () => _productsDataSource.sort<String>((Product p) => p.name, _sortAscending.value),
+      3: () => _productsDataSource.sort<String>((Product p) => p.category, _sortAscending.value),
+      4: () => _productsDataSource.sort<num>((Product p) => p.realPrice, _sortAscending.value),
+      5: () => _productsDataSource.sort<num>((Product p) => p.newPrice, _sortAscending.value),
+      6: () => _productsDataSource.sort<num>((Product p) => p.quantity, _sortAscending.value),
+      7: () => _productsDataSource.sort<num>((Product p) => p.stockAlert, _sortAscending.value),
+    };
+    super.initState();
+  }
 
   @override
   void restoreState(RestorationBucket? oldBucket, bool initialRestore) {
@@ -38,34 +53,7 @@ class ProductTableState extends State<ProductTable> with RestorationMixin {
       _productsDataSource = ProductDataSource(context, true, true, true, true);
       _initialized = true;
     }
-    switch (_sortColumnIndex.value) {
-      case 0:
-        _productsDataSource.sort<DateTime>((Product p) => p.date, _sortAscending.value);
-        break;
-      case 1:
-        _productsDataSource.sort<String>((Product p) => p.reference, _sortAscending.value);
-        break;
-      case 2:
-        _productsDataSource.sort<String>((Product p) => p.name, _sortAscending.value);
-        break;
-      case 3:
-        _productsDataSource.sort<String>((Product p) => p.category, _sortAscending.value);
-        break;
-      case 4:
-        _productsDataSource.sort<num>((Product p) => p.realPrice, _sortAscending.value);
-        break;
-      case 5:
-        _productsDataSource.sort<num>((Product p) => p.newPrice, _sortAscending.value);
-        break;
-      case 6:
-        _productsDataSource.sort<num>((Product p) => p.quantity, _sortAscending.value);
-        break;
-      case 7:
-        _productsDataSource.sort<num>((Product p) => p.stockAlert, _sortAscending.value);
-        break;
-      default:
-        break;
-    }
+    _map[_sortColumnIndex.value];
     _productsDataSource.updateSelectedProducts(_productSelections);
     _productsDataSource.addListener(_updateSelectedproductRowListener);
   }
@@ -129,7 +117,7 @@ class ProductTableState extends State<ProductTable> with RestorationMixin {
             Container(width: MediaQuery.sizeOf(context).width, height: .3, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),
             Expanded(
               child: ListView(
-                restorationId: 'paginated_data_table_list_view',
+                restorationId: restorationId,
                 children: <Widget>[
                   StatefulBuilder(
                     key: _pager,
@@ -144,13 +132,7 @@ class ProductTableState extends State<ProductTable> with RestorationMixin {
                         sortColumnIndex: _sortColumnIndex.value,
                         sortAscending: _sortAscending.value,
                         onSelectAll: _productsDataSource.selectAll,
-                        columns: <DataColumn>[
-                          for (final String column in _columns)
-                            DataColumn(
-                              label: Text(column),
-                              onSort: (int columnIndex, bool ascending) => sort<String>((Product p) => p.name, columnIndex, ascending),
-                            ),
-                        ],
+                        columns: <DataColumn>[for (final String column in _columns) DataColumn(label: Text(column), onSort: (int columnIndex, bool ascending) => _map[columnIndex])],
                         source: _productsDataSource,
                       );
                     },
