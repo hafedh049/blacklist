@@ -115,6 +115,7 @@ class ProductTableState extends State<ProductTable> with RestorationMixin {
               ],
             ),
             Container(width: MediaQuery.sizeOf(context).width, height: .3, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),
+            Container(width: MediaQuery.sizeOf(context).width, height: .3, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),
             Expanded(
               child: ListView(
                 restorationId: restorationId,
