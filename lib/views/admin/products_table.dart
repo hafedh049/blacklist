@@ -1,5 +1,6 @@
 import 'package:blacklist/utils/shared.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../utils/helpers/data_sources.dart';
 
@@ -104,40 +105,64 @@ class ProductTableState extends State<ProductTable> with RestorationMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(
-        restorationId: 'paginated_data_table_list_view',
-        padding: const EdgeInsets.all(16),
+      body: Column(
         children: <Widget>[
-          PaginatedDataTable(
-            availableRowsPerPage: const <int>[20, 30],
-            arrowHeadColor: purpleColor,
-            rowsPerPage: _rowsPerPage.value,
-            onRowsPerPageChanged: (int? value) {
-              setState(
-                () {
-                  _rowsPerPage.value = value!;
-                },
-              );
-            },
-            initialFirstRowIndex: _rowIndex.value,
-            onPageChanged: (int rowIndex) {
-              setState(
-                () {
-                  _rowIndex.value = rowIndex;
-                },
-              );
-            },
-            sortColumnIndex: _sortColumnIndex.value,
-            sortAscending: _sortAscending.value,
-            onSelectAll: _productsDataSource.selectAll,
-            columns: <DataColumn>[
-              for (final String column in _columns)
-                DataColumn(
-                  label: Text(column),
-                  onSort: (int columnIndex, bool ascending) => sort<String>((Product p) => p.name, columnIndex, ascending),
+          Row(
+            children: <Widget>[
+              Text("Products", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
+              const Spacer(),
+              RichText(
+                text: TextSpan(
+                  children: <TextSpan>[
+                    TextSpan(text: "Products", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
+                    TextSpan(text: " / List Products", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
+                  ],
                 ),
+              ),
             ],
-            source: _productsDataSource,
+          ),
+          Container(width: MediaQuery.sizeOf(context).width, height: .3, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), color: darkColor),
+              padding: const EdgeInsets.all(16),
+              child: ListView(
+                restorationId: 'paginated_data_table_list_view',
+                children: <Widget>[
+                  PaginatedDataTable(
+                    availableRowsPerPage: const <int>[20, 30],
+                    arrowHeadColor: purpleColor,
+                    rowsPerPage: _rowsPerPage.value,
+                    onRowsPerPageChanged: (int? value) {
+                      setState(
+                        () {
+                          _rowsPerPage.value = value!;
+                        },
+                      );
+                    },
+                    initialFirstRowIndex: _rowIndex.value,
+                    onPageChanged: (int rowIndex) {
+                      setState(
+                        () {
+                          _rowIndex.value = rowIndex;
+                        },
+                      );
+                    },
+                    sortColumnIndex: _sortColumnIndex.value,
+                    sortAscending: _sortAscending.value,
+                    onSelectAll: _productsDataSource.selectAll,
+                    columns: <DataColumn>[
+                      for (final String column in _columns)
+                        DataColumn(
+                          label: Text(column),
+                          onSort: (int columnIndex, bool ascending) => sort<String>((Product p) => p.name, columnIndex, ascending),
+                        ),
+                    ],
+                    source: _productsDataSource,
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ),
