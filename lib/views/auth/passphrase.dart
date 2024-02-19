@@ -6,6 +6,7 @@ import 'package:animated_loading_border/animated_loading_border.dart';
 import 'package:blacklist/utils/callbacks.dart';
 import 'package:blacklist/utils/shared.dart';
 import 'package:blacklist/views/admin/stores.dart';
+import 'package:blacklist/views/vendor/vendor_table.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -66,7 +67,7 @@ class _PassphraseState extends State<Passphrase> {
         key.currentState!.setState(() => _vendorButtonState = false);
         if (sha512.convert(utf8.encode(_vendorPassphraseController.text)) == sha512.convert(utf8.encode(_vendorPassphrase))) {
           showToast("Welcome VENDOR", greenColor);
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => Container()));
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) =>CONST  VendorTable()));
         } else {
           showToast("Wrong Credentials", redColor);
           _vendorPassphraseFocus.requestFocus();

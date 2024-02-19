@@ -42,17 +42,15 @@ class RestorableProductSelections extends RestorableProperty<Set<int>> {
 }
 
 class Product {
-  Product(this.name, this.category, this.date, this.reference, this.realPrice, this.newPrice, this.quantity, this.stockAlert, this.actions);
+  Product(this.name, this.category, this.date, this.reference, this.newPrice, this.quantity);
 
   final String name;
   final String category;
   final DateTime date;
   final String reference;
-  final double realPrice;
   final double newPrice;
   final int quantity;
-  final int stockAlert;
-  final bool actions;
+
   bool selected = false;
 }
 
@@ -126,10 +124,8 @@ class ProductDataSource extends DataTableSource {
         DataCell(Text(product.reference), onTap: () => _showSnackbar(context, 'Tapped on a cell with "${product.reference}"', Colors.red)),
         DataCell(Text(product.name)),
         DataCell(Text(product.category)),
-        DataCell(Text(product.realPrice.toStringAsFixed(2))),
         DataCell(Text(product.newPrice.toStringAsFixed(2))),
         DataCell(Text(product.quantity.toString())),
-        DataCell(Text(product.stockAlert.toString())),
         DataCell(
           Row(
             mainAxisSize: MainAxisSize.min,

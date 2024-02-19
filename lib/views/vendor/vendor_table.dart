@@ -2,17 +2,16 @@ import 'package:blacklist/utils/shared.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
+import '/views/vendor/vendor_data_sources.dart';
 
-import '../../utils/helpers/data_sources.dart';
-
-class ProductTable extends StatefulWidget {
-  const ProductTable({super.key});
+class VendorTable extends StatefulWidget {
+  const VendorTable({super.key});
 
   @override
-  State<ProductTable> createState() => ProductTableState();
+  State<VendorTable> createState() => VendorTableState();
 }
 
-class ProductTableState extends State<ProductTable> with RestorationMixin {
+class VendorTableState extends State<VendorTable> with RestorationMixin {
   final RestorableProductSelections _productSelections = RestorableProductSelections();
   final RestorableInt _rowIndex = RestorableInt(0);
   final RestorableInt _rowsPerPage = RestorableInt(PaginatedDataTable.defaultRowsPerPage + 10);
@@ -24,7 +23,7 @@ class ProductTableState extends State<ProductTable> with RestorationMixin {
   final GlobalKey<State> _pagerKey = GlobalKey<State>();
   final GlobalKey<State> _searchKey = GlobalKey<State>();
   final TextEditingController _searchController = TextEditingController();
-  final List<Product> _products = <Product>[for (int index = 0; index < 100; index++) Product("P${index + 1}", "C${index + 1}", DateTime.now(), "Ref${index + 1}", 100, 150, 200, 20, true)];
+  final List<Product> _products = <Product>[for (int index = 0; index < 100; index++) Product("P${index + 1}", "C${index + 1}", DateTime.now(), "Ref${index + 1}", 100, 150)];
 
   @override
   String get restorationId => 'paginated_product_table';
@@ -37,10 +36,8 @@ class ProductTableState extends State<ProductTable> with RestorationMixin {
       1: () => _productsDataSource.sort<String>((Product p) => p.reference, _sortAscending.value),
       2: () => _productsDataSource.sort<String>((Product p) => p.name, _sortAscending.value),
       3: () => _productsDataSource.sort<String>((Product p) => p.category, _sortAscending.value),
-      4: () => _productsDataSource.sort<num>((Product p) => p.realPrice, _sortAscending.value),
-      5: () => _productsDataSource.sort<num>((Product p) => p.newPrice, _sortAscending.value),
-      6: () => _productsDataSource.sort<num>((Product p) => p.quantity, _sortAscending.value),
-      7: () => _productsDataSource.sort<num>((Product p) => p.stockAlert, _sortAscending.value),
+      4: () => _productsDataSource.sort<num>((Product p) => p.newPrice, _sortAscending.value),
+      5: () => _productsDataSource.sort<num>((Product p) => p.quantity, _sortAscending.value),
     };
     super.initState();
   }
