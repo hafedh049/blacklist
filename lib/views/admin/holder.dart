@@ -1,5 +1,6 @@
 import 'package:blacklist/utils/shared.dart';
 import 'package:blacklist/views/admin/category_list.dart';
+import 'package:blacklist/views/admin/client.dart';
 import 'package:blacklist/views/admin/dashboard/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -22,6 +23,10 @@ class _HolderState extends State<Holder> with TickerProviderStateMixin {
     <String, dynamic>{
       "screen": CategoryList(),
       "title": "Categories List",
+    },
+    <String, dynamic>{
+      "screen": Client(),
+      "title": "Clients",
     },
   ];
   String _selectedScreen = "Dashboard";

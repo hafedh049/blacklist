@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:blacklist/utils/shared.dart';
-import 'package:blacklist/views/admin/dashboard/holder.dart';
+import 'package:blacklist/views/admin/holder.dart';
 import 'package:blacklist/views/auth/passphrase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
