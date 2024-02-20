@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 class Recepie extends StatefulWidget {
@@ -10,7 +12,11 @@ class Recepie extends StatefulWidget {
 class _RecepieState extends State<Recepie> {
   final List<Map<String, dynamic>> _recepies = List<Map<String, dynamic>>.generate(
     100,
-    (int index) => <String, dynamic>{},
+    (int index) => <String, dynamic>{
+      "username": <String>["User ${index + 1}", "Anonymous"][Random().nextInt(2)],
+      "birth_date": DateTime.fromMillisecondsSinceEpoch(Random().nextInt(4000) * Random().nextInt(4000)),
+      "cin": List<String>.generate(8, (int index) => Random().nextInt(10).toString()).join(),
+    },
   );
   @override
   Widget build(BuildContext context) {
