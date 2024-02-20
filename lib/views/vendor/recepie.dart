@@ -8,7 +8,10 @@ class Recepie extends StatefulWidget {
 }
 
 class _RecepieState extends State<Recepie> {
-  final List<Map<String, dynamic>> _recepies = <Map<String, dynamic>>[];
+  final List<Map<String, dynamic>> _recepies = List<Map<String, dynamic>>.generate(
+    100,
+    (int index) => <String, dynamic>{},
+  );
   @override
   Widget build(BuildContext context) {
     return Scaffold();
