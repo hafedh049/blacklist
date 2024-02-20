@@ -1,30 +1,28 @@
 import 'package:animated_loading_border/animated_loading_border.dart';
 import 'package:blacklist/utils/shared.dart';
-import 'package:blacklist/views/vendor/anonymous_client.dart';
-import 'package:blacklist/views/vendor/recepies.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class CartRecepie extends StatefulWidget {
-  const CartRecepie({super.key});
+class AnonymousClient extends StatefulWidget {
+  const AnonymousClient({super.key});
 
   @override
-  State<CartRecepie> createState() => _CartRecepieState();
+  State<AnonymousClient> createState() => _AnonymousClientState();
 }
 
-class _CartRecepieState extends State<CartRecepie> {
+class _AnonymousClientState extends State<AnonymousClient> {
   late final List<Map<String, dynamic>> _items;
 
   @override
   void initState() {
     _items = <Map<String, dynamic>>[
       <String, dynamic>{
-        "title": "Cart",
-        "callback": () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const AnonymousClient())),
+        "title": "Anonymous",
+        "callback": () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Container())),
       },
       <String, dynamic>{
-        "title": "Recepie",
-        "callback": () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const Recepies())),
+        "title": "Client",
+        "callback": () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Container())),
       },
     ];
     super.initState();
@@ -51,7 +49,7 @@ class _CartRecepieState extends State<CartRecepie> {
                     borderWidth: 4,
                     borderColor: purpleColor,
                     child: Container(
-                      width: 200,
+                      width: 300,
                       height: 150,
                       padding: const EdgeInsets.all(24),
                       decoration: const BoxDecoration(color: darkColor),
