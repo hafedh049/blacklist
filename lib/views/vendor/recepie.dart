@@ -17,9 +17,15 @@ class _RecepieState extends State<Recepie> {
     (int index) => <String, dynamic>{
       "client": <String>["User ${index + 1}", "Anonymous"][Random().nextInt(2)],
       "cin": List<String>.generate(8, (int index) => Random().nextInt(10).toString()).join(),
-      "products": List<String>.generate(
+      "products": List<List<String>>.generate(
         20,
-        (int index) => "${index + 1} ο ${["Vape", "Meat", "Fish", "Steak", "Salami", "Cheese"][Random().nextInt(6)]} / ${["Wrata", "Djej", "Présédent", "Bagri", "Dinde"][Random().nextInt(5)]} ο (${Random().nextInt(50)}) ➤ [${Random().nextInt(1000) * Random().nextDouble()}] DT",
+        (int index) => [
+          "${index + 1}",
+          const <String>["Vape", "Meat", "Fish", "Steak", "Salami", "Cheese"][Random().nextInt(6)],
+          const <String>["Wrata", "Djej", "Présédent", "Bagri", "Dinde"][Random().nextInt(5)],
+          "${Random().nextInt(50)}",
+          "${Random().nextInt(1000) * Random().nextDouble()}]",
+        ],
       ),
     },
   );
@@ -63,6 +69,27 @@ class _RecepieState extends State<Recepie> {
                       ],
                     ),
                     const SizedBox(height: 10),
+                    for (final List<String> product in _recepies[index]["products"])
+                      RichText(
+                        text: TextSpan(
+                          children: <TextSpan>[
+                            TextSpan(text: product[0], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
+                            TextSpan(text: " • ", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
+                            TextSpan(text: product[1], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
+                            TextSpan(text: " / ", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
+                            TextSpan(text: product[2], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
+                            TextSpan(text: " • ", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
+                            TextSpan(text: " ( ", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
+                            TextSpan(text: product[3], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
+                            TextSpan(text: " ) ", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
+                            TextSpan(text: " ➤ ", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
+                            TextSpan(text: " [ ", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
+                            TextSpan(text: product[4], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
+                            TextSpan(text: " ] ", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
+                            TextSpan(text: " DT", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
+                          ],
+                        ),
+                      ),
                   ],
                 ),
               ),
