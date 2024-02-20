@@ -37,6 +37,27 @@ class _RecepiesState extends State<Recepies> {
         padding: const EdgeInsets.all(24),
         child: Column(
           children: <Widget>[
+            Row(
+              children: <Widget>[
+                Text("RECIPIES", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
+                const Spacer(),
+                Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(color: greenColor, borderRadius: BorderRadius.circular(5)),
+                  child: Text("Client", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
+                ),
+                const SizedBox(width: 20),
+                RichText(
+                  text: TextSpan(
+                    children: <TextSpan>[
+                      TextSpan(text: "Vendor", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
+                      TextSpan(text: " / List Recepies", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            Container(width: MediaQuery.sizeOf(context).width, height: .3, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),
             Expanded(
               child: ListView.separated(
                 itemBuilder: (BuildContext context, int index) => Container(
