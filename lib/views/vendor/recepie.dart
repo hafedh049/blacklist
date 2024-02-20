@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:blacklist/utils/shared.dart';
 import 'package:flutter/material.dart';
 
 class Recepie extends StatefulWidget {
@@ -18,12 +19,31 @@ class _RecepieState extends State<Recepie> {
       "cin": List<String>.generate(8, (int index) => Random().nextInt(10).toString()).join(),
       "products": List<String>.generate(
         20,
-        (int index) => "${index + 1} ο ${["Vape", "Meat", "Fish", "Steak", "Salami", "Cheese"][Random().nextInt(6)]} / Product ο (Quantity) ➤ [Price] DT",
+        (int index) => "${index + 1} ο ${["Vape", "Meat", "Fish", "Steak", "Salami", "Cheese"][Random().nextInt(6)]} / ${["Wrata", "Djej", "Présédent", "Bagri", "Dinde"][Random().nextInt(5)]} ο (${Random().nextInt(50)}) ➤ [${Random().nextInt(1000) * Random().nextDouble()}] DT",
       ),
     },
   );
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Scaffold(
+      backgroundColor: scaffoldColor,
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            child: ListView.separated(
+              itemBuilder: (BuildContext context, int index) => Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[],
+                ),
+              ),
+              separatorBuilder: (BuildContext context, int index) => const SizedBox(height: 20),
+              itemCount: _recepies.length,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
