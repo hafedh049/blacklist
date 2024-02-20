@@ -1,5 +1,6 @@
 import 'package:animated_loading_border/animated_loading_border.dart';
 import 'package:blacklist/utils/shared.dart';
+import 'package:blacklist/views/vendor/recepies.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -22,7 +23,7 @@ class _CartRecepieState extends State<CartRecepie> {
       },
       <String, dynamic>{
         "title": "Recepie",
-        "callback": () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Container())),
+        "callback": () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const Recepies())),
       },
     ];
     super.initState();
