@@ -1,7 +1,9 @@
 import 'dart:math';
 
 import 'package:blacklist/utils/shared.dart';
+import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Recepies extends StatefulWidget {
@@ -44,7 +46,10 @@ class _RecepiesState extends State<Recepies> {
                 Container(
                   padding: const EdgeInsets.all(4),
                   decoration: BoxDecoration(color: greenColor, borderRadius: BorderRadius.circular(5)),
-                  child: Text("Client", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
+                  child: Text(
+                    "${formatDate(DateTime.now(), <String>[yyyy, " ", MM.toUpperCase(), " ", dd])} - ${formatDate(DateTime.now().add(1.days), <String>[yyyy, " ", MM.toUpperCase(), " ", dd])}",
+                    style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                  ),
                 ),
                 const SizedBox(width: 20),
                 RichText(
