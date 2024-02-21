@@ -90,7 +90,10 @@ class _ClientState extends State<Client> {
                                 ),
                                 avatarChild: (BuildContext context, Map<String, dynamic> value) => PreferredSize(
                                   preferredSize: const Size.fromRadius(15),
-                                  child: Text((_products[tuple.key]!.indexOf(value) + 1).toString(), style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
+                                  child: CircleAvatar(
+                                    backgroundColor: purpleColor,
+                                    child: Text((_products[tuple.key]!.indexOf(value) + 1).toString(), style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
+                                  ),
                                 ),
                                 contentChild: (BuildContext context, Map<String, dynamic> value) => Container(
                                   padding: const EdgeInsets.all(16),
