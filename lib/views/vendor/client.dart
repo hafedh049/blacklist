@@ -20,6 +20,11 @@ class _ClientState extends State<Client> {
   final GlobalKey<State> _qrKey = GlobalKey<State>();
   String _data = List<String>.generate(8, (int index) => Random().nextInt(10).toString()).join();
 
+  final List<Map<String, dynamic>> _products = List<Map<String, dynamic>>.generate(
+    10,
+    (int index) => <String, dynamic>{},
+  );
+
   @override
   void initState() {
     _timer = Timer.periodic(3.seconds, (Timer timer) => _qrKey.currentState!.setState(() => _data = List<String>.generate(8, (int index) => Random().nextInt(10).toString()).join()));
@@ -48,14 +53,27 @@ class _ClientState extends State<Client> {
                 splashColor: transparentColor,
                 onTap: () {
                   //SCAN THE QR
-                  showModalBottomSheet(
+                  showModalBottomSheet<void>(
                     context: context,
                     builder: (BuildContext context) => SizedBox(
                       width: MediaQuery.sizeOf(context).width * .7,
+                      height: MediaQuery.sizeOf(context).height * .4,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[Container(child: ,),],
+                        children: <Widget>[
+                          Container(
+                            padding: const EdgeInsets.all(5),
+                            decoration: BoxDecoration(color: greenColor, borderRadius: BorderRadius.circular(5)),
+                            child: Text("Foulen Fouleni", style: GoogleFonts.itim(fontSize: 16, color: greyColor, fontWeight: FontWeight.w500)),
+                          ),
+                          const SizedBox(height: 20),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[],
+                          ),
+                        ],
                       ),
                     ),
                   );
