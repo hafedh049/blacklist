@@ -228,6 +228,7 @@ class _ClientState extends State<Client> {
                                 child: StatefulBuilder(
                                   builder: (BuildContext context, void Function(void Function()) _) {
                                     return SearchField<String>(
+                                      autovalidateMode: AutovalidateMode.disabled,
                                       onSearchTextChanged: (String value) {
                                         if (value.trim().length <= 1) {
                                           _(() {});
