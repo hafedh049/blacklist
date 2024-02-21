@@ -22,7 +22,11 @@ class _ClientState extends State<Client> {
 
   final List<Map<String, dynamic>> _products = List<Map<String, dynamic>>.generate(
     10,
-    (int index) => <String, dynamic>{},
+    (int index) => <String, dynamic>{
+      "category": "Category ${index + 1}",
+      "product": "Product ${index + 1}",
+      "total_buys": Random().nextInt(4000),
+    },
   );
 
   @override
