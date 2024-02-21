@@ -28,16 +28,24 @@ class _ClientState extends State<Client> {
 
   String _data = List<String>.generate(8, (int index) => Random().nextInt(10).toString()).join();
 
-  final Map<String, List<Map<String, dynamic>>> _products = <String, List<Map<String, dynamic>>>{
+  final List<Map<String, dynamic>> _categories = <Map<String, dynamic>>[
     for (int index = 0; index < 10; index += 1)
-      "Category ${index + 1}": <Map<String, dynamic>>[
-        for (int indexJ = 0; indexJ < 5; indexJ += 1)
-          <String, dynamic>{
-            "product": "Product ${indexJ + 1}",
-            "total_buys": Random().nextInt(4000),
-          },
-      ],
-  };
+      <String, dynamic>{
+        "category": "Category ${index + 1}",
+        "total_buys": Random().nextInt(100),
+      },
+  ];
+
+  final List<Map<String, dynamic>> _products = <Map<String, dynamic>>[
+    for (int index = 0; index < 10; index += 1)
+      <String, dynamic>{
+        "product": "Category ${index + 1}",
+        "total_buys": Random().nextInt(100),
+        "sum": (Random().nextInt(1000) * Random().nextDouble()).toStringAsFixed(2),
+        "date": DateTime(2024, Random().nextInt(12) + 1, Random().nextInt(31) + 1),
+      },
+  ];
+
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _birthDateController = TextEditingController();
   final TextEditingController _cinController = TextEditingController();
@@ -119,8 +127,8 @@ class _ClientState extends State<Client> {
                               const SizedBox(height: 20),
                               CommentTreeWidget<String, Map<String, dynamic>>(
                                 "Categories",
-                                tuple.value,
-                                avatarRoot: (BuildContext context, String _) => const PreferredSize(preferredSize: Size.fromRadius(15), child: Icon(FontAwesome.caret_down_solid, size: 25, color: purpleColor)),
+                                _categories,
+                                avatarRoot: (BuildContext context, String _) => const PreferredSize(preferredSize: Size.fromRadius(15), child: Icon(FontAwesome.c_solid, size: 25, color: purpleColor)),
                                 contentRoot: (BuildContext context, String value) => Container(
                                   padding: const EdgeInsets.all(16),
                                   decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: darkColor),
@@ -130,7 +138,7 @@ class _ClientState extends State<Client> {
                                   preferredSize: const Size.fromRadius(15),
                                   child: CircleAvatar(
                                     backgroundColor: purpleColor,
-                                    child: Text((_products[tuple.key]!.indexOf(value) + 1).toString(), style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
+                                    child: Text((_products.indexOf(value) + 1).toString(), style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
                                   ),
                                 ),
                                 contentChild: (BuildContext context, Map<String, dynamic> value) => Container(
@@ -140,7 +148,7 @@ class _ClientState extends State<Client> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     mainAxisSize: MainAxisSize.min,
                                     children: <Widget>[
-                                      Text(value["product"], style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
+                                      Text(value["category"], style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
                                       const SizedBox(height: 10),
                                       Text(value["total_buys"].toString(), style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
                                       const SizedBox(height: 10),
@@ -154,7 +162,8 @@ class _ClientState extends State<Client> {
                                 ),
                                 treeThemeData: const TreeThemeData(lineColor: purpleColor, lineWidth: 2),
                               ),
-                              const SizedBox(height: 10),
+                              const SizedBox(height: 20),
+                              for(final Map<String,dynamic> product in _products),
                             ],
                           ),
                         ),
