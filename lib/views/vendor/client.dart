@@ -23,7 +23,9 @@ class Client extends StatefulWidget {
 
 class _ClientState extends State<Client> {
   late final Timer _timer;
+
   final GlobalKey<State> _qrKey = GlobalKey<State>();
+
   String _data = List<String>.generate(8, (int index) => Random().nextInt(10).toString()).join();
 
   final Map<String, List<Map<String, dynamic>>> _products = <String, List<Map<String, dynamic>>>{
@@ -48,18 +50,21 @@ class _ClientState extends State<Client> {
       "type": "text",
       "required": true,
       "hint": "Enter the client name",
+      "key": GlobalKey<State>(),
     },
     "Birth Date": <String, dynamic>{
       "controller": _birthDateController,
       "type": "date",
       "required": true,
       "hint": "Prompt the birthdate : ${formatDate(DateTime.now(), const <String>[yy, '-', M, '-', d]).toUpperCase()}",
+      "key": GlobalKey<State>(),
     },
     "CIN": <String, dynamic>{
       "controller": _cinController,
       "type": "number",
       "required": true,
       "hint": "CIN is required : ${List<String>.generate(8, (int index) => Random().nextInt(10).toString()).join()}",
+      "key": GlobalKey<State>(),
     },
   };
 
@@ -225,30 +230,31 @@ class _ClientState extends State<Client> {
                               const SizedBox(height: 20),
                               Container(
                                 color: scaffoldColor,
-                                child: StatefulBuilder(
-                                  builder: (BuildContext context, void Function(void Function()) _) {
-                                    return SearchField<String>(
-                                      autoCorrect: false,
-                                      onSearchTextChanged: (String value) {
-                                        if (value.trim().length <= 1) {
-                                          _(() {});
-                                        }
-                                        return _names.where((String element) => element.toLowerCase().startsWith(value.toLowerCase())).map((String e) => SearchFieldListItem<String>(e, item: e, child: Padding(padding: const EdgeInsets.all(8.0), child: Text(e)))).toList();
-                                      },
-                                      controller: entry.value["controller"],
-                                      searchStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                                      searchInputDecoration: InputDecoration(
-                                        contentPadding: const EdgeInsets.all(20),
-                                        focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
-                                        border: InputBorder.none,
-                                        hintText: entry.value["hint"],
-                                        hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                                        suffixIcon: entry.value["controller"].text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
-                                      ),
-                                      inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp(entry.value["type"] == "number" ? r"\d" : r"."))],
-                                      suggestions: _names.map((String e) => SearchFieldListItem<String>(e, item: e, child: Padding(padding: const EdgeInsets.all(8.0), child: Text(e)))).toList(),
-                                    );
+                                child: SearchField<String>(
+                                  autoCorrect: false,
+                                  onSearchTextChanged: (String value) {
+                                    if (value.trim().length <= 1) {
+                                      _nameKey.currentState!.setState(() {});
+                                    }
+                                    return _names.where((String element) => element.toLowerCase().startsWith(value.toLowerCase())).map((String e) => SearchFieldListItem<String>(e, item: e, child: Padding(padding: const EdgeInsets.all(8.0), child: Text(e)))).toList();
                                   },
+                                  controller: entry.value["controller"],
+                                  searchStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                                  searchInputDecoration: InputDecoration(
+                                    contentPadding: const EdgeInsets.all(20),
+                                    focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
+                                    border: InputBorder.none,
+                                    hintText: entry.value["hint"],
+                                    hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                                    suffixIcon: StatefulBuilder(
+                                      key: _nameKey,
+                                      builder: (BuildContext context, void Function(void Function()) _) {
+                                        return entry.value["controller"].text.trim().isEmpty ? const SizedBox() : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor);
+                                      },
+                                    ),
+                                  ),
+                                  inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp(entry.value["type"] == "number" ? r"\d" : r"."))],
+                                  suggestions: _names.map((String e) => SearchFieldListItem<String>(e, item: e, child: Padding(padding: const EdgeInsets.all(8.0), child: Text(e)))).toList(),
                                 ),
                               ),
                               const SizedBox(height: 20),
