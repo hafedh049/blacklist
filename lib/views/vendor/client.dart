@@ -232,6 +232,7 @@ class _ClientState extends State<Client> {
                                         if (value.trim().length <= 1) {
                                           _(() {});
                                         }
+                                        print(_names.where((String element) => element.toLowerCase().contains(entry.value["controller"].text.toLowerCase())).map((String e) => SearchFieldListItem<String>(e, item: e, child: Padding(padding: const EdgeInsets.all(8.0), child: Text(e)))).toList().length);
                                         return null;
                                       },
                                       controller: entry.value["controller"],
@@ -245,27 +246,8 @@ class _ClientState extends State<Client> {
                                         suffixIcon: entry.value["controller"].text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
                                       ),
                                       inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp(entry.value["type"] == "number" ? r"\d" : r"."))],
-                                      suggestions: _names.where((String element) => entry.value["controller"].text.toLowerCase().contains(element.toLowerCase())).map((String e) => SearchFieldListItem<String>(e, item: e, child: Padding(padding: const EdgeInsets.all(8.0), child: Text(e)))).toList(),
+                                      suggestions: _names.where((String element) => element.toLowerCase().contains(entry.value["controller"].text.toLowerCase())).map((String e) => SearchFieldListItem<String>(e, item: e, child: Padding(padding: const EdgeInsets.all(8.0), child: Text(e)))).toList(),
                                     );
-                                    /*  return TextField(
-                                      onChanged: (String value) {
-                                        if (value.trim().length <= 1) {
-                                          _(() {});
-                                        }
-                                      },
-                                      controller: entry.value["controller"],
-                                      style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                                      decoration: InputDecoration(
-                                        contentPadding: const EdgeInsets.all(20),
-                                        focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
-                                        border: InputBorder.none,
-                                        hintText: entry.value["hint"],
-                                        hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                                        suffixIcon: entry.value["controller"].text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
-                                      ),
-                                      cursorColor: purpleColor,
-                                      inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp(entry.value["type"] == "number" ? r"\d" : r"."))],
-                                    );*/
                                   },
                                 ),
                               ),
