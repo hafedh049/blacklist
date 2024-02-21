@@ -40,6 +40,8 @@ class _ClientState extends State<Client> {
   final TextEditingController _birthDateController = TextEditingController();
   final TextEditingController _cinController = TextEditingController();
 
+  final List<String> _names = names;
+
   late final Map<String, Map<String, dynamic>> _productTemplate = <String, Map<String, dynamic>>{
     "Full Name": <String, dynamic>{
       "controller": _usernameController,
@@ -243,28 +245,7 @@ class _ClientState extends State<Client> {
                                         suffixIcon: entry.value["controller"].text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
                                       ),
                                       inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp(entry.value["type"] == "number" ? r"\d" : r"."))],
-                                      suggestions: _names
-                                          .map(
-                                            (String e) => SearchFieldListItem<String>(
-                                              e,
-                                              item: e,
-                                              child: Padding(
-                                                padding: const EdgeInsets.all(8.0),
-                                                child: Row(
-                                                  children: [
-                                                    CircleAvatar(
-                                                      backgroundImage: NetworkImage(e.flag),
-                                                    ),
-                                                    SizedBox(
-                                                      width: 10,
-                                                    ),
-                                                    Text(e.name),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          )
-                                          .toList(),
+                                      suggestions: _names.where((String element) => entry.value["controller"].text.toLowerCase().contains(element.toLowerCase())).map((String e) => SearchFieldListItem<String>(e, item: e, child: Padding(padding: const EdgeInsets.all(8.0), child: Text(e)))).toList(),
                                     );
                                     /*  return TextField(
                                       onChanged: (String value) {
