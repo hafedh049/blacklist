@@ -74,8 +74,8 @@ class _ClientState extends State<Client> {
                           children: <Widget>[
                             Container(
                               padding: const EdgeInsets.all(5),
-                              decoration: BoxDecoration(color: greenColor, borderRadius: BorderRadius.circular(5)),
-                              child: Text("Foulen Fouleni", style: GoogleFonts.itim(fontSize: 16, color: greyColor, fontWeight: FontWeight.w500)),
+                              decoration: BoxDecoration(color: greenColor.withOpacity(.6), borderRadius: BorderRadius.circular(5)),
+                              child: Text("Foulen Fouleni", style: GoogleFonts.itim(fontSize: 16, color: whiteColor, fontWeight: FontWeight.w500)),
                             ),
                             const SizedBox(height: 20),
                             for (final MapEntry<String, List<Map<String, dynamic>>> tuple in _products.entries)
@@ -86,7 +86,7 @@ class _ClientState extends State<Client> {
                                 contentRoot: (BuildContext context, String value) => Container(
                                   padding: const EdgeInsets.all(16),
                                   decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: darkColor),
-                                  child: Text(value, style: GoogleFonts.itim(fontSize: 14, color: greyColor, fontWeight: FontWeight.w500)),
+                                  child: Text(value, style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
                                 ),
                                 contentChild: (BuildContext context, Map<String, dynamic> value) => Container(
                                   padding: const EdgeInsets.all(16),
@@ -95,8 +95,15 @@ class _ClientState extends State<Client> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     mainAxisSize: MainAxisSize.min,
                                     children: <Widget>[
-                                      Text(value, style: GoogleFonts.itim(fontSize: 14, color: greyColor, fontWeight: FontWeight.w500)),
+                                      Text(value["product"], style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
                                       const SizedBox(height: 10),
+                                      Text(value["total_buys"], style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
+                                      const SizedBox(height: 10),
+                                      Container(
+                                        padding: const EdgeInsets.all(4),
+                                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: value["total_buys"] != 1 && value["total_buys"] % 8 == 1 ? greenColor : redColor),
+                                        child: Text(value["total_buys"] != 1 && value["total_buys"] % 8 == 1 ? "GIFT" : "NO GIFT", style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
+                                      ),
                                     ],
                                   ),
                                 ),
