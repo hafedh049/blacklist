@@ -3,7 +3,7 @@ import 'dart:math';
 
 import 'package:animated_loading_border/animated_loading_border.dart';
 import 'package:blacklist/utils/shared.dart';
-import 'package:comment_tree/comment_tree.dart';
+import 'package:blacklist/views/vendor/after_qr_scan.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -27,24 +27,6 @@ class _ClientState extends State<Client> {
   final GlobalKey<State> _qrKey = GlobalKey<State>();
 
   String _data = List<String>.generate(8, (int index) => Random().nextInt(10).toString()).join();
-
-  final List<Map<String, dynamic>> _categories = <Map<String, dynamic>>[
-    for (int index = 0; index < 10; index += 1)
-      <String, dynamic>{
-        "category": "Category ${index + 1}",
-        "total_buys": Random().nextInt(1000),
-      },
-  ];
-
-  final List<Map<String, dynamic>> _products = <Map<String, dynamic>>[
-    for (int index = 0; index < 10; index += 1)
-      <String, dynamic>{
-        "product": "Product ${index + 1}",
-        "total_buys": Random().nextInt(100),
-        "sum": (Random().nextInt(1000) * Random().nextDouble()).toStringAsFixed(2),
-        "date": DateTime(2024, Random().nextInt(12) + 1, Random().nextInt(31) + 1),
-      },
-  ];
 
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _birthDateController = TextEditingController();
@@ -108,101 +90,7 @@ class _ClientState extends State<Client> {
                   splashColor: transparentColor,
                   onTap: () {
                     //SCAN THE QR
-                    showModalBottomSheet<void>(
-                      context: context,
-                      builder: (BuildContext context) => Container(
-                        padding: const EdgeInsets.all(24),
-                        width: MediaQuery.sizeOf(context).width * .7,
-                        height: MediaQuery.sizeOf(context).height * .4,
-                        child: SingleChildScrollView(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              Container(
-                                padding: const EdgeInsets.all(5),
-                                decoration: BoxDecoration(color: purpleColor, borderRadius: BorderRadius.circular(5)),
-                                child: Text("Foulen Fouleni", style: GoogleFonts.itim(fontSize: 16, color: whiteColor, fontWeight: FontWeight.w500)),
-                              ),
-                              const SizedBox(height: 20),
-                              CommentTreeWidget<String, Map<String, dynamic>>(
-                                "Categories",
-                                _categories,
-                                avatarRoot: (BuildContext context, String _) => const PreferredSize(preferredSize: Size.fromRadius(15), child: Icon(FontAwesome.c_solid, size: 25, color: purpleColor)),
-                                contentRoot: (BuildContext context, String value) => Container(
-                                  padding: const EdgeInsets.all(16),
-                                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: darkColor),
-                                  child: Text(value, style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
-                                ),
-                                avatarChild: (BuildContext context, Map<String, dynamic> value) => PreferredSize(
-                                  preferredSize: const Size.fromRadius(15),
-                                  child: CircleAvatar(
-                                    backgroundColor: purpleColor,
-                                    child: Text((_categories.indexOf(value) + 1).toString(), style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
-                                  ),
-                                ),
-                                contentChild: (BuildContext context, Map<String, dynamic> value) => Container(
-                                  padding: const EdgeInsets.all(16),
-                                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: darkColor),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      Text(value["category"], style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
-                                      const SizedBox(height: 10),
-                                      Text(value["total_buys"].toString(), style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
-                                      const SizedBox(height: 10),
-                                      Container(
-                                        padding: const EdgeInsets.all(4),
-                                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: value["total_buys"] != 1 && value["total_buys"] % 8 == 1 ? greenColor : redColor),
-                                        child: Text(value["total_buys"] != 1 && value["total_buys"] % 8 == 1 ? "GIFT" : "NO GIFT", style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                treeThemeData: const TreeThemeData(lineColor: purpleColor, lineWidth: 2),
-                              ),
-                              const SizedBox(height: 20),
-                              Wrap(
-                                alignment: WrapAlignment.start,
-                                crossAxisAlignment: WrapCrossAlignment.start,
-                                runAlignment: WrapAlignment.start,
-                                runSpacing: 20,
-                                spacing: 20,
-                                children: <Widget>[
-                                  for (final Map<String, dynamic> product in _products)
-                                    Container(
-                                      padding: const EdgeInsets.all(16),
-                                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: darkColor),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: <Widget>[
-                                          Container(
-                                            padding: const EdgeInsets.all(4),
-                                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: purpleColor),
-                                            child: Text(formatDate(product["date"], const <String>[d, "-", M, "-", yyyy]).toUpperCase(), style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
-                                          ),
-                                          const SizedBox(height: 10),
-                                          Text(product["product"], style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
-                                          const SizedBox(height: 10),
-                                          Text(product["total_buys"].toString(), style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
-                                          const SizedBox(height: 10),
-                                          Container(
-                                            padding: const EdgeInsets.all(4),
-                                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: purpleColor),
-                                            child: Text("${product["sum"]} DT", style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
+                    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const AfterQRScan()));
                   },
                   child: AnimatedLoadingBorder(
                     borderWidth: 4,
