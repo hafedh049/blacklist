@@ -228,12 +228,11 @@ class _ClientState extends State<Client> {
                                 child: StatefulBuilder(
                                   builder: (BuildContext context, void Function(void Function()) _) {
                                     return SearchField<String>(
-                                      autovalidateMode: AutovalidateMode.disabled,
+                                      autoCorrect: false,
                                       onSearchTextChanged: (String value) {
                                         if (value.trim().length <= 1) {
                                           _(() {});
                                         }
-                                        print(_names.where((String element) => element.toLowerCase().contains(entry.value["controller"].text.toLowerCase())).map((String e) => SearchFieldListItem<String>(e, item: e, child: Padding(padding: const EdgeInsets.all(8.0), child: Text(e)))).toList().length);
                                         return null;
                                       },
                                       controller: entry.value["controller"],
@@ -247,7 +246,7 @@ class _ClientState extends State<Client> {
                                         suffixIcon: entry.value["controller"].text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
                                       ),
                                       inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp(entry.value["type"] == "number" ? r"\d" : r"."))],
-                                      suggestions: _names.where((String element) => element.toLowerCase().contains(entry.value["controller"].text.toLowerCase())).map((String e) => SearchFieldListItem<String>(e, item: e, child: Padding(padding: const EdgeInsets.all(8.0), child: Text(e)))).toList(),
+                                      suggestions: _names /*.where((String element) => element.toLowerCase().startsWith(entry.value["controller"].text.toLowerCase()))*/ .map((String e) => SearchFieldListItem<String>(e, item: e, child: Padding(padding: const EdgeInsets.all(8.0), child: Text(e)))).toList(),
                                     );
                                   },
                                 ),
