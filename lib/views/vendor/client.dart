@@ -117,46 +117,44 @@ class _ClientState extends State<Client> {
                                 child: Text("Foulen Fouleni", style: GoogleFonts.itim(fontSize: 16, color: whiteColor, fontWeight: FontWeight.w500)),
                               ),
                               const SizedBox(height: 20),
-                              for (final MapEntry<String, List<Map<String, dynamic>>> tuple in _products.entries) ...<Widget>[
-                                CommentTreeWidget<String, Map<String, dynamic>>(
-                                  tuple.key,
-                                  tuple.value,
-                                  avatarRoot: (BuildContext context, String _) => const PreferredSize(preferredSize: Size.fromRadius(15), child: Icon(FontAwesome.caret_down_solid, size: 25, color: purpleColor)),
-                                  contentRoot: (BuildContext context, String value) => Container(
-                                    padding: const EdgeInsets.all(16),
-                                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: darkColor),
-                                    child: Text(value, style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
-                                  ),
-                                  avatarChild: (BuildContext context, Map<String, dynamic> value) => PreferredSize(
-                                    preferredSize: const Size.fromRadius(15),
-                                    child: CircleAvatar(
-                                      backgroundColor: purpleColor,
-                                      child: Text((_products[tuple.key]!.indexOf(value) + 1).toString(), style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
-                                    ),
-                                  ),
-                                  contentChild: (BuildContext context, Map<String, dynamic> value) => Container(
-                                    padding: const EdgeInsets.all(16),
-                                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: darkColor),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: <Widget>[
-                                        Text(value["product"], style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
-                                        const SizedBox(height: 10),
-                                        Text(value["total_buys"].toString(), style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
-                                        const SizedBox(height: 10),
-                                        Container(
-                                          padding: const EdgeInsets.all(4),
-                                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: value["total_buys"] != 1 && value["total_buys"] % 8 == 1 ? greenColor : redColor),
-                                          child: Text(value["total_buys"] != 1 && value["total_buys"] % 8 == 1 ? "GIFT" : "NO GIFT", style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  treeThemeData: const TreeThemeData(lineColor: purpleColor, lineWidth: 2),
+                              CommentTreeWidget<String, Map<String, dynamic>>(
+                                "Categories",
+                                tuple.value,
+                                avatarRoot: (BuildContext context, String _) => const PreferredSize(preferredSize: Size.fromRadius(15), child: Icon(FontAwesome.caret_down_solid, size: 25, color: purpleColor)),
+                                contentRoot: (BuildContext context, String value) => Container(
+                                  padding: const EdgeInsets.all(16),
+                                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: darkColor),
+                                  child: Text(value, style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
                                 ),
-                                const SizedBox(height: 10),
-                              ],
+                                avatarChild: (BuildContext context, Map<String, dynamic> value) => PreferredSize(
+                                  preferredSize: const Size.fromRadius(15),
+                                  child: CircleAvatar(
+                                    backgroundColor: purpleColor,
+                                    child: Text((_products[tuple.key]!.indexOf(value) + 1).toString(), style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
+                                  ),
+                                ),
+                                contentChild: (BuildContext context, Map<String, dynamic> value) => Container(
+                                  padding: const EdgeInsets.all(16),
+                                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: darkColor),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      Text(value["product"], style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
+                                      const SizedBox(height: 10),
+                                      Text(value["total_buys"].toString(), style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
+                                      const SizedBox(height: 10),
+                                      Container(
+                                        padding: const EdgeInsets.all(4),
+                                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: value["total_buys"] != 1 && value["total_buys"] % 8 == 1 ? greenColor : redColor),
+                                        child: Text(value["total_buys"] != 1 && value["total_buys"] % 8 == 1 ? "GIFT" : "NO GIFT", style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                treeThemeData: const TreeThemeData(lineColor: purpleColor, lineWidth: 2),
+                              ),
+                              const SizedBox(height: 10),
                             ],
                           ),
                         ),
@@ -230,32 +228,56 @@ class _ClientState extends State<Client> {
                               const SizedBox(height: 20),
                               Container(
                                 color: scaffoldColor,
-                                child: SearchField<String>(
-                                  autoCorrect: false,
-                                  onSearchTextChanged: (String value) {
-                                    if (value.trim().length <= 1) {
-                                      _nameKey.currentState!.setState(() {});
-                                    }
-                                    return _names.where((String element) => element.toLowerCase().startsWith(value.toLowerCase())).map((String e) => SearchFieldListItem<String>(e, item: e, child: Padding(padding: const EdgeInsets.all(8.0), child: Text(e)))).toList();
-                                  },
-                                  controller: entry.value["controller"],
-                                  searchStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                                  searchInputDecoration: InputDecoration(
-                                    contentPadding: const EdgeInsets.all(20),
-                                    focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
-                                    border: InputBorder.none,
-                                    hintText: entry.value["hint"],
-                                    hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                                    suffixIcon: StatefulBuilder(
-                                      key: _nameKey,
-                                      builder: (BuildContext context, void Function(void Function()) _) {
-                                        return entry.value["controller"].text.trim().isEmpty ? const SizedBox() : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor);
-                                      },
-                                    ),
-                                  ),
-                                  inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp(entry.value["type"] == "number" ? r"\d" : r"."))],
-                                  suggestions: _names.map((String e) => SearchFieldListItem<String>(e, item: e, child: Padding(padding: const EdgeInsets.all(8.0), child: Text(e)))).toList(),
-                                ),
+                                child: entry.value["type"] != "text"
+                                    ? TextField(
+                                        onChanged: (String value) {
+                                          if (value.trim().length <= 1) {
+                                            entry.value["key"].currentState!.setState(() {});
+                                          }
+                                        },
+                                        controller: entry.value["controller"],
+                                        style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                                        decoration: InputDecoration(
+                                          contentPadding: const EdgeInsets.all(20),
+                                          focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
+                                          border: InputBorder.none,
+                                          hintText: entry.value["hint"],
+                                          hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                                          suffixIcon: StatefulBuilder(
+                                            key: entry.value["key"],
+                                            builder: (BuildContext context, void Function(void Function()) _) {
+                                              return entry.value["controller"].text.trim().isEmpty ? const SizedBox() : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor);
+                                            },
+                                          ),
+                                        ),
+                                        inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp(entry.value["type"] == "number" ? r"\d" : r"."))],
+                                      )
+                                    : SearchField<String>(
+                                        autoCorrect: false,
+                                        onSearchTextChanged: (String value) {
+                                          if (value.trim().length <= 1) {
+                                            entry.value["key"].currentState!.setState(() {});
+                                          }
+                                          return _names.where((String element) => element.toLowerCase().startsWith(value.toLowerCase())).map((String e) => SearchFieldListItem<String>(e, item: e, child: Padding(padding: const EdgeInsets.all(8.0), child: Text(e)))).toList();
+                                        },
+                                        controller: entry.value["controller"],
+                                        searchStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                                        searchInputDecoration: InputDecoration(
+                                          contentPadding: const EdgeInsets.all(20),
+                                          focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
+                                          border: InputBorder.none,
+                                          hintText: entry.value["hint"],
+                                          hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                                          suffixIcon: StatefulBuilder(
+                                            key: entry.value["key"],
+                                            builder: (BuildContext context, void Function(void Function()) _) {
+                                              return entry.value["controller"].text.trim().isEmpty ? const SizedBox() : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor);
+                                            },
+                                          ),
+                                        ),
+                                        inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp(entry.value["type"] == "number" ? r"\d" : r"."))],
+                                        suggestions: _names.map((String e) => SearchFieldListItem<String>(e, item: e, child: Padding(padding: const EdgeInsets.all(8.0), child: Text(e)))).toList(),
+                                      ),
                               ),
                               const SizedBox(height: 20),
                             ],
