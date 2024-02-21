@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:animated_loading_border/animated_loading_border.dart';
 import 'package:blacklist/utils/shared.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -38,31 +39,70 @@ class _ClientState extends State<Client> {
       body: Padding(
         padding: const EdgeInsets.all(24),
         child: Center(
-          child: SizedBox(
-            width: 300,
-            height: 300,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Expanded(
-                  child: StatefulBuilder(
-                    key: _qrKey,
-                    builder: (BuildContext context, void Function(void Function()) _) {
-                      return PrettyQrView.data(
-                        data: _data,
-                        decoration: const PrettyQrDecoration(
-                          shape: PrettyQrSmoothSymbol(color: purpleColor),
-                          image: PrettyQrDecorationImage(image: AssetImage('assets/images/flutter.png'), fit: BoxFit.cover),
-                        ),
-                      ).animate().fade(duration: 1.seconds);
-                    },
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              InkWell(
+                hoverColor: transparentColor,
+                highlightColor: transparentColor,
+                splashColor: transparentColor,
+                onTap: () {
+                  //SCAN THE QR
+                  showModalBottomSheet(
+                    context: context,
+                    builder: (BuildContext context) => SizedBox(
+                      width: MediaQuery.sizeOf(context).width * .7,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[Container(child: ,),],
+                      ),
+                    ),
+                  );
+                },
+                child: AnimatedLoadingBorder(
+                  borderWidth: 4,
+                  borderColor: purpleColor,
+                  child: Container(
+                    width: 300,
+                    height: 150,
+                    padding: const EdgeInsets.all(24),
+                    decoration: const BoxDecoration(color: darkColor),
+                    alignment: Alignment.center,
+                    child: SizedBox(
+                      width: 300,
+                      height: 300,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Expanded(
+                            child: StatefulBuilder(
+                              key: _qrKey,
+                              builder: (BuildContext context, void Function(void Function()) _) {
+                                return Animate(
+                                  key: ValueKey<String>(_data),
+                                  effects: <Effect>[FadeEffect(duration: 1.seconds)],
+                                  child: PrettyQrView.data(
+                                    data: _data,
+                                    decoration: const PrettyQrDecoration(
+                                      shape: PrettyQrSmoothSymbol(color: purpleColor),
+                                      image: PrettyQrDecorationImage(image: AssetImage('assets/images/flutter.png'), fit: BoxFit.cover),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          Text("Scan QR", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
-                const SizedBox(height: 20),
-                Text("Scan QR", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
