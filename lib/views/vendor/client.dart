@@ -36,8 +36,8 @@ class _ClientState extends State<Client> {
       ],
   };
   final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _birthDateController = TextEditingController(text: formatDate(DateTime.now(), const <String>[yy, '-', M, '-', d]).toUpperCase());
-  final TextEditingController _cinController = TextEditingController(text: "#${List<String>.generate(8, (int index) => Random().nextInt(10).toString()).join()}");
+  final TextEditingController _birthDateController = TextEditingController();
+  final TextEditingController _cinController = TextEditingController();
 
   late final Map<String, Map<String, dynamic>> _productTemplate = <String, Map<String, dynamic>>{
     "Full Name": <String, dynamic>{
@@ -50,13 +50,13 @@ class _ClientState extends State<Client> {
       "controller": _birthDateController,
       "type": "date",
       "required": true,
-      "hint": "Prompt the birthdate",
+      "hint": "Prompt the birthdate : ${formatDate(DateTime.now(), const <String>[yy, '-', M, '-', d]).toUpperCase()}",
     },
     "CIN": <String, dynamic>{
       "controller": _cinController,
       "type": "number",
       "required": true,
-      "hint": "CIN is required",
+      "hint": "CIN is required : ${List<String>.generate(8, (int index) => Random().nextInt(10).toString()).join()}",
     },
   };
 
@@ -84,7 +84,7 @@ class _ClientState extends State<Client> {
         child: SingleChildScrollView(
           child: Center(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 InkWell(
                   hoverColor: transparentColor,
@@ -193,89 +193,83 @@ class _ClientState extends State<Client> {
                     ),
                   ),
                 ),
-                InkWell(
-                  hoverColor: transparentColor,
-                  highlightColor: transparentColor,
-                  splashColor: transparentColor,
-                  onTap: () {},
-                  child: AnimatedLoadingBorder(
-                    borderWidth: 4,
-                    borderColor: purpleColor,
-                    child: Container(
-                      width: 300,
-                      padding: const EdgeInsets.all(24),
-                      decoration: const BoxDecoration(color: darkColor),
-                      alignment: Alignment.center,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          for (final MapEntry<String, Map<String, dynamic>> entry in _productTemplate.entries)
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: <Widget>[
-                                    Text(entry.key, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
-                                    const SizedBox(width: 5),
-                                    Text("*", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: entry.value["required"] ? redColor : greenColor)),
-                                  ],
-                                ),
-                                const SizedBox(height: 20),
-                                Container(
-                                  color: darkColor,
-                                  child: StatefulBuilder(
-                                    builder: (BuildContext context, void Function(void Function()) _) {
-                                      return TextField(
-                                        onChanged: (String value) {
-                                          if (value.trim().length <= 1) {
-                                            _(() {});
-                                          }
-                                        },
-                                        controller: entry.value["controller"],
-                                        readOnly: entry.value["type"] == "date" ? true : false,
-                                        style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                                        decoration: InputDecoration(
-                                          contentPadding: const EdgeInsets.all(20),
-                                          focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
-                                          border: InputBorder.none,
-                                          hintText: entry.value["hint"],
-                                          hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                                          suffixIcon: entry.value["controller"].text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
-                                        ),
-                                        cursorColor: purpleColor,
-                                        inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp(entry.value["type"] == "number" ? r"\d" : r"."))],
-                                      );
-                                    },
-                                  ),
-                                ),
-                                const SizedBox(height: 20),
-                              ],
-                            ),
-                          const SizedBox(height: 20),
-                          Row(
+                const SizedBox(height: 20),
+                AnimatedLoadingBorder(
+                  borderWidth: 4,
+                  borderColor: purpleColor,
+                  child: Container(
+                    width: 500,
+                    padding: const EdgeInsets.all(24),
+                    decoration: const BoxDecoration(color: darkColor),
+                    alignment: Alignment.center,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        for (final MapEntry<String, Map<String, dynamic>> entry in _productTemplate.entries)
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
-                              const Spacer(),
-                              AnimatedButton(
-                                width: 150,
-                                height: 40,
-                                text: 'NEXT',
-                                selectedTextColor: darkColor,
-                                animatedOn: AnimatedOn.onHover,
-                                animationDuration: 500.ms,
-                                isReverse: true,
-                                selectedBackgroundColor: greenColor,
-                                backgroundColor: purpleColor,
-                                transitionType: TransitionType.TOP_TO_BOTTOM,
-                                textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                                onPress: () {},
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Text(entry.key, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
+                                  const SizedBox(width: 5),
+                                  Text("*", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: entry.value["required"] ? redColor : greenColor)),
+                                ],
                               ),
+                              const SizedBox(height: 20),
+                              Container(
+                                color: scaffoldColor,
+                                child: StatefulBuilder(
+                                  builder: (BuildContext context, void Function(void Function()) _) {
+                                    return TextField(
+                                      onChanged: (String value) {
+                                        if (value.trim().length <= 1) {
+                                          _(() {});
+                                        }
+                                      },
+                                      controller: entry.value["controller"],
+                                      style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                                      decoration: InputDecoration(
+                                        contentPadding: const EdgeInsets.all(20),
+                                        focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
+                                        border: InputBorder.none,
+                                        hintText: entry.value["hint"],
+                                        hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                                        suffixIcon: entry.value["controller"].text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
+                                      ),
+                                      cursorColor: purpleColor,
+                                      inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp(entry.value["type"] == "number" ? r"\d" : r"."))],
+                                    );
+                                  },
+                                ),
+                              ),
+                              const SizedBox(height: 20),
                             ],
                           ),
-                        ],
-                      ),
+                        const SizedBox(height: 20),
+                        Row(
+                          children: <Widget>[
+                            const Spacer(),
+                            AnimatedButton(
+                              width: 150,
+                              height: 40,
+                              text: 'NEXT',
+                              selectedTextColor: darkColor,
+                              animatedOn: AnimatedOn.onHover,
+                              animationDuration: 500.ms,
+                              isReverse: true,
+                              selectedBackgroundColor: greenColor,
+                              backgroundColor: purpleColor,
+                              transitionType: TransitionType.TOP_TO_BOTTOM,
+                              textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                              onPress: () {},
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
                 ),
