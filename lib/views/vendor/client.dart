@@ -7,6 +7,7 @@ import 'package:comment_tree/comment_tree.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:icons_plus/icons_plus.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 
 class Client extends StatefulWidget {
@@ -62,7 +63,8 @@ class _ClientState extends State<Client> {
                   //SCAN THE QR
                   showModalBottomSheet<void>(
                     context: context,
-                    builder: (BuildContext context) => SizedBox(
+                    builder: (BuildContext context) => Container(
+                      padding: const EdgeInsets.all(24),
                       width: MediaQuery.sizeOf(context).width * .7,
                       height: MediaQuery.sizeOf(context).height * .4,
                       child: SingleChildScrollView(
@@ -80,6 +82,25 @@ class _ClientState extends State<Client> {
                               CommentTreeWidget<String, Map<String, dynamic>>(
                                 tuple.key,
                                 tuple.value,
+                                avatarRoot: (BuildContext context, String _) => const PreferredSize(preferredSize: Size.fromRadius(15), child: Icon(FontAwesome.product_hunt_brand, size: 25, color: purpleColor)),
+                                contentRoot: (BuildContext context, String value) => Container(
+                                  padding: const EdgeInsets.all(16),
+                                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: darkColor),
+                                  child: Text(value, style: GoogleFonts.itim(fontSize: 14, color: greyColor, fontWeight: FontWeight.w500)),
+                                ),
+                                contentChild: (BuildContext context, Map<String, dynamic> value) => Container(
+                                  padding: const EdgeInsets.all(16),
+                                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: darkColor),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      Text(value, style: GoogleFonts.itim(fontSize: 14, color: greyColor, fontWeight: FontWeight.w500)),
+                                      const SizedBox(height: 10),
+                                    ],
+                                  ),
+                                ),
+                                treeThemeData: const TreeThemeData(lineColor: purpleColor, lineWidth: 2),
                               ),
                           ],
                         ),
