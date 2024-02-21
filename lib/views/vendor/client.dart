@@ -32,7 +32,7 @@ class _ClientState extends State<Client> {
     for (int index = 0; index < 10; index += 1)
       <String, dynamic>{
         "category": "Category ${index + 1}",
-        "total_buys": Random().nextInt(100),
+        "total_buys": Random().nextInt(1000),
       },
   ];
 
@@ -138,7 +138,7 @@ class _ClientState extends State<Client> {
                                   preferredSize: const Size.fromRadius(15),
                                   child: CircleAvatar(
                                     backgroundColor: purpleColor,
-                                    child: Text((_products.indexOf(value) + 1).toString(), style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
+                                    child: Text((_categories.indexOf(value) + 1).toString(), style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
                                   ),
                                 ),
                                 contentChild: (BuildContext context, Map<String, dynamic> value) => Container(
@@ -192,12 +192,6 @@ class _ClientState extends State<Client> {
                                             padding: const EdgeInsets.all(4),
                                             decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: purpleColor),
                                             child: Text("${product["sum"]} DT", style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
-                                          ),
-                                          const SizedBox(height: 10),
-                                          Container(
-                                            padding: const EdgeInsets.all(4),
-                                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: product["total_buys"] != 1 && product["total_buys"] % 8 == 1 ? purpleColor : redColor),
-                                            child: Text(product["total_buys"] != 1 && product["total_buys"] % 8 == 1 ? "GIFT" : "NO GIFT", style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
                                           ),
                                         ],
                                       ),
