@@ -78,7 +78,7 @@ class _ClientState extends State<Client> {
                               child: Text("Foulen Fouleni", style: GoogleFonts.itim(fontSize: 16, color: whiteColor, fontWeight: FontWeight.w500)),
                             ),
                             const SizedBox(height: 20),
-                            for (final MapEntry<String, List<Map<String, dynamic>>> tuple in _products.entries)
+                            for (final MapEntry<String, List<Map<String, dynamic>>> tuple in _products.entries) ...<Widget>[
                               CommentTreeWidget<String, Map<String, dynamic>>(
                                 tuple.key,
                                 tuple.value,
@@ -88,6 +88,10 @@ class _ClientState extends State<Client> {
                                   decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: darkColor),
                                   child: Text(value, style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
                                 ),
+                                avatarChild: (BuildContext context, Map<String, dynamic> value) => PreferredSize(
+                                  preferredSize: const Size.fromRadius(15),
+                                  child: Text((_products[tuple.key]!.indexOf(value) + 1).toString(), style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
+                                ),
                                 contentChild: (BuildContext context, Map<String, dynamic> value) => Container(
                                   padding: const EdgeInsets.all(16),
                                   decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: darkColor),
@@ -95,20 +99,22 @@ class _ClientState extends State<Client> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     mainAxisSize: MainAxisSize.min,
                                     children: <Widget>[
-                                      Text(value["product"], style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
+                                      Text(/*value["product"]*/ "00000", style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
                                       const SizedBox(height: 10),
-                                      Text(value["total_buys"], style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
+                                      Text(/*value["total_buys"]*/ "11111", style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
                                       const SizedBox(height: 10),
                                       Container(
                                         padding: const EdgeInsets.all(4),
-                                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: value["total_buys"] != 1 && value["total_buys"] % 8 == 1 ? greenColor : redColor),
-                                        child: Text(value["total_buys"] != 1 && value["total_buys"] % 8 == 1 ? "GIFT" : "NO GIFT", style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
+                                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: /*value["total_buys"] != 1 && value["total_buys"] % 8 == 1 ? greenColor : */ redColor),
+                                        child: Text(/*value["total_buys"] != 1 && value["total_buys"] % 8 == 1 ? "GIFT" :*/ "NO GIFT", style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
                                       ),
                                     ],
                                   ),
                                 ),
                                 treeThemeData: const TreeThemeData(lineColor: purpleColor, lineWidth: 2),
                               ),
+                              const SizedBox(height: 10),
+                            ],
                           ],
                         ),
                       ),
