@@ -233,7 +233,7 @@ class _ClientState extends State<Client> {
                                         if (value.trim().length <= 1) {
                                           _(() {});
                                         }
-                                        return _names.where((String element) => element.toLowerCase().startsWith(entry.value["controller"].text.toLowerCase())).map((String e) => SearchFieldListItem<String>(e, item: e, child: Padding(padding: const EdgeInsets.all(8.0), child: Text(e)))).toList();
+                                        return _names.where((String element) => element.toLowerCase().startsWith(value.toLowerCase())).map((String e) => SearchFieldListItem<String>(e, item: e, child: Padding(padding: const EdgeInsets.all(8.0), child: Text(e)))).toList();
                                       },
                                       controller: entry.value["controller"],
                                       searchStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
