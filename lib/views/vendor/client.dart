@@ -39,7 +39,7 @@ class _ClientState extends State<Client> {
   final List<Map<String, dynamic>> _products = <Map<String, dynamic>>[
     for (int index = 0; index < 10; index += 1)
       <String, dynamic>{
-        "product": "Category ${index + 1}",
+        "product": "Product ${index + 1}",
         "total_buys": Random().nextInt(100),
         "sum": (Random().nextInt(1000) * Random().nextDouble()).toStringAsFixed(2),
         "date": DateTime(2024, Random().nextInt(12) + 1, Random().nextInt(31) + 1),
@@ -121,7 +121,7 @@ class _ClientState extends State<Client> {
                             children: <Widget>[
                               Container(
                                 padding: const EdgeInsets.all(5),
-                                decoration: BoxDecoration(color: greenColor, borderRadius: BorderRadius.circular(5)),
+                                decoration: BoxDecoration(color: purpleColor, borderRadius: BorderRadius.circular(5)),
                                 child: Text("Foulen Fouleni", style: GoogleFonts.itim(fontSize: 16, color: whiteColor, fontWeight: FontWeight.w500)),
                               ),
                               const SizedBox(height: 20),
@@ -163,7 +163,47 @@ class _ClientState extends State<Client> {
                                 treeThemeData: const TreeThemeData(lineColor: purpleColor, lineWidth: 2),
                               ),
                               const SizedBox(height: 20),
-                              for(final Map<String,dynamic> product in _products),
+                              Wrap(
+                                alignment: WrapAlignment.start,
+                                crossAxisAlignment: WrapCrossAlignment.start,
+                                runAlignment: WrapAlignment.start,
+                                runSpacing: 20,
+                                spacing: 20,
+                                children: <Widget>[
+                                  for (final Map<String, dynamic> product in _products)
+                                    Container(
+                                      padding: const EdgeInsets.all(16),
+                                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: darkColor),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: <Widget>[
+                                          Container(
+                                            padding: const EdgeInsets.all(4),
+                                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: purpleColor),
+                                            child: Text(formatDate(product["date"], const <String>[d, "-", M, "-", yyyy]).toUpperCase(), style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
+                                          ),
+                                          const SizedBox(height: 10),
+                                          Text(product["product"], style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
+                                          const SizedBox(height: 10),
+                                          Text(product["total_buys"].toString(), style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
+                                          const SizedBox(height: 10),
+                                          Container(
+                                            padding: const EdgeInsets.all(4),
+                                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: purpleColor),
+                                            child: Text("${product["sum"]} DT", style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
+                                          ),
+                                          const SizedBox(height: 10),
+                                          Container(
+                                            padding: const EdgeInsets.all(4),
+                                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: product["total_buys"] != 1 && product["total_buys"] % 8 == 1 ? purpleColor : redColor),
+                                            child: Text(product["total_buys"] != 1 && product["total_buys"] % 8 == 1 ? "GIFT" : "NO GIFT", style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                ],
+                              ),
                             ],
                           ),
                         ),
