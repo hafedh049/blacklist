@@ -74,7 +74,7 @@ class _ClientState extends State<Client> {
                           children: <Widget>[
                             Container(
                               padding: const EdgeInsets.all(5),
-                              decoration: BoxDecoration(color: greenColor.withOpacity(.6), borderRadius: BorderRadius.circular(5)),
+                              decoration: BoxDecoration(color: greenColor, borderRadius: BorderRadius.circular(5)),
                               child: Text("Foulen Fouleni", style: GoogleFonts.itim(fontSize: 16, color: whiteColor, fontWeight: FontWeight.w500)),
                             ),
                             const SizedBox(height: 20),
@@ -99,14 +99,14 @@ class _ClientState extends State<Client> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     mainAxisSize: MainAxisSize.min,
                                     children: <Widget>[
-                                      Text(/*value["product"]*/ "00000", style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
+                                      Text(value["product"], style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
                                       const SizedBox(height: 10),
-                                      Text(/*value["total_buys"]*/ "11111", style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
+                                      Text(value["total_buys"].toString(), style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
                                       const SizedBox(height: 10),
                                       Container(
                                         padding: const EdgeInsets.all(4),
-                                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: /*value["total_buys"] != 1 && value["total_buys"] % 8 == 1 ? greenColor : */ redColor),
-                                        child: Text(/*value["total_buys"] != 1 && value["total_buys"] % 8 == 1 ? "GIFT" :*/ "NO GIFT", style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
+                                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: value["total_buys"] != 1 && value["total_buys"] % 8 == 1 ? greenColor : redColor),
+                                        child: Text(value["total_buys"] != 1 && value["total_buys"] % 8 == 1 ? "GIFT" : "NO GIFT", style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
                                       ),
                                     ],
                                   ),
