@@ -1,7 +1,11 @@
+import 'package:blacklist/utils/shared.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:data_table_2/data_table_2.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:icons_plus/icons_plus.dart';
 
 class RestorableProductSelections extends RestorableProperty<Set<int>> {
   Set<int> _productSelections = <int>{};
@@ -64,10 +68,17 @@ class ProductDataSource extends DataTableSource {
   }
 
   final BuildContext context;
+  final TextEditingController _cartController = TextEditingController(text: "0");
   late List<Product> products;
   bool hasRowTaps = true;
   bool hasRowHeightOverrides = true;
   bool hasZebraStripes = true;
+
+  @override
+  void dispose() {
+    _cartController.dispose();
+    super.dispose();
+  }
 
   void sort<T>(Comparable<T> Function(Product p) getField, bool ascending) {
     products.sort(
@@ -113,12 +124,50 @@ class ProductDataSource extends DataTableSource {
       },
       onTap: hasRowTaps ? () => _showSnackbar(context, 'Tapped on row ${product.name}') : null,
       cells: <DataCell>[
-        DataCell(Text(formatDate(product.date, <String>[yyyy, " ", MM, " ", dd]))),
+        DataCell(Text(formatDate(product.date, const <String>[yyyy, " ", MM, " ", dd]))),
         DataCell(Text(product.reference)),
         DataCell(Text(product.name)),
         DataCell(Text(product.category)),
         DataCell(Text(product.newPrice.toStringAsFixed(2))),
-        DataCell(Text(product.quantity.toString())),
+        !product.selected
+            ? DataCell(Text(product.quantity.toString()))
+            : DataCell(
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    IconButton(
+                      onPressed: () {
+                        if (int.parse(_cartController.text) > 0) {
+                          _cartController.text = (int.parse(_cartController.text) - 1).toString();
+                        }
+                      },
+                      icon: const Icon(FontAwesome.circle_minus_solid, size: 20, color: whiteColor),
+                    ),
+                    Container(
+                      width: 50,
+                      height: 50,
+                      color: darkColor,
+                      child: TextField(
+                        controller: _cartController,
+                        style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                        decoration: const InputDecoration(
+                          contentPadding: EdgeInsets.all(4),
+                          focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
+                          border: InputBorder.none,
+                        ),
+                        cursorColor: purpleColor,
+                        inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp(r"\d"))],
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        _cartController.text = (int.parse(_cartController.text) + 1).toString();
+                      },
+                      icon: const Icon(FontAwesome.circle_plus_solid, size: 20, color: whiteColor),
+                    ),
+                  ],
+                ),
+              ),
       ],
     );
   }
@@ -133,7 +182,7 @@ class ProductDataSource extends DataTableSource {
   int get selectedRowCount => _selectedCount;
 
   void selectAll(bool? checked) {
-    for (final product in products) {
+    for (final Product product in products) {
       product.selected = checked ?? false;
     }
     _selectedCount = (checked ?? false) ? products.length : 0;

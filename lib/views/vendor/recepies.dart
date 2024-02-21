@@ -41,16 +41,24 @@ class _RecepiesState extends State<Recepies> {
           children: <Widget>[
             Row(
               children: <Widget>[
-                Text("RECIPIES", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
-                const Spacer(),
-                Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(color: greenColor, borderRadius: BorderRadius.circular(5)),
-                  child: Text(
-                    "${formatDate(DateTime.now(), <String>[yyyy, " ", MM.toUpperCase(), " ", dd])} - ${formatDate(DateTime.now().add(1.days), <String>[yyyy, " ", MM.toUpperCase(), " ", dd])}",
-                    style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                  ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Text("RECIPIES", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
+                    const SizedBox(height: 10),
+                    Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(color: greenColor, borderRadius: BorderRadius.circular(5)),
+                      child: Text(
+                        "${formatDate(DateTime.now(), <String>[yyyy, " ", MM.toUpperCase(), " ", dd])} - ${formatDate(DateTime.now().add(1.days), <String>[yyyy, " ", MM.toUpperCase(), " ", dd])}",
+                        style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                      ),
+                    ),
+                  ],
                 ),
+                const SizedBox(width: 20),
+                const Spacer(),
                 const SizedBox(width: 20),
                 RichText(
                   text: TextSpan(
