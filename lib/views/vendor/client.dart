@@ -233,7 +233,7 @@ class _ClientState extends State<Client> {
                                         if (value.trim().length <= 1) {
                                           _(() {});
                                         }
-                                        return null;
+                                        return _names.where((String element) => element.toLowerCase().startsWith(entry.value["controller"].text.toLowerCase())).map((String e) => SearchFieldListItem<String>(e, item: e, child: Padding(padding: const EdgeInsets.all(8.0), child: Text(e)))).toList();
                                       },
                                       controller: entry.value["controller"],
                                       searchStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
@@ -246,7 +246,7 @@ class _ClientState extends State<Client> {
                                         suffixIcon: entry.value["controller"].text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
                                       ),
                                       inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp(entry.value["type"] == "number" ? r"\d" : r"."))],
-                                      suggestions: _names /*.where((String element) => element.toLowerCase().startsWith(entry.value["controller"].text.toLowerCase()))*/ .map((String e) => SearchFieldListItem<String>(e, item: e, child: Padding(padding: const EdgeInsets.all(8.0), child: Text(e)))).toList(),
+                                      suggestions: _names.map((String e) => SearchFieldListItem<String>(e, item: e, child: Padding(padding: const EdgeInsets.all(8.0), child: Text(e)))).toList(),
                                     );
                                   },
                                 ),
@@ -254,7 +254,6 @@ class _ClientState extends State<Client> {
                               const SizedBox(height: 20),
                             ],
                           ),
-                        const SizedBox(height: 20),
                         Row(
                           children: <Widget>[
                             const Spacer(),
