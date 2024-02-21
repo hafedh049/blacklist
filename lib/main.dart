@@ -1,7 +1,10 @@
 import 'package:blacklist/views/auth/passphrase.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  Animate.restartOnHotReload = true;
   runApp(const Main());
 }
 

@@ -1,5 +1,6 @@
 import 'package:animated_loading_border/animated_loading_border.dart';
 import 'package:blacklist/utils/shared.dart';
+import 'package:blacklist/views/vendor/client.dart';
 import 'package:blacklist/views/vendor/vendor_table.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -23,7 +24,7 @@ class _AnonymousClientState extends State<AnonymousClient> {
       },
       <String, dynamic>{
         "title": "Client",
-        "callback": () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Container())),
+        "callback": () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const Client())),
       },
     ];
     super.initState();
