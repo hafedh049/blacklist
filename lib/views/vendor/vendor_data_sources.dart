@@ -129,11 +129,8 @@ class ProductDataSource extends DataTableSource {
       },
       onTap: hasRowTaps ? () => _showSnackbar(context, 'Tapped on row ${product.name}') : null,
       cells: <DataCell>[
-        DataCell(Text(formatDate(product.date, const <String>[yyyy, " ", MM, " ", dd]))),
-        DataCell(Text(product.reference)),
         DataCell(Text(product.name)),
         DataCell(Text(product.category)),
-        DataCell(Text(product.newPrice.toStringAsFixed(2))),
         !product.selected
             ? DataCell(Text(product.quantity.toString()))
             : DataCell(
@@ -174,6 +171,9 @@ class ProductDataSource extends DataTableSource {
                   ],
                 ),
               ),
+        DataCell(Text(formatDate(product.date, const <String>[yyyy, " ", MM, " ", dd]))),
+        DataCell(Text(product.reference)),
+        DataCell(Text(product.newPrice.toStringAsFixed(2))),
       ],
     );
   }
