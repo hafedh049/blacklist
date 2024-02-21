@@ -82,7 +82,7 @@ class _ClientState extends State<Client> {
                               CommentTreeWidget<String, Map<String, dynamic>>(
                                 tuple.key,
                                 tuple.value,
-                                avatarRoot: (BuildContext context, String _) => const PreferredSize(preferredSize: Size.fromRadius(15), child: Icon(FontAwesome.product_hunt_brand, size: 25, color: purpleColor)),
+                                avatarRoot: (BuildContext context, String _) => const PreferredSize(preferredSize: Size.fromRadius(15), child: Icon(FontAwesome.caret_down_solid, size: 25, color: purpleColor)),
                                 contentRoot: (BuildContext context, String value) => Container(
                                   padding: const EdgeInsets.all(16),
                                   decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: darkColor),
@@ -129,39 +129,65 @@ class _ClientState extends State<Client> {
                   borderColor: purpleColor,
                   child: Container(
                     width: 300,
-                    height: 150,
+                    height: 300,
                     padding: const EdgeInsets.all(24),
                     decoration: const BoxDecoration(color: darkColor),
                     alignment: Alignment.center,
-                    child: SizedBox(
-                      width: 300,
-                      height: 300,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Expanded(
-                            child: StatefulBuilder(
-                              key: _qrKey,
-                              builder: (BuildContext context, void Function(void Function()) _) {
-                                return Animate(
-                                  key: ValueKey<String>(_data),
-                                  effects: <Effect>[FadeEffect(duration: 1.seconds)],
-                                  child: PrettyQrView.data(
-                                    data: _data,
-                                    decoration: const PrettyQrDecoration(
-                                      shape: PrettyQrSmoothSymbol(color: purpleColor),
-                                      image: PrettyQrDecorationImage(image: AssetImage('assets/images/flutter.png'), fit: BoxFit.cover),
-                                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Expanded(
+                          child: StatefulBuilder(
+                            key: _qrKey,
+                            builder: (BuildContext context, void Function(void Function()) _) {
+                              return Animate(
+                                key: ValueKey<String>(_data),
+                                effects: <Effect>[FadeEffect(duration: 1.seconds)],
+                                child: PrettyQrView.data(
+                                  data: _data,
+                                  decoration: const PrettyQrDecoration(
+                                    shape: PrettyQrSmoothSymbol(color: purpleColor),
+                                    image: PrettyQrDecorationImage(image: AssetImage('assets/images/flutter.png'), fit: BoxFit.cover),
                                   ),
-                                );
-                              },
-                            ),
+                                ),
+                              );
+                            },
                           ),
-                          const SizedBox(height: 20),
-                          Text("Scan QR", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
-                        ],
-                      ),
+                        ),
+                        const SizedBox(height: 20),
+                        Text("Scan QR", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              InkWell(
+                hoverColor: transparentColor,
+                highlightColor: transparentColor,
+                splashColor: transparentColor,
+                onTap: () {},
+                child: AnimatedLoadingBorder(
+                  borderWidth: 4,
+                  borderColor: purpleColor,
+                  child: Container(
+                    width: 300,
+                    height: 300,
+                    padding: const EdgeInsets.all(24),
+                    decoration: const BoxDecoration(color: darkColor),
+                    alignment: Alignment.center,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        const SizedBox(height: 20),
+                        Row(
+                          children: <Widget>[
+                            const Spacer(),
+                            Container(child:  Text("NEXT", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),,),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
                 ),
