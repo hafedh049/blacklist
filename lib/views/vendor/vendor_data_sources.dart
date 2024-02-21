@@ -52,8 +52,12 @@ class Product {
   final String reference;
   final double newPrice;
   final int quantity;
-
+  final TextEditingController _cartController = TextEditingController(text: "0");
   bool selected = false;
+
+  void dispose() {
+    _cartController.dispose();
+  }
 }
 
 class ProductDataSource extends DataTableSource {
@@ -68,7 +72,6 @@ class ProductDataSource extends DataTableSource {
   }
 
   final BuildContext context;
-  final TextEditingController _cartController = TextEditingController(text: "0");
   late List<Product> products;
   bool hasRowTaps = true;
   bool hasRowHeightOverrides = true;
@@ -76,7 +79,9 @@ class ProductDataSource extends DataTableSource {
 
   @override
   void dispose() {
-    _cartController.dispose();
+    for (final Product product in products) {
+      product.dispose();
+    }
     super.dispose();
   }
 
@@ -137,8 +142,8 @@ class ProductDataSource extends DataTableSource {
                   children: <Widget>[
                     IconButton(
                       onPressed: () {
-                        if (int.parse(_cartController.text) > 0) {
-                          _cartController.text = (int.parse(_cartController.text) - 1).toString();
+                        if (int.parse(product._cartController.text) > 0) {
+                          product._cartController.text = (int.parse(product._cartController.text) - 1).toString();
                         }
                       },
                       icon: const Icon(FontAwesome.circle_minus_solid, size: 20, color: whiteColor),
@@ -148,12 +153,13 @@ class ProductDataSource extends DataTableSource {
                       height: 50,
                       color: darkColor,
                       child: TextField(
-                        controller: _cartController,
+                        controller: product._cartController,
                         style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                        textAlign: TextAlign.center,
                         decoration: const InputDecoration(
                           contentPadding: EdgeInsets.all(4),
                           focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
-                          border: InputBorder.none,
+                          border: OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
                         ),
                         cursorColor: purpleColor,
                         inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp(r"\d"))],
@@ -161,7 +167,7 @@ class ProductDataSource extends DataTableSource {
                     ),
                     IconButton(
                       onPressed: () {
-                        _cartController.text = (int.parse(_cartController.text) + 1).toString();
+                        product._cartController.text = (int.parse(product._cartController.text) + 1).toString();
                       },
                       icon: const Icon(FontAwesome.circle_plus_solid, size: 20, color: whiteColor),
                     ),
