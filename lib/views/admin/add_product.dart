@@ -21,19 +21,12 @@ class _AddProductState extends State<AddProduct> {
   final TextEditingController _productNameController = TextEditingController();
   final TextEditingController _productDateController = TextEditingController(text: formatDate(DateTime.now(), const <String>[yy, '-', M, '-', d, " ", HH, ':', nn, ':', ss]).toUpperCase());
   final TextEditingController _productReferenceController = TextEditingController(text: "#${List<String>.generate(8, (int index) => Random().nextInt(10).toString()).join()}");
-  final TextEditingController _productCategoryController = TextEditingController();
   final TextEditingController _productOldPriceController = TextEditingController();
   final TextEditingController _productNewPriceController = TextEditingController();
   final TextEditingController _productQuantityController = TextEditingController();
   final TextEditingController _productStockAlertController = TextEditingController();
 
   late final Map<String, Map<String, dynamic>> _productTemplate = <String, Map<String, dynamic>>{
-    "Category": <String, dynamic>{
-      "controller": _productCategoryController,
-      "type": "text",
-      "required": true,
-      "hint": "Choose Category",
-    },
     "Product Name": <String, dynamic>{
       "controller": _productNameController,
       "type": "text",
@@ -83,7 +76,6 @@ class _AddProductState extends State<AddProduct> {
     _productNameController.dispose();
     _productDateController.dispose();
     _productReferenceController.dispose();
-    _productCategoryController.dispose();
     _productOldPriceController.dispose();
     _productNewPriceController.dispose();
     _productQuantityController.dispose();

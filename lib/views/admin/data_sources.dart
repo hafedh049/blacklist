@@ -1,4 +1,5 @@
 import 'package:blacklist/utils/shared.dart';
+//import 'package:blacklist/views/admin/add_product.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -130,7 +131,9 @@ class ProductDataSource extends DataTableSource {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  //Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const AddProduct()));
+                },
                 icon: const Icon(FontAwesome.pen_solid, color: purpleColor, size: 15),
               ),
               IconButton(

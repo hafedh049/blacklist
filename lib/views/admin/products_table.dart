@@ -1,9 +1,12 @@
 import 'package:blacklist/utils/shared.dart';
+import 'package:blacklist/views/admin/add_product.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_animated_button/flutter_animated_button.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
 
-import '../../utils/helpers/data_sources.dart';
+import 'data_sources.dart';
 
 class ProductTable extends StatefulWidget {
   const ProductTable({super.key});
@@ -107,7 +110,30 @@ class ProductTableState extends State<ProductTable> with RestorationMixin {
           children: <Widget>[
             Row(
               children: <Widget>[
-                Text("Products", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Text("Products", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
+                    const SizedBox(height: 10),
+                    AnimatedButton(
+                      width: 150,
+                      height: 40,
+                      text: 'ADD',
+                      selectedTextColor: darkColor,
+                      animatedOn: AnimatedOn.onHover,
+                      animationDuration: 500.ms,
+                      isReverse: true,
+                      selectedBackgroundColor: greenColor,
+                      backgroundColor: purpleColor,
+                      transitionType: TransitionType.TOP_TO_BOTTOM,
+                      textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                      onPress: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const AddProduct()));
+                      },
+                    ),
+                  ],
+                ),
                 const Spacer(),
                 RichText(
                   text: TextSpan(

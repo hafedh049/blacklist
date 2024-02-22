@@ -25,6 +25,10 @@ class _HolderState extends State<Holder> with TickerProviderStateMixin {
       "title": "Categories List",
     },
     <String, dynamic>{
+      "screen": Alert(),
+      "title": "Stock Alerts",
+    },
+    <String, dynamic>{
       "screen": ClientsList(),
       "title": "Clients",
     },
