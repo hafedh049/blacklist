@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:blacklist/utils/callbacks.dart';
 import 'package:blacklist/utils/shared.dart';
 import 'package:blacklist/views/admin/holder.dart';
 import 'package:blacklist/views/auth/passphrase.dart';
@@ -18,6 +19,112 @@ class StoresList extends StatefulWidget {
 
 class _StoresListState extends State<StoresList> {
   final List<Map<String, dynamic>> _stores = List<Map<String, dynamic>>.generate(20, (int index) => <String, dynamic>{"store_name": "Store ${index + 1}", "vendor_name": "Vendor ${index + 1}", "total_products": Random().nextInt(4000).toString()});
+
+  final TextEditingController _adminController = TextEditingController();
+  final TextEditingController _oldPasswordController = TextEditingController(text: "balblabl");
+  final TextEditingController _newPasswordController = TextEditingController();
+
+  final String _adminPassphrase = "admin";
+
+  @override
+  void dispose() {
+    _adminController.dispose();
+    _oldPasswordController.dispose();
+    _newPasswordController.dispose();
+    super.dispose();
+  }
+
+  void _changePassword() {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) => Container(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Container(
+              color: darkColor,
+              child: StatefulBuilder(
+                builder: (BuildContext context, void Function(void Function()) _) {
+                  return TextField(
+                    onChanged: (String value) {
+                      if (value.trim().length <= 1) {
+                        _(() {});
+                      }
+                    },
+                    controller: _oldPasswordController,
+                    onSubmitted: (String value) {},
+                    style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.all(20),
+                      focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
+                      border: InputBorder.none,
+                      hintText: "OLD PASSWORD",
+                      hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                      suffixIcon: _oldPasswordController.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
+                    ),
+                    cursorColor: purpleColor,
+                  );
+                },
+              ),
+            ),
+            const SizedBox(height: 20),
+            Container(
+              color: darkColor,
+              child: StatefulBuilder(
+                builder: (BuildContext context, void Function(void Function()) _) {
+                  return TextField(
+                    onChanged: (String value) {
+                      if (value.trim().length <= 1) {
+                        _(() {});
+                      }
+                    },
+                    controller: _newPasswordController,
+                    onSubmitted: (String value) {},
+                    style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.all(20),
+                      focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
+                      border: InputBorder.none,
+                      hintText: "NEW PASSWORD",
+                      hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                      suffixIcon: _newPasswordController.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
+                    ),
+                    cursorColor: purpleColor,
+                  );
+                },
+              ),
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                const Spacer(),
+                AnimatedButton(
+                  width: 80,
+                  height: 30,
+                  text: 'CONTINUE',
+                  selectedTextColor: whiteColor,
+                  animatedOn: AnimatedOn.onHover,
+                  animationDuration: 500.ms,
+                  isReverse: true,
+                  selectedBackgroundColor: darkColor,
+                  backgroundColor: greenColor,
+                  transitionType: TransitionType.TOP_TO_BOTTOM,
+                  textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                  onPress: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -163,37 +270,127 @@ class _StoresListState extends State<StoresList> {
                                             child: StatefulBuilder(
                                               builder: (BuildContext context, void Function(void Function()) _) {
                                                 return TextField(
+                                                  autofocus: true,
                                                   onChanged: (String value) {
                                                     if (value.trim().length <= 1) {
                                                       _(() {});
                                                     }
                                                   },
-                                                  controller: entry.value["controller"],
-                                                  readOnly: entry.value["type"] == "date" || entry.value["type"] == "reference" ? true : false,
+                                                  controller: _adminController,
+                                                  onSubmitted: (String value) {},
                                                   style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
                                                   decoration: InputDecoration(
                                                     contentPadding: const EdgeInsets.all(20),
                                                     focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
                                                     border: InputBorder.none,
-                                                    hintText: entry.value["hint"],
+                                                    hintText: "Security Bypass",
                                                     hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                                                    suffixIcon: entry.value["controller"].text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
+                                                    suffixIcon: _adminController.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
                                                   ),
                                                   cursorColor: purpleColor,
-                                                  inputFormatters: <TextInputFormatter>[
-                                                    FilteringTextInputFormatter.allow(
-                                                      RegExp(
-                                                        entry.value["type"] == "double"
-                                                            ? r"[\d.]"
-                                                            : entry.value["type"] == "number"
-                                                                ? r"\d"
-                                                                : r".",
-                                                      ),
-                                                    ),
-                                                  ],
                                                 );
                                               },
                                             ),
+                                          ),
+                                          const SizedBox(height: 20),
+                                          Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: <Widget>[
+                                              const Spacer(),
+                                              AnimatedButton(
+                                                width: 80,
+                                                height: 30,
+                                                text: 'CONTINUE',
+                                                selectedTextColor: whiteColor,
+                                                animatedOn: AnimatedOn.onHover,
+                                                animationDuration: 500.ms,
+                                                isReverse: true,
+                                                selectedBackgroundColor: darkColor,
+                                                backgroundColor: greenColor,
+                                                transitionType: TransitionType.TOP_TO_BOTTOM,
+                                                textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                                                onPress: () {
+                                                  if (_adminController.text == _adminPassphrase) {
+                                                    Navigator.pop(context);
+                                                    showModalBottomSheet(
+                                                      context: context,
+                                                      builder: (BuildContext context) => Container(
+                                                        padding: const EdgeInsets.all(16),
+                                                        child: Column(
+                                                          mainAxisSize: MainAxisSize.min,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: <Widget>[
+                                                            Container(
+                                                              color: darkColor,
+                                                              child: StatefulBuilder(
+                                                                builder: (BuildContext context, void Function(void Function()) _) {
+                                                                  return TextField(
+                                                                    onChanged: (String value) {
+                                                                      if (value.trim().length <= 1) {
+                                                                        _(() {});
+                                                                      }
+                                                                    },
+                                                                    controller: _adminController,
+                                                                    onSubmitted: (String value) {
+                                                                      if (_adminController.text == _adminPassphrase) {
+                                                                        Navigator.pop(context);
+                                                                        _changePassword();
+                                                                      } else {
+                                                                        showToast("Wrong Credentials", redColor);
+                                                                      }
+                                                                    },
+                                                                    style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                                                                    decoration: InputDecoration(
+                                                                      contentPadding: const EdgeInsets.all(20),
+                                                                      focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
+                                                                      border: InputBorder.none,
+                                                                      hintText: "Security Bypass",
+                                                                      hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                                                                      suffixIcon: _adminController.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
+                                                                    ),
+                                                                    cursorColor: purpleColor,
+                                                                  );
+                                                                },
+                                                              ),
+                                                            ),
+                                                            const SizedBox(height: 20),
+                                                            Row(
+                                                              mainAxisSize: MainAxisSize.min,
+                                                              children: <Widget>[
+                                                                const Spacer(),
+                                                                AnimatedButton(
+                                                                  width: 80,
+                                                                  height: 30,
+                                                                  text: 'CONTINUE',
+                                                                  selectedTextColor: whiteColor,
+                                                                  animatedOn: AnimatedOn.onHover,
+                                                                  animationDuration: 500.ms,
+                                                                  isReverse: true,
+                                                                  selectedBackgroundColor: darkColor,
+                                                                  backgroundColor: greenColor,
+                                                                  transitionType: TransitionType.TOP_TO_BOTTOM,
+                                                                  textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                                                                  onPress: () {
+                                                                    if (_adminController.text == _adminPassphrase) {
+                                                                      Navigator.pop(context);
+                                                                      _changePassword();
+                                                                    } else {
+                                                                      showToast("Wrong Credentials", redColor);
+                                                                    }
+                                                                  },
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    );
+                                                  } else {
+                                                    showToast("Wrong Credentials", redColor);
+                                                  }
+                                                },
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),
