@@ -59,6 +59,7 @@ class _HolderState extends State<Holder> with TickerProviderStateMixin {
       body: ZoomDrawer(
         androidCloseOnBackTap: true,
         mainScreenTapClose: true,
+        menuScreenWidth: 275.0,
         controller: _zoomController,
         style: DrawerStyle.defaultStyle,
         menuScreen: Container(

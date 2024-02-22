@@ -67,9 +67,9 @@ class _AfterQRScanState extends State<AfterQRScan> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       AnimatedButton(
-                        width: 80,
+                        width: 100,
                         height: 30,
-                        text: 'CART',
+                        text: 'CART 🛒',
                         selectedTextColor: whiteColor,
                         animatedOn: AnimatedOn.onHover,
                         animationDuration: 500.ms,
@@ -82,9 +82,9 @@ class _AfterQRScanState extends State<AfterQRScan> {
                       ),
                       const SizedBox(height: 10),
                       AnimatedButton(
-                        width: 80,
+                        width: 100,
                         height: 30,
-                        text: 'GIFT',
+                        text: 'GIFT 🎁',
                         selectedTextColor: whiteColor,
                         animatedOn: AnimatedOn.onHover,
                         animationDuration: 500.ms,
@@ -97,9 +97,9 @@ class _AfterQRScanState extends State<AfterQRScan> {
                       ),
                       const SizedBox(height: 10),
                       AnimatedButton(
-                        width: 80,
+                        width: 100,
                         height: 30,
-                        text: 'HISTORY',
+                        text: 'HISTORY 📚',
                         selectedTextColor: whiteColor,
                         animatedOn: AnimatedOn.onHover,
                         animationDuration: 500.ms,
