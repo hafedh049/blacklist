@@ -1,9 +1,12 @@
 import 'dart:math';
 
 import 'package:blacklist/utils/shared.dart';
+import 'package:blacklist/views/vendor/vendor_table.dart';
 import 'package:comment_tree/comment_tree.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_animated_button/flutter_animated_button.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
 
@@ -42,12 +45,63 @@ class _AfterQRScanState extends State<AfterQRScan> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Container(
-                padding: const EdgeInsets.all(5),
-                decoration: BoxDecoration(color: purpleColor, borderRadius: BorderRadius.circular(5)),
-                child: Text("Foulen Fouleni", style: GoogleFonts.itim(fontSize: 16, color: whiteColor, fontWeight: FontWeight.w500)),
+              Row(
+                children: <Widget>[
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Container(
+                        padding: const EdgeInsets.all(5),
+                        decoration: BoxDecoration(color: purpleColor, borderRadius: BorderRadius.circular(5)),
+                        child: Text("Foulen Fouleni", style: GoogleFonts.itim(fontSize: 16, color: whiteColor, fontWeight: FontWeight.w500)),
+                      ),
+                      const SizedBox(height: 10),
+                      Container(
+                        padding: const EdgeInsets.all(5),
+                        decoration: BoxDecoration(color: purpleColor, borderRadius: BorderRadius.circular(5)),
+                        child: Text("11643672", style: GoogleFonts.itim(fontSize: 16, color: whiteColor, fontWeight: FontWeight.w500)),
+                      ),
+                      const SizedBox(height: 10),
+                      Container(
+                        padding: const EdgeInsets.all(5),
+                        decoration: BoxDecoration(color: purpleColor, borderRadius: BorderRadius.circular(5)),
+                        child: Text("23/60/2001", style: GoogleFonts.itim(fontSize: 16, color: whiteColor, fontWeight: FontWeight.w500)),
+                      ),
+                    ],
+                  ),
+                  const Spacer(),
+                  AnimatedButton(
+                    width: 80,
+                    height: 30,
+                    text: 'CART',
+                    selectedTextColor: whiteColor,
+                    animatedOn: AnimatedOn.onHover,
+                    animationDuration: 500.ms,
+                    isReverse: true,
+                    selectedBackgroundColor: darkColor,
+                    backgroundColor: greenColor,
+                    transitionType: TransitionType.TOP_TO_BOTTOM,
+                    textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                    onPress: () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const VendorTable())),
+                  ),
+                  AnimatedButton(
+                    width: 80,
+                    height: 30,
+                    text: 'GIFT',
+                    selectedTextColor: whiteColor,
+                    animatedOn: AnimatedOn.onHover,
+                    animationDuration: 500.ms,
+                    isReverse: true,
+                    selectedBackgroundColor: darkColor,
+                    backgroundColor: greenColor,
+                    transitionType: TransitionType.TOP_TO_BOTTOM,
+                    textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                    onPress: () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const VendorTable())),
+                  ),
+                ],
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               CommentTreeWidget<String, Map<String, dynamic>>(
                 "Categories",
                 _categories,
