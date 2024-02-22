@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:blacklist/utils/shared.dart';
 import 'package:blacklist/views/vendor/recepies/first_day.dart';
 import 'package:date_format/date_format.dart';
@@ -17,14 +19,18 @@ class _RecepiesState extends State<Recepies> {
     <String, dynamic>{
       "date": formatDate(DateTime.now().add(1.days), <String>[yyyy, " ", M, " ", dd]).toUpperCase(),
       "screen": FirstDay(date: formatDate(DateTime.now().add(1.days), <String>[yyyy, " ", M, " ", dd]).toUpperCase()),
+      "total": (Random().nextInt(4000) * Random().nextDouble()).toStringAsFixed(2),
     },
     <String, dynamic>{
       "date": formatDate(DateTime.now(), <String>[yyyy, " ", M, " ", dd]).toUpperCase(),
       "screen": FirstDay(date: formatDate(DateTime.now(), <String>[yyyy, " ", M, " ", dd]).toUpperCase()),
+      "total": (Random().nextInt(4000) * Random().nextDouble()).toStringAsFixed(2),
     },
   ];
 
   final PageController _daysController = PageController();
+
+  final GlobalKey<State> _totalKey = GlobalKey<State>();
 
   int _selectedPage = 0;
 
@@ -71,6 +77,7 @@ class _RecepiesState extends State<Recepies> {
                       onTap: () {
                         if (_selectedPage != 0) {
                           _(() => _selectedPage = 0);
+                          _totalKey.currentState!.setState(() {});
                           _daysController.jumpToPage(0);
                         }
                       },
@@ -87,6 +94,7 @@ class _RecepiesState extends State<Recepies> {
                       onTap: () {
                         if (_selectedPage != 1) {
                           _(() => _selectedPage = 1);
+                          _totalKey.currentState!.setState(() {});
                           _daysController.jumpToPage(1);
                         }
                       },
@@ -102,6 +110,21 @@ class _RecepiesState extends State<Recepies> {
             ),
             Container(width: MediaQuery.sizeOf(context).width, height: .3, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),
             Expanded(child: PageView.builder(controller: _daysController, itemBuilder: (BuildContext context, int index) => _recepies[index]["screen"], itemCount: _recepies.length)),
+            Row(
+              children: <Widget>[
+                const Spacer(),
+                Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(color: purpleColor, borderRadius: BorderRadius.circular(5)),
+                  child: StatefulBuilder(
+                    key: _totalKey,
+                    builder: (BuildContext context, void Function(void Function()) _) {
+                      return Text("RECETTE [ ${_recepies[_selectedPage]["total"]} ]", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor));
+                    },
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),
