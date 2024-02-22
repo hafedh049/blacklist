@@ -66,7 +66,10 @@ class _HolderState extends State<Holder> with TickerProviderStateMixin {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     for (final Map<String, dynamic> item in _screens)
-                      GestureDetector(
+                      InkWell(
+                        hoverColor: transparentColor,
+                        splashColor: transparentColor,
+                        highlightColor: transparentColor,
                         onTap: () async {
                           if (_selectedScreen != item["title"]) {
                             _(() => _selectedScreen = item["title"]);
