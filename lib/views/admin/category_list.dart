@@ -2,9 +2,7 @@ import 'dart:math';
 
 import 'package:blacklist/utils/shared.dart';
 import 'package:blacklist/views/admin/products_table.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_animated_button/flutter_animated_button.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -91,143 +89,90 @@ class _CategoryListState extends State<CategoryList> {
                         transitionType: TransitionType.TOP_TO_BOTTOM,
                         textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
                         onPress: () {
+                          final TextEditingController giftVault = TextEditingController();
                           showModalBottomSheet<void>(
                             context: context,
                             builder: (BuildContext context) => Container(
+                              padding: const EdgeInsets.all(16),
                               child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
-                                  AnimatedButton(
-                                    width: 80,
-                                    height: 30,
-                                    text: 'ADD',
-                                    selectedTextColor: whiteColor,
-                                    animatedOn: AnimatedOn.onHover,
-                                    animationDuration: 500.ms,
-                                    isReverse: true,
-                                    selectedBackgroundColor: darkColor,
-                                    backgroundColor: greenColor,
-                                    transitionType: TransitionType.TOP_TO_BOTTOM,
-                                    textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                                    onPress: () {
-                                      final TextEditingController categoryName = TextEditingController();
-                                      final FocusNode categoryNode = FocusNode();
-                                      showModalBottomSheet<void>(
-                                        context: context,
-                                        builder: (BuildContext context) => Container(
-                                          padding: const EdgeInsets.all(16),
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: <Widget>[
-                                              Text("Category Name", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
-                                              const SizedBox(height: 10),
-                                              Container(
-                                                color: darkColor,
-                                                child: StatefulBuilder(
-                                                  builder: (BuildContext context, void Function(void Function()) _) {
-                                                    return TextField(
-                                                      onChanged: (String value) {
-                                                        if (value.trim().length <= 1) {
-                                                          _(() {});
-                                                        }
-                                                      },
-                                                      controller: categoryName,
-                                                      style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                                                      decoration: InputDecoration(
-                                                        contentPadding: const EdgeInsets.all(20),
-                                                        focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
-                                                        border: InputBorder.none,
-                                                        hintText: "Choose a category name",
-                                                        hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                                                        suffixIcon: categoryName.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
-                                                      ),
-                                                      cursorColor: purpleColor,
-                                                    );
-                                                  },
-                                                ),
-                                              ),
-                                              const SizedBox(height: 20),
-                                              Row(
-                                                children: <Widget>[
-                                                  const Spacer(),
-                                                  AnimatedButton(
-                                                    width: 80,
-                                                    height: 30,
-                                                    text: 'ADD',
-                                                    selectedTextColor: whiteColor,
-                                                    animatedOn: AnimatedOn.onHover,
-                                                    animationDuration: 500.ms,
-                                                    isReverse: true,
-                                                    selectedBackgroundColor: darkColor,
-                                                    backgroundColor: greenColor,
-                                                    transitionType: TransitionType.TOP_TO_BOTTOM,
-                                                    textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                                                    onPress: () {
-                                                      if (categoryName.text.trim().isNotEmpty) {
-                                                        showToast("New category has been added", greenColor);
-                                                        _categories.add(
-                                                          <String, dynamic>{
-                                                            "background_image": "assets/images/bg.jpg",
-                                                            "category_name": categoryName.text.trim(),
-                                                            "total_products": 0,
-                                                            "total_articles": 0,
-                                                            "state": false,
-                                                          },
-                                                        );
-                                                        Navigator.pop(context);
-                                                        setState(() {});
-                                                      } else {
-                                                        showToast("Please enter a category name", redColor);
-                                                      }
-                                                    },
-                                                  ),
-                                                  const SizedBox(width: 20),
-                                                  AnimatedButton(
-                                                    width: 80,
-                                                    height: 30,
-                                                    text: 'CANCEL',
-                                                    selectedTextColor: whiteColor,
-                                                    animatedOn: AnimatedOn.onHover,
-                                                    animationDuration: 500.ms,
-                                                    isReverse: true,
-                                                    selectedBackgroundColor: darkColor,
-                                                    backgroundColor: greyColor,
-                                                    transitionType: TransitionType.TOP_TO_BOTTOM,
-                                                    textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                                                    onPress: () => Navigator.pop(context),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
+                                  Text("Gift Vault", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
+                                  const SizedBox(height: 10),
+                                  Container(
+                                    color: darkColor,
+                                    child: StatefulBuilder(
+                                      builder: (BuildContext context, void Function(void Function()) _) {
+                                        return TextField(
+                                          autofocus: true,
+                                          onChanged: (String value) {
+                                            if (value.trim().length <= 1) {
+                                              _(() {});
+                                            }
+                                          },
+                                          controller: giftVault,
+                                          onSubmitted: (String value) {
+                                            Navigator.pop(context);
+                                          },
+                                          style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                                          decoration: InputDecoration(
+                                            contentPadding: const EdgeInsets.all(20),
+                                            focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
+                                            border: InputBorder.none,
+                                            hintText: "Enter the gift vault",
+                                            hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                                            suffixIcon: giftVault.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
                                           ),
-                                        ),
-                                      ).then(
-                                        (void value) {
-                                          categoryName.dispose();
-                                          categoryNode.dispose();
-                                        },
-                                      );
-                                    },
+                                          cursorColor: purpleColor,
+                                        );
+                                      },
+                                    ),
                                   ),
                                   const SizedBox(height: 20),
-                                  AnimatedButton(
-                                    width: 80,
-                                    height: 30,
-                                    text: 'DELETE',
-                                    selectedTextColor: whiteColor,
-                                    animatedOn: AnimatedOn.onHover,
-                                    animationDuration: 500.ms,
-                                    isReverse: true,
-                                    selectedBackgroundColor: darkColor,
-                                    backgroundColor: redColor,
-                                    transitionType: TransitionType.TOP_TO_BOTTOM,
-                                    textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                                    onPress: () => setState(() => _deleteState = true),
+                                  Row(
+                                    children: <Widget>[
+                                      const Spacer(),
+                                      AnimatedButton(
+                                        width: 80,
+                                        height: 30,
+                                        text: 'CONFIRM',
+                                        selectedTextColor: whiteColor,
+                                        animatedOn: AnimatedOn.onHover,
+                                        animationDuration: 500.ms,
+                                        isReverse: true,
+                                        selectedBackgroundColor: darkColor,
+                                        backgroundColor: greenColor,
+                                        transitionType: TransitionType.TOP_TO_BOTTOM,
+                                        textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                                        onPress: () {
+                                          Navigator.pop(context);
+                                        },
+                                      ),
+                                      const SizedBox(width: 20),
+                                      AnimatedButton(
+                                        width: 80,
+                                        height: 30,
+                                        text: 'CANCEL',
+                                        selectedTextColor: whiteColor,
+                                        animatedOn: AnimatedOn.onHover,
+                                        animationDuration: 500.ms,
+                                        isReverse: true,
+                                        selectedBackgroundColor: darkColor,
+                                        backgroundColor: greyColor,
+                                        transitionType: TransitionType.TOP_TO_BOTTOM,
+                                        textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                                        onPress: () => Navigator.pop(context),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
                             ),
+                          ).then(
+                            (void value) {
+                              giftVault.dispose();
+                            },
                           );
                         },
                       ),
