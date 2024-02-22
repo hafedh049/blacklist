@@ -169,10 +169,6 @@ class _CategoryListState extends State<CategoryList> {
                                 ],
                               ),
                             ),
-                          ).then(
-                            (void value) {
-                              giftVault.dispose();
-                            },
                           );
                         },
                       ),
@@ -269,7 +265,6 @@ class _CategoryListState extends State<CategoryList> {
                                   textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
                                   onPress: () {
                                     final TextEditingController categoryName = TextEditingController();
-                                    final FocusNode categoryNode = FocusNode();
                                     showModalBottomSheet<void>(
                                       context: context,
                                       builder: (BuildContext context) => Container(
@@ -290,6 +285,7 @@ class _CategoryListState extends State<CategoryList> {
                                                         _(() {});
                                                       }
                                                     },
+                                                    autofocus: true,
                                                     controller: categoryName,
                                                     style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
                                                     decoration: InputDecoration(
@@ -360,11 +356,6 @@ class _CategoryListState extends State<CategoryList> {
                                           ],
                                         ),
                                       ),
-                                    ).then(
-                                      (void value) {
-                                        categoryName.dispose();
-                                        categoryNode.dispose();
-                                      },
                                     );
                                   },
                                 ),

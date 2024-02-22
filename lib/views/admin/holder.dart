@@ -1,6 +1,6 @@
 import 'package:blacklist/utils/shared.dart';
 import 'package:blacklist/views/admin/category_list.dart';
-import 'package:blacklist/views/vendor/client.dart';
+import 'package:blacklist/views/vendor/client_qr.dart';
 import 'package:blacklist/views/admin/dashboard/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
