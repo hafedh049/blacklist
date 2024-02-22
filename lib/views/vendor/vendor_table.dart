@@ -133,7 +133,7 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
                           }
                         }
                         _productSelections.setProductSelections(_productsDataSource.products);
-                        _productsDataSource.updateSelectedProducts();
+                        _productsDataSource.updateSelectedProducts(_productSelections);
                       },
                     ),
                   ],
