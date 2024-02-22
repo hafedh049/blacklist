@@ -34,36 +34,57 @@ class _CartRecepieState extends State<CartRecepie> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: scaffoldColor,
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              for (final Map<String, dynamic> item in _items) ...<Widget>[
-                InkWell(
-                  onTap: item["callback"],
-                  hoverColor: transparentColor,
-                  splashColor: transparentColor,
-                  highlightColor: transparentColor,
-                  child: AnimatedLoadingBorder(
-                    borderWidth: 4,
-                    borderColor: purpleColor,
-                    child: Container(
-                      width: 200,
-                      height: 150,
-                      padding: const EdgeInsets.all(24),
-                      decoration: const BoxDecoration(color: darkColor),
-                      alignment: Alignment.center,
-                      child: Text(item["title"], style: GoogleFonts.itim(fontSize: 35, fontWeight: FontWeight.w500, color: whiteColor)),
-                    ),
+      body: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                Text("Clients", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
+                const Spacer(),
+                RichText(
+                  text: TextSpan(
+                    children: <TextSpan>[
+                      TextSpan(text: "Admin", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
+                      TextSpan(text: " / Clients List", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 20),
               ],
-            ],
-          ),
+            ),
+            Container(width: MediaQuery.sizeOf(context).width, height: .3, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),
+            Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  for (final Map<String, dynamic> item in _items) ...<Widget>[
+                    InkWell(
+                      onTap: item["callback"],
+                      hoverColor: transparentColor,
+                      splashColor: transparentColor,
+                      highlightColor: transparentColor,
+                      child: AnimatedLoadingBorder(
+                        borderWidth: 4,
+                        borderColor: purpleColor,
+                        child: Container(
+                          width: 200,
+                          height: 150,
+                          padding: const EdgeInsets.all(24),
+                          decoration: const BoxDecoration(color: darkColor),
+                          alignment: Alignment.center,
+                          child: Text(item["title"], style: GoogleFonts.itim(fontSize: 35, fontWeight: FontWeight.w500, color: whiteColor)),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                  ],
+                ],
+              ),
+            )
+          ],
         ),
       ),
     );
