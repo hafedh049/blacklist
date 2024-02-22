@@ -268,30 +268,35 @@ class _StoresListState extends State<StoresList> {
                                             color: darkColor,
                                             child: StatefulBuilder(
                                               builder: (BuildContext context, void Function(void Function()) _) {
-                                                return TextField(o
+                                                return TextField(
                                                   autofocus: true,
-                                                  onChanged: (String value) {
-                                                    if (value.trim().length <= 1) {
-                                                      _(() {});
+                                                  obscureText: !_adminState,
+                                                  onChanged: (String value) => value.trim().length <= 1 ? _(() {}) : null,
+                                                  controller: _adminController,
+                                                  style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                                                  onSubmitted: (String value) {
+                                                    if (_adminController.text == _adminPassphrase) {
+                                                      Navigator.pop(context);
+                                                      _changePassword();
+                                                    } else {
+                                                      showToast("Wrong Credentials", redColor);
                                                     }
                                                   },
-                                                  controller: _adminController,
-                                                  onSubmitted: (String value) {},
-                                                  style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
                                                   decoration: InputDecoration(
                                                     contentPadding: const EdgeInsets.all(20),
                                                     focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
                                                     border: InputBorder.none,
                                                     hintText: "Security Bypass",
                                                     hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                                                    suffixIcon: _adminController.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
+                                                    prefixIcon: _adminController.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
+                                                    suffixIcon: IconButton(onPressed: () => _(() => _adminState = !_adminState), icon: Icon(_adminState ? FontAwesome.eye_solid : FontAwesome.eye_slash_solid, size: 15, color: purpleColor)),
                                                   ),
                                                   cursorColor: purpleColor,
                                                 );
                                               },
                                             ),
                                           ),
-                                          const SizedBox(height: 20),
+                                          const SizedBox(height: 10),
                                           Row(
                                             mainAxisSize: MainAxisSize.min,
                                             children: <Widget>[
@@ -311,77 +316,7 @@ class _StoresListState extends State<StoresList> {
                                                 onPress: () {
                                                   if (_adminController.text == _adminPassphrase) {
                                                     Navigator.pop(context);
-                                                    showModalBottomSheet(
-                                                      context: context,
-                                                      builder: (BuildContext context) => Container(
-                                                        padding: const EdgeInsets.all(16),
-                                                        child: Column(
-                                                          mainAxisSize: MainAxisSize.min,
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                          children: <Widget>[
-                                                            Container(
-                                                              color: darkColor,
-                                                              child: StatefulBuilder(
-                                                                builder: (BuildContext context, void Function(void Function()) _) {
-                                                                  return TextField(
-                                                                    obscureText: !_adminState,
-                                                                    onChanged: (String value) => value.trim().length <= 1 ? _(() {}) : null,
-                                                                    controller: _adminController,
-                                                                    onSubmitted: (String value) {
-                                                                      if (_adminController.text == _adminPassphrase) {
-                                                                        Navigator.pop(context);
-                                                                        _changePassword();
-                                                                      } else {
-                                                                        showToast("Wrong Credentials", redColor);
-                                                                      }
-                                                                    },
-                                                                    style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                                                                    decoration: InputDecoration(
-                                                                      contentPadding: const EdgeInsets.all(20),
-                                                                      focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
-                                                                      border: InputBorder.none,
-                                                                      hintText: "Security Bypass",
-                                                                      hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                                                                      prefixIcon: _adminController.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
-                                                                      suffixIcon: IconButton(onPressed: () => _(() => _adminState = !_adminState), icon: Icon(_adminState ? FontAwesome.eye_solid : FontAwesome.eye_slash_solid, size: 15, color: purpleColor)),
-                                                                    ),
-                                                                    cursorColor: purpleColor,
-                                                                  );
-                                                                },
-                                                              ),
-                                                            ),
-                                                            const SizedBox(height: 10),
-                                                            Row(
-                                                              mainAxisSize: MainAxisSize.min,
-                                                              children: <Widget>[
-                                                                const Spacer(),
-                                                                AnimatedButton(
-                                                                  width: 100,
-                                                                  height: 40,
-                                                                  text: 'CONTINUE',
-                                                                  selectedTextColor: whiteColor,
-                                                                  animatedOn: AnimatedOn.onHover,
-                                                                  animationDuration: 500.ms,
-                                                                  isReverse: true,
-                                                                  selectedBackgroundColor: darkColor,
-                                                                  backgroundColor: greenColor,
-                                                                  transitionType: TransitionType.TOP_TO_BOTTOM,
-                                                                  textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                                                                  onPress: () {
-                                                                    if (_adminController.text == _adminPassphrase) {
-                                                                      Navigator.pop(context);
-                                                                      _changePassword();
-                                                                    } else {
-                                                                      showToast("Wrong Credentials", redColor);
-                                                                    }
-                                                                  },
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    );
+                                                    _changePassword();
                                                   } else {
                                                     showToast("Wrong Credentials", redColor);
                                                   }
@@ -394,7 +329,7 @@ class _StoresListState extends State<StoresList> {
                                     ),
                                   );
                                 },
-                                icon: const Icon(FontAwesome.user_secret_solid, size: 20, color: whiteColor),
+                                icon: const Icon(FontAwesome.user_secret_solid, size: 25, color: purpleColor),
                               ),
                             ],
                           ),

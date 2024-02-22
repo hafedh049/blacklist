@@ -47,12 +47,18 @@ class _RecepiesState extends State<Recepies> {
                   children: <Widget>[
                     Text("RECIPIES", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
                     const SizedBox(height: 10),
-                    Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: BoxDecoration(color: greenColor, borderRadius: BorderRadius.circular(5)),
-                      child: Text(
-                        "${formatDate(DateTime.now(), <String>[yyyy, " ", MM.toUpperCase(), " ", dd])} - ${formatDate(DateTime.now().add(1.days), <String>[yyyy, " ", MM.toUpperCase(), " ", dd])}",
-                        style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                    InkWell(
+                      hoverColor: transparentColor,
+                      splashColor: transparentColor,
+                      highlightColor: transparentColor,
+                      onTap: () {},
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(color: purpleColor, borderRadius: BorderRadius.circular(5)),
+                        child: Text(
+                          "${formatDate(DateTime.now(), <String>[yyyy, " ", M, " ", dd]).toUpperCase()} - ${formatDate(DateTime.now().add(1.days), <String>[yyyy, " ", MM.toUpperCase(), " ", dd])}",
+                          style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                        ),
                       ),
                     ),
                   ],
