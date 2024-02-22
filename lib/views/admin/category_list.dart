@@ -30,7 +30,6 @@ class _CategoryListState extends State<CategoryList> {
     },
   );
   bool _deleteState = false;
-  bool _giftState = false;
 
   @override
   Widget build(BuildContext context) {
@@ -51,75 +50,66 @@ class _CategoryListState extends State<CategoryList> {
                     children: <Widget>[
                       Text("CATEGORIES LIST", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
                       const SizedBox(height: 10),
-                      StatefulBuilder(
-                        builder: (BuildContext context, void Function(void Function()) _) {
-                          return Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              AnimatedButton(
-                                width: 150,
-                                height: 30,
-                                text: _categories.map((Map<String, dynamic> e) => e["gift_state"]).toList().every((dynamic element) => element == true) ? "UNSELECT ALL" : 'SELECT ALL',
-                                selectedTextColor: whiteColor,
-                                animatedOn: AnimatedOn.onHover,
-                                animationDuration: 500.ms,
-                                isReverse: true,
-                                selectedBackgroundColor: darkColor,
-                                backgroundColor: purpleColor,
-                                transitionType: TransitionType.TOP_TO_BOTTOM,
-                                textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                                onPress: () {
-                                  if (!_categories.map((Map<String, dynamic> e) => e["gift_state"]).toList().every((dynamic element) => element == true)) {
-                                    for (Map<String, dynamic> item in _categories) {
-                                      item["gift_state"] = true;
-                                    }
-                                  } else {
-                                    for (Map<String, dynamic> item in _categories) {
-                                      item["gift_state"] = false;
-                                    }
-                                  }
-                                  setState(() {});
-                                },
-                              ),
-                              const SizedBox(width: 20),
-                              AnimatedButton(
-                                width: 80,
-                                height: 30,
-                                text: 'APPLY',
-                                selectedTextColor: whiteColor,
-                                animatedOn: AnimatedOn.onHover,
-                                animationDuration: 500.ms,
-                                isReverse: true,
-                                selectedBackgroundColor: darkColor,
-                                backgroundColor: purpleColor,
-                                transitionType: TransitionType.TOP_TO_BOTTOM,
-                                textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                                onPress: () {
-                                  showModalBottomSheet<void>(context: context, builder: (BuildContext context) => Container());
-                                },
-                              ),
-                              const SizedBox(width: 20),
-                              AnimatedButton(
-                                width: 80,
-                                height: 30,
-                                text: 'CANCEL',
-                                selectedTextColor: whiteColor,
-                                animatedOn: AnimatedOn.onHover,
-                                animationDuration: 500.ms,
-                                isReverse: true,
-                                selectedBackgroundColor: darkColor,
-                                backgroundColor: purpleColor,
-                                transitionType: TransitionType.TOP_TO_BOTTOM,
-                                textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                                onPress: () {
-                                  for (Map<String, dynamic> item in _categories) {
-                                    item["gift_state"] = false;
-                                  }
-                                  setState(() => _giftState = false);
-                                },
-                              ),
-                            ],
-                          );
+                      AnimatedButton(
+                        width: 150,
+                        height: 30,
+                        text: _categories.map((Map<String, dynamic> e) => e["gift_state"]).toList().every((dynamic element) => element == true) ? "UNSELECT ALL" : 'SELECT ALL',
+                        selectedTextColor: whiteColor,
+                        animatedOn: AnimatedOn.onHover,
+                        animationDuration: 500.ms,
+                        isReverse: true,
+                        selectedBackgroundColor: darkColor,
+                        backgroundColor: purpleColor,
+                        transitionType: TransitionType.TOP_TO_BOTTOM,
+                        textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                        onPress: () {
+                          if (!_categories.map((Map<String, dynamic> e) => e["gift_state"]).toList().every((dynamic element) => element == true)) {
+                            for (Map<String, dynamic> item in _categories) {
+                              item["gift_state"] = true;
+                            }
+                          } else {
+                            for (Map<String, dynamic> item in _categories) {
+                              item["gift_state"] = false;
+                            }
+                          }
+                          setState(() {});
+                        },
+                      ),
+                      const SizedBox(height: 10),
+                      AnimatedButton(
+                        width: 80,
+                        height: 30,
+                        text: 'APPLY',
+                        selectedTextColor: whiteColor,
+                        animatedOn: AnimatedOn.onHover,
+                        animationDuration: 500.ms,
+                        isReverse: true,
+                        selectedBackgroundColor: darkColor,
+                        backgroundColor: purpleColor,
+                        transitionType: TransitionType.TOP_TO_BOTTOM,
+                        textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                        onPress: () {
+                          showModalBottomSheet<void>(context: context, builder: (BuildContext context) => Container());
+                        },
+                      ),
+                      const SizedBox(height: 10),
+                      AnimatedButton(
+                        width: 80,
+                        height: 30,
+                        text: 'CANCEL',
+                        selectedTextColor: whiteColor,
+                        animatedOn: AnimatedOn.onHover,
+                        animationDuration: 500.ms,
+                        isReverse: true,
+                        selectedBackgroundColor: darkColor,
+                        backgroundColor: purpleColor,
+                        transitionType: TransitionType.TOP_TO_BOTTOM,
+                        textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                        onPress: () {
+                          for (Map<String, dynamic> item in _categories) {
+                            item["gift_state"] = false;
+                          }
+                          setState(() {});
                         },
                       ),
                     ],
@@ -128,7 +118,7 @@ class _CategoryListState extends State<CategoryList> {
                   StatefulBuilder(
                     builder: (BuildContext context, void Function(void Function()) _) {
                       return _deleteState
-                          ? Row(
+                          ? Column(
                               mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
                                 AnimatedButton(
@@ -156,7 +146,7 @@ class _CategoryListState extends State<CategoryList> {
                                     setState(() {});
                                   },
                                 ),
-                                const SizedBox(width: 20),
+                                const SizedBox(height: 20),
                                 AnimatedButton(
                                   width: 80,
                                   height: 30,
@@ -178,7 +168,7 @@ class _CategoryListState extends State<CategoryList> {
                                 ),
                               ],
                             )
-                          : Row(
+                          : Column(
                               mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
                                 AnimatedButton(
@@ -196,7 +186,6 @@ class _CategoryListState extends State<CategoryList> {
                                   onPress: () {
                                     final TextEditingController categoryName = TextEditingController();
                                     final FocusNode categoryNode = FocusNode();
-
                                     showModalBottomSheet<void>(
                                       context: context,
                                       builder: (BuildContext context) => Container(
@@ -295,7 +284,7 @@ class _CategoryListState extends State<CategoryList> {
                                     );
                                   },
                                 ),
-                                const SizedBox(width: 20),
+                                const SizedBox(height: 20),
                                 AnimatedButton(
                                   width: 80,
                                   height: 30,
@@ -334,13 +323,9 @@ class _CategoryListState extends State<CategoryList> {
                           Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const ProductTable()));
                         },
                         child: Container(
-                          width: 300,
+                          width: 400,
                           padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            color: darkColor,
-                            //   image: DecorationImage(image: AssetImage(item["background_image"]), fit: BoxFit.cover),
-                          ),
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: darkColor),
                           child: Stack(
                             alignment: Alignment.topRight,
                             children: <Widget>[
