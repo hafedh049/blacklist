@@ -61,7 +61,6 @@ class _HolderState extends State<Holder> with TickerProviderStateMixin {
         mainScreenTapClose: true,
         menuScreenWidth: 275.0,
         controller: _zoomController,
-        style: DrawerStyle.defaultStyle,
         menuScreen: Container(
           color: purpleColor.withOpacity(.3),
           child: Padding(
