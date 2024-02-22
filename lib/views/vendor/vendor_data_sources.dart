@@ -51,12 +51,12 @@ class Product {
   final DateTime date;
   final String reference;
   final double newPrice;
-  final int quantity;
-  final TextEditingController _cartController = TextEditingController(text: "0");
+  int quantity;
+  final TextEditingController cartController = TextEditingController(text: "0");
   bool selected = false;
 
   void dispose() {
-    _cartController.dispose();
+    cartController.dispose();
   }
 }
 
@@ -139,8 +139,8 @@ class ProductDataSource extends DataTableSource {
                   children: <Widget>[
                     IconButton(
                       onPressed: () {
-                        if (int.parse(product._cartController.text) > 0) {
-                          product._cartController.text = (int.parse(product._cartController.text) - 1).toString();
+                        if (int.parse(product.cartController.text) > 0) {
+                          product.cartController.text = (int.parse(product.cartController.text) - 1).toString();
                         }
                       },
                       icon: const Icon(FontAwesome.circle_minus_solid, size: 20, color: whiteColor),
@@ -150,7 +150,7 @@ class ProductDataSource extends DataTableSource {
                       height: 50,
                       color: darkColor,
                       child: TextField(
-                        controller: product._cartController,
+                        controller: product.cartController,
                         style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
                         textAlign: TextAlign.center,
                         decoration: const InputDecoration(
@@ -164,7 +164,7 @@ class ProductDataSource extends DataTableSource {
                     ),
                     IconButton(
                       onPressed: () {
-                        product._cartController.text = (int.parse(product._cartController.text) + 1).toString();
+                        product.cartController.text = (int.parse(product.cartController.text) + 1).toString();
                       },
                       icon: const Icon(FontAwesome.circle_plus_solid, size: 20, color: whiteColor),
                     ),

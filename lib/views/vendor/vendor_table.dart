@@ -125,7 +125,13 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
                       transitionType: TransitionType.TOP_TO_BOTTOM,
                       textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
                       onPress: () {
-                        for (int index = 0; index < 100; index++) {}
+                        for (Product product in _productsDataSource.products) {
+                          if (product.selected) {
+                            product.quantity -= int.parse(product.cartController.text);
+                          }
+                        }
+                        _productsDataSource.updateSelectedProducts(_productSelections);
+                        setState(() {});
                       },
                     ),
                   ],
