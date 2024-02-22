@@ -128,10 +128,12 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
                         for (Product product in _productsDataSource.products) {
                           if (product.selected) {
                             product.quantity -= int.parse(product.cartController.text);
+                            product.cartController.text = "0";
+                            product.selected = false;
                           }
                         }
-                        _productsDataSource.updateSelectedProducts(_productSelections);
-                        setState(() {});
+                        _productSelections.setProductSelections(_productsDataSource.products);
+                        _productsDataSource.updateSelectedProducts();
                       },
                     ),
                   ],
