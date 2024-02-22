@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_animated_button/flutter_animated_button.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:icons_plus/icons_plus.dart';
 
 class StoresList extends StatefulWidget {
   const StoresList({super.key});
@@ -51,7 +52,7 @@ class _StoresListState extends State<StoresList> {
                   RichText(
                     text: TextSpan(
                       children: <TextSpan>[
-                        TextSpan(text: "Stores", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
+                        TextSpan(text: "Admin", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
                         TextSpan(text: " / Add(Choose) store", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
                       ],
                     ),
@@ -79,68 +80,127 @@ class _StoresListState extends State<StoresList> {
                           width: 300,
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: darkColor),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
+                          child: Stack(
+                            alignment: Alignment.topRight,
                             children: <Widget>[
-                              Row(
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
-                                  Text("Store", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
-                                  const SizedBox(width: 10),
-                                  Text(item["store_name"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: blueColor)),
-                                ],
-                              ),
-                              const SizedBox(height: 10),
-                              Row(
-                                children: <Widget>[
-                                  Text("Vendor", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
-                                  const SizedBox(width: 10),
-                                  Text(item["vendor_name"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greenColor)),
-                                ],
-                              ),
-                              const SizedBox(height: 10),
-                              Row(
-                                children: <Widget>[
-                                  Text("Total Products", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
-                                  const SizedBox(width: 10),
-                                  Text(item["total_products"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: redColor)),
-                                ],
-                              ),
-                              const SizedBox(height: 20),
-                              Text("Vendor Acess", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
-                              const SizedBox(height: 10),
-                              Row(
-                                children: <Widget>[
-                                  AnimatedButton(
-                                    width: 100,
-                                    height: 40,
-                                    text: 'OPEN',
-                                    selectedTextColor: darkColor,
-                                    animatedOn: AnimatedOn.onHover,
-                                    animationDuration: 500.ms,
-                                    isReverse: true,
-                                    selectedBackgroundColor: greenColor,
-                                    backgroundColor: purpleColor,
-                                    transitionType: TransitionType.TOP_TO_BOTTOM,
-                                    textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                                    onPress: () {},
+                                  Row(
+                                    children: <Widget>[
+                                      Text("Store", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
+                                      const SizedBox(width: 10),
+                                      Text(item["store_name"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: blueColor)),
+                                    ],
                                   ),
-                                  const SizedBox(width: 20),
-                                  AnimatedButton(
-                                    width: 100,
-                                    height: 40,
-                                    text: 'CLOSE',
-                                    selectedTextColor: darkColor,
-                                    animatedOn: AnimatedOn.onHover,
-                                    animationDuration: 500.ms,
-                                    isReverse: true,
-                                    selectedBackgroundColor: redColor,
-                                    backgroundColor: purpleColor,
-                                    transitionType: TransitionType.TOP_TO_BOTTOM,
-                                    textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                                    onPress: () {},
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    children: <Widget>[
+                                      Text("Vendor", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
+                                      const SizedBox(width: 10),
+                                      Text(item["vendor_name"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greenColor)),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    children: <Widget>[
+                                      Text("Total Products", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
+                                      const SizedBox(width: 10),
+                                      Text(item["total_products"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: redColor)),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 20),
+                                  Text("Vendor Acess", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    children: <Widget>[
+                                      AnimatedButton(
+                                        width: 100,
+                                        height: 40,
+                                        text: 'OPEN',
+                                        selectedTextColor: darkColor,
+                                        animatedOn: AnimatedOn.onHover,
+                                        animationDuration: 500.ms,
+                                        isReverse: true,
+                                        selectedBackgroundColor: greenColor,
+                                        backgroundColor: purpleColor,
+                                        transitionType: TransitionType.TOP_TO_BOTTOM,
+                                        textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                                        onPress: () {},
+                                      ),
+                                      const SizedBox(width: 20),
+                                      AnimatedButton(
+                                        width: 100,
+                                        height: 40,
+                                        text: 'CLOSE',
+                                        selectedTextColor: darkColor,
+                                        animatedOn: AnimatedOn.onHover,
+                                        animationDuration: 500.ms,
+                                        isReverse: true,
+                                        selectedBackgroundColor: redColor,
+                                        backgroundColor: purpleColor,
+                                        transitionType: TransitionType.TOP_TO_BOTTOM,
+                                        textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                                        onPress: () {},
+                                      ),
+                                    ],
                                   ),
                                 ],
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  showModalBottomSheet(
+                                    context: context,
+                                    builder: (BuildContext context) => Container(
+                                      padding: const EdgeInsets.all(16),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Container(
+                                            color: darkColor,
+                                            child: StatefulBuilder(
+                                              builder: (BuildContext context, void Function(void Function()) _) {
+                                                return TextField(
+                                                  onChanged: (String value) {
+                                                    if (value.trim().length <= 1) {
+                                                      _(() {});
+                                                    }
+                                                  },
+                                                  controller: entry.value["controller"],
+                                                  readOnly: entry.value["type"] == "date" || entry.value["type"] == "reference" ? true : false,
+                                                  style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                                                  decoration: InputDecoration(
+                                                    contentPadding: const EdgeInsets.all(20),
+                                                    focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
+                                                    border: InputBorder.none,
+                                                    hintText: entry.value["hint"],
+                                                    hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                                                    suffixIcon: entry.value["controller"].text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
+                                                  ),
+                                                  cursorColor: purpleColor,
+                                                  inputFormatters: <TextInputFormatter>[
+                                                    FilteringTextInputFormatter.allow(
+                                                      RegExp(
+                                                        entry.value["type"] == "double"
+                                                            ? r"[\d.]"
+                                                            : entry.value["type"] == "number"
+                                                                ? r"\d"
+                                                                : r".",
+                                                      ),
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                                icon: const Icon(FontAwesome.user_secret_solid, size: 20, color: whiteColor),
                               ),
                             ],
                           ),

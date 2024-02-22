@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:blacklist/utils/shared.dart';
 import 'package:blacklist/views/admin/products_table.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_animated_button/flutter_animated_button.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -310,6 +311,7 @@ class _CategoryListState extends State<CategoryList> {
                                                     child: StatefulBuilder(
                                                       builder: (BuildContext context, void Function(void Function()) _) {
                                                         return TextField(
+                                                          inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
                                                           autofocus: true,
                                                           onChanged: (String value) {
                                                             if (value.trim().length <= 1) {
