@@ -26,6 +26,11 @@ class _StoresListState extends State<StoresList> {
 
   final String _adminPassphrase = "admin";
 
+  bool _oldPasswordState = false;
+  bool _newPasswordState = false;
+
+  bool _adminState = false;
+
   @override
   void dispose() {
     _adminController.dispose();
@@ -48,21 +53,18 @@ class _StoresListState extends State<StoresList> {
               child: StatefulBuilder(
                 builder: (BuildContext context, void Function(void Function()) _) {
                   return TextField(
-                    onChanged: (String value) {
-                      if (value.trim().length <= 1) {
-                        _(() {});
-                      }
-                    },
+                    obscureText: !_oldPasswordState,
+                    onChanged: (String value) => value.trim().length <= 1 ? _(() {}) : null,
                     controller: _oldPasswordController,
-                    onSubmitted: (String value) {},
                     style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
                     decoration: InputDecoration(
                       contentPadding: const EdgeInsets.all(20),
                       focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
                       border: InputBorder.none,
-                      hintText: "OLD PASSWORD",
+                      hintText: 'OLD PASSWORD',
                       hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                      suffixIcon: _oldPasswordController.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
+                      prefixIcon: _oldPasswordController.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
+                      suffixIcon: IconButton(onPressed: () => _(() => _oldPasswordState = !_oldPasswordState), icon: Icon(_oldPasswordState ? FontAwesome.eye_solid : FontAwesome.eye_slash_solid, size: 15, color: purpleColor)),
                     ),
                     cursorColor: purpleColor,
                   );
@@ -75,21 +77,18 @@ class _StoresListState extends State<StoresList> {
               child: StatefulBuilder(
                 builder: (BuildContext context, void Function(void Function()) _) {
                   return TextField(
-                    onChanged: (String value) {
-                      if (value.trim().length <= 1) {
-                        _(() {});
-                      }
-                    },
+                    obscureText: !_newPasswordState,
+                    onChanged: (String value) => value.trim().length <= 1 ? _(() {}) : null,
                     controller: _newPasswordController,
-                    onSubmitted: (String value) {},
                     style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
                     decoration: InputDecoration(
                       contentPadding: const EdgeInsets.all(20),
                       focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
                       border: InputBorder.none,
-                      hintText: "NEW PASSWORD",
+                      hintText: 'NEW PASSWORD',
                       hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                      suffixIcon: _newPasswordController.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
+                      prefixIcon: _newPasswordController.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
+                      suffixIcon: IconButton(onPressed: () => _(() => _newPasswordState = !_newPasswordState), icon: Icon(_newPasswordState ? FontAwesome.eye_solid : FontAwesome.eye_slash_solid, size: 15, color: purpleColor)),
                     ),
                     cursorColor: purpleColor,
                   );
@@ -102,9 +101,9 @@ class _StoresListState extends State<StoresList> {
               children: <Widget>[
                 const Spacer(),
                 AnimatedButton(
-                  width: 80,
+                  width: 100,
                   height: 30,
-                  text: 'CONTINUE',
+                  text: 'CHANGE',
                   selectedTextColor: whiteColor,
                   animatedOn: AnimatedOn.onHover,
                   animationDuration: 500.ms,
@@ -269,7 +268,7 @@ class _StoresListState extends State<StoresList> {
                                             color: darkColor,
                                             child: StatefulBuilder(
                                               builder: (BuildContext context, void Function(void Function()) _) {
-                                                return TextField(
+                                                return TextField(o
                                                   autofocus: true,
                                                   onChanged: (String value) {
                                                     if (value.trim().length <= 1) {
@@ -298,7 +297,7 @@ class _StoresListState extends State<StoresList> {
                                             children: <Widget>[
                                               const Spacer(),
                                               AnimatedButton(
-                                                width: 80,
+                                                width: 100,
                                                 height: 30,
                                                 text: 'CONTINUE',
                                                 selectedTextColor: whiteColor,
@@ -325,11 +324,8 @@ class _StoresListState extends State<StoresList> {
                                                               child: StatefulBuilder(
                                                                 builder: (BuildContext context, void Function(void Function()) _) {
                                                                   return TextField(
-                                                                    onChanged: (String value) {
-                                                                      if (value.trim().length <= 1) {
-                                                                        _(() {});
-                                                                      }
-                                                                    },
+                                                                    obscureText: !_adminState,
+                                                                    onChanged: (String value) => value.trim().length <= 1 ? _(() {}) : null,
                                                                     controller: _adminController,
                                                                     onSubmitted: (String value) {
                                                                       if (_adminController.text == _adminPassphrase) {
@@ -346,21 +342,22 @@ class _StoresListState extends State<StoresList> {
                                                                       border: InputBorder.none,
                                                                       hintText: "Security Bypass",
                                                                       hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                                                                      suffixIcon: _adminController.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
+                                                                      prefixIcon: _adminController.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
+                                                                      suffixIcon: IconButton(onPressed: () => _(() => _adminState = !_adminState), icon: Icon(_adminState ? FontAwesome.eye_solid : FontAwesome.eye_slash_solid, size: 15, color: purpleColor)),
                                                                     ),
                                                                     cursorColor: purpleColor,
                                                                   );
                                                                 },
                                                               ),
                                                             ),
-                                                            const SizedBox(height: 20),
+                                                            const SizedBox(height: 10),
                                                             Row(
                                                               mainAxisSize: MainAxisSize.min,
                                                               children: <Widget>[
                                                                 const Spacer(),
                                                                 AnimatedButton(
-                                                                  width: 80,
-                                                                  height: 30,
+                                                                  width: 100,
+                                                                  height: 40,
                                                                   text: 'CONTINUE',
                                                                   selectedTextColor: whiteColor,
                                                                   animatedOn: AnimatedOn.onHover,
