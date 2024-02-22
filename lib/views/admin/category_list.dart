@@ -26,9 +26,12 @@ class _CategoryListState extends State<CategoryList> {
       "total_products": Random().nextInt(4000),
       "total_articles": Random().nextInt(20),
       "state": false,
+      "gift_state": false,
     },
   );
   bool _deleteState = false;
+  bool _giftState = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,7 +45,223 @@ class _CategoryListState extends State<CategoryList> {
               const SizedBox(height: 30),
               Row(
                 children: <Widget>[
-                  Text("CATEGORIES LIST", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Text("CATEGORIES LIST", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
+                      const SizedBox(height: 10),
+                      StatefulBuilder(
+                        builder: (BuildContext context, void Function(void Function()) _) {
+                          return _giftState
+                              ? Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    AnimatedButton(
+                                      width: 150,
+                                      height: 30,
+                                      text: _categories.map((Map<String, dynamic> e) => e["state"]).toList().every((dynamic element) => element == true) ? "UNSELECT ALL" : 'SELECT ALL',
+                                      selectedTextColor: whiteColor,
+                                      animatedOn: AnimatedOn.onHover,
+                                      animationDuration: 500.ms,
+                                      isReverse: true,
+                                      selectedBackgroundColor: darkColor,
+                                      backgroundColor: greenColor,
+                                      transitionType: TransitionType.TOP_TO_BOTTOM,
+                                      textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                                      onPress: () {
+                                        if (!_categories.map((Map<String, dynamic> e) => e["state"]).toList().every((dynamic element) => element == true)) {
+                                          for (Map<String, dynamic> item in _categories) {
+                                            item["state"] = true;
+                                          }
+                                        } else {
+                                          for (Map<String, dynamic> item in _categories) {
+                                            item["state"] = false;
+                                          }
+                                        }
+                                        setState(() {});
+                                      },
+                                    ),
+                                    const SizedBox(width: 20),
+                                    AnimatedButton(
+                                      width: 80,
+                                      height: 30,
+                                      text: 'APPLY',
+                                      selectedTextColor: whiteColor,
+                                      animatedOn: AnimatedOn.onHover,
+                                      animationDuration: 500.ms,
+                                      isReverse: true,
+                                      selectedBackgroundColor: darkColor,
+                                      backgroundColor: redColor,
+                                      transitionType: TransitionType.TOP_TO_BOTTOM,
+                                      textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                                      onPress: () {
+                                        for (Map<String, dynamic> item in _categories) {
+                                          item["gift_state"] = false;
+                                        }
+                                        setState(() => _giftState = false);
+                                      },
+                                    ),
+                                    const SizedBox(width: 20),
+                                    AnimatedButton(
+                                      width: 80,
+                                      height: 30,
+                                      text: 'CANCEL',
+                                      selectedTextColor: whiteColor,
+                                      animatedOn: AnimatedOn.onHover,
+                                      animationDuration: 500.ms,
+                                      isReverse: true,
+                                      selectedBackgroundColor: darkColor,
+                                      backgroundColor: redColor,
+                                      transitionType: TransitionType.TOP_TO_BOTTOM,
+                                      textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                                      onPress: () {
+                                        for (Map<String, dynamic> item in _categories) {
+                                          item["gift_state"] = false;
+                                        }
+                                        setState(() => _giftState = false);
+                                      },
+                                    ),
+                                  ],
+                                )
+                              : Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    AnimatedButton(
+                                      width: 80,
+                                      height: 30,
+                                      text: 'ADD',
+                                      selectedTextColor: whiteColor,
+                                      animatedOn: AnimatedOn.onHover,
+                                      animationDuration: 500.ms,
+                                      isReverse: true,
+                                      selectedBackgroundColor: darkColor,
+                                      backgroundColor: greenColor,
+                                      transitionType: TransitionType.TOP_TO_BOTTOM,
+                                      textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                                      onPress: () {
+                                        final TextEditingController categoryName = TextEditingController();
+                                        final FocusNode categoryNode = FocusNode();
+
+                                        showModalBottomSheet<void>(
+                                          context: context,
+                                          builder: (BuildContext context) => Container(
+                                            padding: const EdgeInsets.all(16),
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: <Widget>[
+                                                Text("Category Name", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
+                                                const SizedBox(height: 10),
+                                                Container(
+                                                  color: darkColor,
+                                                  child: StatefulBuilder(
+                                                    builder: (BuildContext context, void Function(void Function()) _) {
+                                                      return TextField(
+                                                        onChanged: (String value) {
+                                                          if (value.trim().length <= 1) {
+                                                            _(() {});
+                                                          }
+                                                        },
+                                                        controller: categoryName,
+                                                        style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                                                        decoration: InputDecoration(
+                                                          contentPadding: const EdgeInsets.all(20),
+                                                          focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
+                                                          border: InputBorder.none,
+                                                          hintText: "Choose a category name",
+                                                          hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                                                          suffixIcon: categoryName.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
+                                                        ),
+                                                        cursorColor: purpleColor,
+                                                      );
+                                                    },
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 20),
+                                                Row(
+                                                  children: <Widget>[
+                                                    const Spacer(),
+                                                    AnimatedButton(
+                                                      width: 80,
+                                                      height: 30,
+                                                      text: 'ADD',
+                                                      selectedTextColor: whiteColor,
+                                                      animatedOn: AnimatedOn.onHover,
+                                                      animationDuration: 500.ms,
+                                                      isReverse: true,
+                                                      selectedBackgroundColor: darkColor,
+                                                      backgroundColor: greenColor,
+                                                      transitionType: TransitionType.TOP_TO_BOTTOM,
+                                                      textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                                                      onPress: () {
+                                                        if (categoryName.text.trim().isNotEmpty) {
+                                                          showToast("New category has been added", greenColor);
+                                                          _categories.add(
+                                                            <String, dynamic>{
+                                                              "background_image": "assets/images/bg.jpg",
+                                                              "category_name": categoryName.text.trim(),
+                                                              "total_products": 0,
+                                                              "total_articles": 0,
+                                                              "state": false,
+                                                            },
+                                                          );
+                                                          Navigator.pop(context);
+                                                          setState(() {});
+                                                        } else {
+                                                          showToast("Please enter a category name", redColor);
+                                                        }
+                                                      },
+                                                    ),
+                                                    const SizedBox(width: 20),
+                                                    AnimatedButton(
+                                                      width: 80,
+                                                      height: 30,
+                                                      text: 'CANCEL',
+                                                      selectedTextColor: whiteColor,
+                                                      animatedOn: AnimatedOn.onHover,
+                                                      animationDuration: 500.ms,
+                                                      isReverse: true,
+                                                      selectedBackgroundColor: darkColor,
+                                                      backgroundColor: greyColor,
+                                                      transitionType: TransitionType.TOP_TO_BOTTOM,
+                                                      textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                                                      onPress: () => Navigator.pop(context),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ).then(
+                                          (void value) {
+                                            categoryName.dispose();
+                                            categoryNode.dispose();
+                                          },
+                                        );
+                                      },
+                                    ),
+                                    const SizedBox(width: 20),
+                                    AnimatedButton(
+                                      width: 80,
+                                      height: 30,
+                                      text: 'DELETE',
+                                      selectedTextColor: whiteColor,
+                                      animatedOn: AnimatedOn.onHover,
+                                      animationDuration: 500.ms,
+                                      isReverse: true,
+                                      selectedBackgroundColor: darkColor,
+                                      backgroundColor: redColor,
+                                      transitionType: TransitionType.TOP_TO_BOTTOM,
+                                      textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                                      onPress: () => setState(() => _deleteState = true),
+                                    ),
+                                  ],
+                                );
+                        },
+                      ),
+                    ],
+                  ),
                   const Spacer(),
                   StatefulBuilder(
                     builder: (BuildContext context, void Function(void Function()) _) {
