@@ -85,6 +85,7 @@ class _AfterQRScanState extends State<AfterQRScan> {
                     textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
                     onPress: () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const VendorTable())),
                   ),
+                  const SizedBox(width: 20),
                   AnimatedButton(
                     width: 80,
                     height: 30,
@@ -101,7 +102,7 @@ class _AfterQRScanState extends State<AfterQRScan> {
                   ),
                 ],
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 20),
               CommentTreeWidget<String, Map<String, dynamic>>(
                 "Categories",
                 _categories,
