@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -13,7 +16,12 @@ class ClientsList extends StatefulWidget {
 class _ClientsListState extends State<ClientsList> {
   final List<Map<String, dynamic>> _clients = List<Map<String, dynamic>>.generate(
     100,
-    (int index) => <String, dynamic>{},
+    (int index) => <String, dynamic>{
+      "name": "Client ${index + 1}",
+      "cin": List<String>.generate(8, (int index) => Random().nextInt(10).toString()).join(),
+      "phone_number": "+216 ${Random().nextInt(90) + 10} ${Random().nextInt(900) + 100} ${Random().nextInt(900) + 100}",
+      "birth_date": formatDate(DateTime(Random().nextInt(20) + 1960, Random().nextInt(12) + 1, Random().nextInt(31) + 1), const <String>[]),
+    },
   );
   @override
   Widget build(BuildContext context) {
@@ -40,10 +48,15 @@ class _ClientsListState extends State<ClientsList> {
             Container(width: MediaQuery.sizeOf(context).width, height: .3, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),
             Expanded(
               child: ListView.separated(
-                itemBuilder: (BuildContext context, int index) => Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[],
+                itemBuilder: (BuildContext context, int index) => Row(
+                  children: <Widget>[
+                    const SizedBox(width: 20),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[],
+                    ),
+                  ],
                 ),
                 separatorBuilder: (BuildContext context, int index) => const SizedBox(height: 20),
                 itemCount: _clients.length,
