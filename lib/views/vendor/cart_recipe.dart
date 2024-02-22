@@ -42,13 +42,13 @@ class _CartRecepieState extends State<CartRecepie> {
           children: <Widget>[
             Row(
               children: <Widget>[
-                Text("Clients", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
+                Text("Home", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
                 const Spacer(),
                 RichText(
                   text: TextSpan(
                     children: <TextSpan>[
-                      TextSpan(text: "Admin", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
-                      TextSpan(text: " / Clients List", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
+                      TextSpan(text: "Vendor", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
+                      TextSpan(text: " / Home Page", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
                     ],
                   ),
                 ),
