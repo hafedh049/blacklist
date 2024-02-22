@@ -35,111 +35,66 @@ class _SecondDayState extends State<SecondDay> {
       backgroundColor: scaffoldColor,
       body: Padding(
         padding: const EdgeInsets.all(24),
-        child: Column(
-          children: <Widget>[
-            Row(
+        child: ListView.separated(
+          itemBuilder: (BuildContext context, int index) => Container(
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(color: darkColor, borderRadius: BorderRadius.circular(15)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                Row(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    Text("RECIPIES", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
-                    const SizedBox(height: 10),
-                    InkWell(
-                      hoverColor: transparentColor,
-                      splashColor: transparentColor,
-                      highlightColor: transparentColor,
-                      onTap: () {},
-                      child: Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(color: purpleColor, borderRadius: BorderRadius.circular(5)),
-                        child: Text(
-                          // "${formatDate(DateTime.now(), <String>[yyyy, " ", M, " ", dd]).toUpperCase()} - ${formatDate(DateTime.now().add(1.days), <String>[yyyy, " ", M, " ", dd])}",
-                          widget.date,
-                          style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                        ),
-                      ),
+                    Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(color: _recepies[index]["client"] == "Anonymous" ? redColor : greenColor, borderRadius: BorderRadius.circular(5)),
+                      child: Text("Client", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
                     ),
+                    const SizedBox(width: 10),
+                    Text(_recepies[index]["client"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
                   ],
                 ),
-                const SizedBox(width: 20),
-                const Spacer(),
-                const SizedBox(width: 20),
-                RichText(
-                  text: TextSpan(
-                    children: <TextSpan>[
-                      TextSpan(text: "Vendor", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
-                      TextSpan(text: " / List Recepies", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
-                    ],
-                  ),
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(color: greenColor, borderRadius: BorderRadius.circular(5)),
+                      child: Text("CIN", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
+                    ),
+                    const SizedBox(width: 10),
+                    Text(_recepies[index]["cin"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
+                  ],
                 ),
+                const SizedBox(height: 10),
+                for (final List<String> product in _recepies[index]["products"])
+                  RichText(
+                    text: TextSpan(
+                      children: <TextSpan>[
+                        TextSpan(text: product[0], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
+                        TextSpan(text: " • ", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
+                        TextSpan(text: product[1], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
+                        TextSpan(text: " / ", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
+                        TextSpan(text: product[2], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
+                        TextSpan(text: " • ", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
+                        TextSpan(text: " ( ", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
+                        TextSpan(text: product[3], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
+                        TextSpan(text: " ) ", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
+                        TextSpan(text: " ➤ ", style: GoogleFonts.itim(fontSize: 15, fontWeight: FontWeight.w500, color: purpleColor)),
+                        TextSpan(text: " [ ", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
+                        TextSpan(text: product[4], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
+                        TextSpan(text: " ] ", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
+                        TextSpan(text: " DT", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
+                      ],
+                    ),
+                  ),
               ],
             ),
-            Container(width: MediaQuery.sizeOf(context).width, height: .3, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),
-            Expanded(
-              child: ListView.separated(
-                itemBuilder: (BuildContext context, int index) => Container(
-                  padding: const EdgeInsets.all(24),
-                  decoration: BoxDecoration(color: darkColor, borderRadius: BorderRadius.circular(15)),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Container(
-                            padding: const EdgeInsets.all(4),
-                            decoration: BoxDecoration(color: _recepies[index]["client"] == "Anonymous" ? redColor : greenColor, borderRadius: BorderRadius.circular(5)),
-                            child: Text("Client", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
-                          ),
-                          const SizedBox(width: 10),
-                          Text(_recepies[index]["client"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Container(
-                            padding: const EdgeInsets.all(4),
-                            decoration: BoxDecoration(color: greenColor, borderRadius: BorderRadius.circular(5)),
-                            child: Text("CIN", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
-                          ),
-                          const SizedBox(width: 10),
-                          Text(_recepies[index]["cin"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-                      for (final List<String> product in _recepies[index]["products"])
-                        RichText(
-                          text: TextSpan(
-                            children: <TextSpan>[
-                              TextSpan(text: product[0], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
-                              TextSpan(text: " • ", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
-                              TextSpan(text: product[1], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
-                              TextSpan(text: " / ", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
-                              TextSpan(text: product[2], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
-                              TextSpan(text: " • ", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
-                              TextSpan(text: " ( ", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
-                              TextSpan(text: product[3], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
-                              TextSpan(text: " ) ", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
-                              TextSpan(text: " ➤ ", style: GoogleFonts.itim(fontSize: 15, fontWeight: FontWeight.w500, color: purpleColor)),
-                              TextSpan(text: " [ ", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
-                              TextSpan(text: product[4], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
-                              TextSpan(text: " ] ", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
-                              TextSpan(text: " DT", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
-                            ],
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-                separatorBuilder: (BuildContext context, int index) => const SizedBox(height: 20),
-                itemCount: _recepies.length,
-              ),
-            ),
-          ],
+          ),
+          separatorBuilder: (BuildContext context, int index) => const SizedBox(height: 20),
+          itemCount: _recepies.length,
         ),
       ),
     );
