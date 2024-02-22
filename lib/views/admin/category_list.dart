@@ -30,6 +30,7 @@ class _CategoryListState extends State<CategoryList> {
     },
   );
   bool _deleteState = false;
+  bool _giftState = false;
 
   @override
   Widget build(BuildContext context) {
@@ -52,75 +53,73 @@ class _CategoryListState extends State<CategoryList> {
                       const SizedBox(height: 10),
                       StatefulBuilder(
                         builder: (BuildContext context, void Function(void Function()) _) {
-                          return _giftState
-                              ? Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: <Widget>[
-                                    AnimatedButton(
-                                      width: 150,
-                                      height: 30,
-                                      text: _categories.map((Map<String, dynamic> e) => e["gift_state"]).toList().every((dynamic element) => element == true) ? "UNSELECT ALL" : 'SELECT ALL',
-                                      selectedTextColor: whiteColor,
-                                      animatedOn: AnimatedOn.onHover,
-                                      animationDuration: 500.ms,
-                                      isReverse: true,
-                                      selectedBackgroundColor: darkColor,
-                                      backgroundColor: greenColor,
-                                      transitionType: TransitionType.TOP_TO_BOTTOM,
-                                      textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                                      onPress: () {
-                                        if (!_categories.map((Map<String, dynamic> e) => e["gift_state"]).toList().every((dynamic element) => element == true)) {
-                                          for (Map<String, dynamic> item in _categories) {
-                                            item["gift_state"] = true;
-                                          }
-                                        } else {
-                                          for (Map<String, dynamic> item in _categories) {
-                                            item["gift_state"] = false;
-                                          }
-                                        }
-                                        setState(() {});
-                                      },
-                                    ),
-                                    const SizedBox(width: 20),
-                                    AnimatedButton(
-                                      width: 80,
-                                      height: 30,
-                                      text: 'APPLY',
-                                      selectedTextColor: whiteColor,
-                                      animatedOn: AnimatedOn.onHover,
-                                      animationDuration: 500.ms,
-                                      isReverse: true,
-                                      selectedBackgroundColor: darkColor,
-                                      backgroundColor: redColor,
-                                      transitionType: TransitionType.TOP_TO_BOTTOM,
-                                      textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                                      onPress: () {
-                                        showModalBottomSheet<void>(context: context, builder: (BuildContext context) => Container());
-                                      },
-                                    ),
-                                    const SizedBox(width: 20),
-                                    AnimatedButton(
-                                      width: 80,
-                                      height: 30,
-                                      text: 'CANCEL',
-                                      selectedTextColor: whiteColor,
-                                      animatedOn: AnimatedOn.onHover,
-                                      animationDuration: 500.ms,
-                                      isReverse: true,
-                                      selectedBackgroundColor: darkColor,
-                                      backgroundColor: redColor,
-                                      transitionType: TransitionType.TOP_TO_BOTTOM,
-                                      textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                                      onPress: () {
-                                        for (Map<String, dynamic> item in _categories) {
-                                          item["gift_state"] = false;
-                                        }
-                                        setState(() => _giftState = false);
-                                      },
-                                    ),
-                                  ],
-                                )
-                              : const SizedBox();
+                          return Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              AnimatedButton(
+                                width: 150,
+                                height: 30,
+                                text: _categories.map((Map<String, dynamic> e) => e["gift_state"]).toList().every((dynamic element) => element == true) ? "UNSELECT ALL" : 'SELECT ALL',
+                                selectedTextColor: whiteColor,
+                                animatedOn: AnimatedOn.onHover,
+                                animationDuration: 500.ms,
+                                isReverse: true,
+                                selectedBackgroundColor: darkColor,
+                                backgroundColor: purpleColor,
+                                transitionType: TransitionType.TOP_TO_BOTTOM,
+                                textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                                onPress: () {
+                                  if (!_categories.map((Map<String, dynamic> e) => e["gift_state"]).toList().every((dynamic element) => element == true)) {
+                                    for (Map<String, dynamic> item in _categories) {
+                                      item["gift_state"] = true;
+                                    }
+                                  } else {
+                                    for (Map<String, dynamic> item in _categories) {
+                                      item["gift_state"] = false;
+                                    }
+                                  }
+                                  setState(() {});
+                                },
+                              ),
+                              const SizedBox(width: 20),
+                              AnimatedButton(
+                                width: 80,
+                                height: 30,
+                                text: 'APPLY',
+                                selectedTextColor: whiteColor,
+                                animatedOn: AnimatedOn.onHover,
+                                animationDuration: 500.ms,
+                                isReverse: true,
+                                selectedBackgroundColor: darkColor,
+                                backgroundColor: purpleColor,
+                                transitionType: TransitionType.TOP_TO_BOTTOM,
+                                textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                                onPress: () {
+                                  showModalBottomSheet<void>(context: context, builder: (BuildContext context) => Container());
+                                },
+                              ),
+                              const SizedBox(width: 20),
+                              AnimatedButton(
+                                width: 80,
+                                height: 30,
+                                text: 'CANCEL',
+                                selectedTextColor: whiteColor,
+                                animatedOn: AnimatedOn.onHover,
+                                animationDuration: 500.ms,
+                                isReverse: true,
+                                selectedBackgroundColor: darkColor,
+                                backgroundColor: purpleColor,
+                                transitionType: TransitionType.TOP_TO_BOTTOM,
+                                textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                                onPress: () {
+                                  for (Map<String, dynamic> item in _categories) {
+                                    item["gift_state"] = false;
+                                  }
+                                  setState(() => _giftState = false);
+                                },
+                              ),
+                            ],
+                          );
                         },
                       ),
                     ],
@@ -377,16 +376,22 @@ class _CategoryListState extends State<CategoryList> {
                               Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
-                                  if (_deleteState)
-                                    StatefulBuilder(
-                                      builder: (BuildContext context, void Function(void Function()) _) {
-                                        return Checkbox(
-                                          activeColor: purpleColor,
-                                          value: item["gift_state"],
-                                          onChanged: (bool? value) => _(() => item["gift_state"] = value),
-                                        );
-                                      },
-                                    ),
+                                  Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      const Icon(FontAwesome.gift_solid, size: 15, color: greenColor),
+                                      const SizedBox(width: 10),
+                                      StatefulBuilder(
+                                        builder: (BuildContext context, void Function(void Function()) _) {
+                                          return Checkbox(
+                                            activeColor: purpleColor,
+                                            value: item["gift_state"],
+                                            onChanged: (bool? value) => _(() => item["gift_state"] = value),
+                                          );
+                                        },
+                                      ),
+                                    ],
+                                  ),
                                   if (_deleteState)
                                     StatefulBuilder(
                                       builder: (BuildContext context, void Function(void Function()) _) {
