@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:blacklist/views/admin/clients_products.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -51,49 +52,55 @@ class _ClientsListState extends State<ClientsList> {
             Container(width: MediaQuery.sizeOf(context).width, height: .3, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),
             Expanded(
               child: ListView.separated(
-                itemBuilder: (BuildContext context, int index) => Container(
-                  padding: const EdgeInsets.all(24),
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), color: darkColor),
-                  width: 250,
-                  child: Wrap(
-                    crossAxisAlignment: WrapCrossAlignment.start,
-                    alignment: WrapAlignment.start,
-                    runAlignment: WrapAlignment.start,
-                    runSpacing: 20,
-                    spacing: 20,
-                    children: <Widget>[
-                      SizedBox(
-                        width: 250,
-                        child: PrettyQrView.data(
-                          data: _clients[index].toString(),
-                          decoration: const PrettyQrDecoration(
-                            shape: PrettyQrSmoothSymbol(color: purpleColor),
-                            image: PrettyQrDecorationImage(image: AssetImage('assets/images/flutter.png'), fit: BoxFit.cover),
+                itemBuilder: (BuildContext context, int index) => InkWell(
+                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const ClientsProducts())),
+                  hoverColor: transparentColor,
+                  splashColor: transparentColor,
+                  highlightColor: transparentColor,
+                  child: Container(
+                    padding: const EdgeInsets.all(24),
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), color: darkColor),
+                    width: 250,
+                    child: Wrap(
+                      crossAxisAlignment: WrapCrossAlignment.start,
+                      alignment: WrapAlignment.start,
+                      runAlignment: WrapAlignment.start,
+                      runSpacing: 20,
+                      spacing: 20,
+                      children: <Widget>[
+                        SizedBox(
+                          width: 250,
+                          child: PrettyQrView.data(
+                            data: _clients[index].toString(),
+                            decoration: const PrettyQrDecoration(
+                              shape: PrettyQrSmoothSymbol(color: purpleColor),
+                              image: PrettyQrDecorationImage(image: AssetImage('assets/images/flutter.png'), fit: BoxFit.cover),
+                            ),
                           ),
                         ),
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          for (final MapEntry<String, dynamic> entry in _clients[index].entries) ...<Widget>[
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                Container(
-                                  padding: const EdgeInsets.all(4),
-                                  decoration: BoxDecoration(color: purpleColor, borderRadius: BorderRadius.circular(5)),
-                                  child: Text(entry.key.replaceAll("_", " ").toUpperCase(), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
-                                ),
-                                const SizedBox(width: 10),
-                                Text(entry.value.toUpperCase(), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
-                              ],
-                            ),
-                            const SizedBox(height: 10),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            for (final MapEntry<String, dynamic> entry in _clients[index].entries) ...<Widget>[
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Container(
+                                    padding: const EdgeInsets.all(4),
+                                    decoration: BoxDecoration(color: purpleColor, borderRadius: BorderRadius.circular(5)),
+                                    child: Text(entry.key.replaceAll("_", " ").toUpperCase(), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Text(entry.value.toUpperCase(), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                            ],
                           ],
-                        ],
-                      ),
-                    ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 separatorBuilder: (BuildContext context, int index) => const SizedBox(height: 20),
