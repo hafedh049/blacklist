@@ -1,7 +1,7 @@
 import 'package:animated_loading_border/animated_loading_border.dart';
 import 'package:blacklist/utils/shared.dart';
 import 'package:blacklist/views/vendor/anonymous_client.dart';
-import 'package:blacklist/views/vendor/recepies.dart';
+import 'package:blacklist/views/vendor/recepies/recepies.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 

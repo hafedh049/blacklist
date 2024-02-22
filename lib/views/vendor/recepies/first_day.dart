@@ -1,19 +1,17 @@
 import 'dart:math';
 
 import 'package:blacklist/utils/shared.dart';
-import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class Recepies extends StatefulWidget {
-  const Recepies({super.key});
-
+class FirstDay extends StatefulWidget {
+  const FirstDay({super.key, required this.date});
+  final String date;
   @override
-  State<Recepies> createState() => _RecepiesState();
+  State<FirstDay> createState() => _FirstDayState();
 }
 
-class _RecepiesState extends State<Recepies> {
+class _FirstDayState extends State<FirstDay> {
   final List<Map<String, dynamic>> _recepies = List<Map<String, dynamic>>.generate(
     100,
     (int index) => <String, dynamic>{
@@ -56,7 +54,8 @@ class _RecepiesState extends State<Recepies> {
                         padding: const EdgeInsets.all(4),
                         decoration: BoxDecoration(color: purpleColor, borderRadius: BorderRadius.circular(5)),
                         child: Text(
-                          "${formatDate(DateTime.now(), <String>[yyyy, " ", M, " ", dd]).toUpperCase()} - ${formatDate(DateTime.now().add(1.days), <String>[yyyy, " ", MM.toUpperCase(), " ", dd])}",
+                          // "${formatDate(DateTime.now(), <String>[yyyy, " ", M, " ", dd]).toUpperCase()} - ${formatDate(DateTime.now().add(1.days), <String>[yyyy, " ", M, " ", dd])}",
+                          widget.date,
                           style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
                         ),
                       ),
