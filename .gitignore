@@ -13,6 +13,7 @@ doc/api/
 windows/
 web/
 auto_commit.py
+test.py
 lib/utils/callbacks.dart
 
 # dotenv environment variables file
