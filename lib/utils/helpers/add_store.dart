@@ -53,8 +53,8 @@ class _AddStoreState extends State<AddStore> {
         "vendor_email": _vendorEmailController.text.trim(),
         "vendor_password": _vendorPasswordController.text.trim(),
       };
-      await FirebaseFirestore.instance.collection('stores').add(storeItem);
-      await FirebaseFirestore.instance.collection('vendors').doc(storeID).set(vendorItem);
+      await FirebaseFirestore.instance.collection('stores').doc(storeID).set(storeItem);
+      await FirebaseFirestore.instance.collection('vendors').doc(vendorID).set(vendorItem);
       widget.stores.add(storeItem);
       widget.callback();
       showToast("Store added successfully", greenColor);

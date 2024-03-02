@@ -178,7 +178,7 @@ class _StoresListState extends State<StoresList> {
                                                 ],
                                               ),
                                               IconButton(
-                                                onPressed: () => showModalBottomSheet(context: context, builder: (BuildContext context) => ChangeVendorPassword(vendor: item["vendor_id"])),
+                                                onPressed: () => showModalBottomSheet(context: context, builder: (BuildContext context) => ChangeVendorPassword(vendorID: item["vendor_id"])),
                                                 icon: const Icon(FontAwesome.user_secret_solid, size: 25, color: purpleColor),
                                               ),
                                             ],

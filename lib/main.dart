@@ -1,5 +1,7 @@
 import 'package:blacklist/utils/callbacks.dart';
+import 'package:blacklist/views/admin/stores.dart';
 import 'package:blacklist/views/auth/passphrase.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -25,7 +27,7 @@ class Main extends StatelessWidget {
         future: load(),
         builder: (BuildContext context, AsyncSnapshot<FirebaseApp> snapshot) {
           if (snapshot.hasData) {
-            return const Passphrase();
+            return FirebaseAuth.instance.currentUser == null ? const Passphrase() : const StoresList();
           } else if (snapshot.connectionState == ConnectionState.waiting) {
             return const Loading();
           }

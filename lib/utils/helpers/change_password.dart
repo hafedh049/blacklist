@@ -1,14 +1,16 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_animated_button/flutter_animated_button.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
 
+import '../callbacks.dart';
 import '../shared.dart';
 
 class ChangePassword extends StatefulWidget {
-  const ChangePassword({super.key});
-
+  const ChangePassword({super.key, required this.vendorID});
+  final String vendorID;
   @override
   State<ChangePassword> createState() => _ChangePasswordState();
 }
@@ -21,6 +23,20 @@ class _ChangePasswordState extends State<ChangePassword> {
 
   bool _oldPasswordState = true;
   bool _newPasswordState = false;
+
+  @override
+  void initState() {
+    FirebaseFirestore.instance.collection("vendors").doc(widget.vendorID).get().then(
+      (DocumentSnapshot snapshot) {
+        if (snapshot.exists) {
+          _nameController.text = snapshot.get("vendor_name");
+          _emailController.text = snapshot.get("vendor_email");
+          _oldPasswordController.text = snapshot.get("vendor_password");
+        }
+      },
+    );
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -147,8 +163,24 @@ class _ChangePasswordState extends State<ChangePassword> {
                 backgroundColor: greenColor,
                 transitionType: TransitionType.TOP_TO_BOTTOM,
                 textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                onPress: () {
-                  Navigator.pop(context);
+                onPress: () async {
+                  if (_nameController.text.trim().isEmpty) {
+                    showToast("Enter a valid vendor name", redColor);
+                  } else if (_emailController.text.trim().isEmpty) {
+                    showToast("Enter a valid vendor name", redColor);
+                  } else if (_newPasswordController.text.trim().isEmpty) {
+                    showToast("Enter a valid vendor password", redColor);
+                  } else {
+                    final Map<String, dynamic> vendorItem = <String, dynamic>{
+                      "vendor_name": _nameController.text.trim(),
+                      "vendor_email": _emailController.text.trim(),
+                      "vendor_password": _newPasswordController.text.trim(),
+                    };
+                    await FirebaseFirestore.instance.collection('vendors').doc(widget.vendorID).update(vendorItem);
+                    showToast("Vendor details changed successfully", greenColor);
+                    // ignore: use_build_context_synchronously
+                    Navigator.pop(context);
+                  }
                 },
               ),
             ],
