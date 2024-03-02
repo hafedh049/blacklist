@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:blacklist/utils/callbacks.dart';
 import 'package:blacklist/utils/shared.dart';
 import 'package:blacklist/views/admin/holder.dart';
@@ -10,6 +8,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_animated_button/flutter_animated_button.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:lottie/lottie.dart';
 
 class StoresList extends StatefulWidget {
   const StoresList({super.key});
@@ -19,7 +18,7 @@ class StoresList extends StatefulWidget {
 }
 
 class _StoresListState extends State<StoresList> {
-  final List<Map<String, dynamic>> _stores = List<Map<String, dynamic>>.generate(20, (int index) => <String, dynamic>{"store_name": "Store ${index + 1}", "vendor_name": "Vendor ${index + 1}", "total_products": Random().nextInt(4000).toString()});
+  final List<Map<String, dynamic>> _stores = <Map<String, dynamic>>[];
 
   final TextEditingController _adminController = TextEditingController();
   final TextEditingController _oldPasswordController = TextEditingController();
@@ -229,15 +228,16 @@ class _StoresListState extends State<StoresList> {
                                         showToast("Enter a valid store name", redColor);
                                       }
                                       if (_vendorNameController.text.trim().isEmpty) {
-                                        showToast("Enter a valid store name", redColor);
+                                        showToast("Enter a valid vendor name", redColor);
                                       } else {
                                         FirebaseFirestore.instance.collection('stores').add(
                                           {
                                             "store_name": _storeNameController.text.trim(),
-                                            "vendor_name": "Vendor ${index + 1}",
-                                            "total_products": Random().nextInt(4000).toString(),
+                                            "vendor_name": _vendorNameController,
+                                            "total_products": 0,
                                           },
                                         );
+                                        showToast("Store added successfully", greenColor);
                                         Navigator.pop(context);
                                       }
                                     },
@@ -270,178 +270,184 @@ class _StoresListState extends State<StoresList> {
                 ],
               ),
               Container(width: MediaQuery.sizeOf(context).width, height: .3, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),
-              Center(
-                child: Wrap(
-                  alignment: WrapAlignment.center,
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  runAlignment: WrapAlignment.center,
-                  runSpacing: 20,
-                  spacing: 20,
-                  children: <Widget>[
-                    for (final Map<String, dynamic> item in _stores)
-                      InkWell(
-                        splashColor: transparentColor,
-                        hoverColor: transparentColor,
-                        highlightColor: transparentColor,
-                        onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const Holder()));
-                        },
-                        child: Container(
-                          width: 300,
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: darkColor),
-                          child: Stack(
-                            alignment: Alignment.topRight,
-                            children: <Widget>[
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  Row(
-                                    children: <Widget>[
-                                      Text("Store", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
-                                      const SizedBox(width: 10),
-                                      Text(item["store_name"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: blueColor)),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Row(
-                                    children: <Widget>[
-                                      Text("Vendor", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
-                                      const SizedBox(width: 10),
-                                      Text(item["vendor_name"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greenColor)),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Row(
-                                    children: <Widget>[
-                                      Text("Total Products", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
-                                      const SizedBox(width: 10),
-                                      Text(item["total_products"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: redColor)),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 20),
-                                  Text("Vendor Acess", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
-                                  const SizedBox(height: 10),
-                                  Row(
-                                    children: <Widget>[
-                                      AnimatedButton(
-                                        width: 100,
-                                        height: 40,
-                                        text: 'OPEN',
-                                        selectedTextColor: darkColor,
-                                        animatedOn: AnimatedOn.onHover,
-                                        animationDuration: 500.ms,
-                                        isReverse: true,
-                                        selectedBackgroundColor: greenColor,
-                                        backgroundColor: purpleColor,
-                                        transitionType: TransitionType.TOP_TO_BOTTOM,
-                                        textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                                        onPress: () {},
-                                      ),
-                                      const SizedBox(width: 20),
-                                      AnimatedButton(
-                                        width: 100,
-                                        height: 40,
-                                        text: 'CLOSE',
-                                        selectedTextColor: darkColor,
-                                        animatedOn: AnimatedOn.onHover,
-                                        animationDuration: 500.ms,
-                                        isReverse: true,
-                                        selectedBackgroundColor: redColor,
-                                        backgroundColor: purpleColor,
-                                        transitionType: TransitionType.TOP_TO_BOTTOM,
-                                        textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                                        onPress: () {},
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              IconButton(
-                                onPressed: () {
-                                  showModalBottomSheet(
-                                    context: context,
-                                    builder: (BuildContext context) => Container(
-                                      padding: const EdgeInsets.all(16),
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Container(
-                                            color: darkColor,
-                                            child: StatefulBuilder(
-                                              builder: (BuildContext context, void Function(void Function()) _) {
-                                                return TextField(
-                                                  autofocus: true,
-                                                  obscureText: !_adminState,
-                                                  onChanged: (String value) => value.trim().length <= 1 ? _(() {}) : null,
-                                                  controller: _adminController,
-                                                  style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                                                  onSubmitted: (String value) {
-                                                    if (_adminController.text == _adminPassphrase) {
-                                                      Navigator.pop(context);
-                                                      _changePassword();
-                                                    } else {
-                                                      showToast("Wrong Credentials", redColor);
-                                                    }
-                                                  },
-                                                  decoration: InputDecoration(
-                                                    contentPadding: const EdgeInsets.all(20),
-                                                    focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
-                                                    border: InputBorder.none,
-                                                    hintText: "Security Bypass",
-                                                    hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                                                    prefixIcon: _adminController.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
-                                                    suffixIcon: IconButton(onPressed: () => _(() => _adminState = !_adminState), icon: Icon(_adminState ? FontAwesome.eye_solid : FontAwesome.eye_slash_solid, size: 15, color: purpleColor)),
+              _stores.isEmpty
+                  ? SizedBox(
+                      width: MediaQuery.sizeOf(context).width,
+                      height: MediaQuery.sizeOf(context).height,
+                      child: Center(child: LottieBuilder.asset("assets/lotties/empty.json")),
+                    )
+                  : Center(
+                      child: Wrap(
+                        alignment: WrapAlignment.center,
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        runAlignment: WrapAlignment.center,
+                        runSpacing: 20,
+                        spacing: 20,
+                        children: <Widget>[
+                          for (final Map<String, dynamic> item in _stores)
+                            InkWell(
+                              splashColor: transparentColor,
+                              hoverColor: transparentColor,
+                              highlightColor: transparentColor,
+                              onTap: () {
+                                Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const Holder()));
+                              },
+                              child: Container(
+                                width: 300,
+                                padding: const EdgeInsets.all(16),
+                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: darkColor),
+                                child: Stack(
+                                  alignment: Alignment.topRight,
+                                  children: <Widget>[
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        Row(
+                                          children: <Widget>[
+                                            Text("Store", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
+                                            const SizedBox(width: 10),
+                                            Text(item["store_name"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: blueColor)),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Row(
+                                          children: <Widget>[
+                                            Text("Vendor", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
+                                            const SizedBox(width: 10),
+                                            Text(item["vendor_name"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greenColor)),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Row(
+                                          children: <Widget>[
+                                            Text("Total Products", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
+                                            const SizedBox(width: 10),
+                                            Text(item["total_products"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: redColor)),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 20),
+                                        Text("Vendor Acess", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
+                                        const SizedBox(height: 10),
+                                        Row(
+                                          children: <Widget>[
+                                            AnimatedButton(
+                                              width: 100,
+                                              height: 40,
+                                              text: 'OPEN',
+                                              selectedTextColor: darkColor,
+                                              animatedOn: AnimatedOn.onHover,
+                                              animationDuration: 500.ms,
+                                              isReverse: true,
+                                              selectedBackgroundColor: greenColor,
+                                              backgroundColor: purpleColor,
+                                              transitionType: TransitionType.TOP_TO_BOTTOM,
+                                              textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                                              onPress: () {},
+                                            ),
+                                            const SizedBox(width: 20),
+                                            AnimatedButton(
+                                              width: 100,
+                                              height: 40,
+                                              text: 'CLOSE',
+                                              selectedTextColor: darkColor,
+                                              animatedOn: AnimatedOn.onHover,
+                                              animationDuration: 500.ms,
+                                              isReverse: true,
+                                              selectedBackgroundColor: redColor,
+                                              backgroundColor: purpleColor,
+                                              transitionType: TransitionType.TOP_TO_BOTTOM,
+                                              textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                                              onPress: () {},
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    IconButton(
+                                      onPressed: () {
+                                        showModalBottomSheet(
+                                          context: context,
+                                          builder: (BuildContext context) => Container(
+                                            padding: const EdgeInsets.all(16),
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: <Widget>[
+                                                Container(
+                                                  color: darkColor,
+                                                  child: StatefulBuilder(
+                                                    builder: (BuildContext context, void Function(void Function()) _) {
+                                                      return TextField(
+                                                        autofocus: true,
+                                                        obscureText: !_adminState,
+                                                        onChanged: (String value) => value.trim().length <= 1 ? _(() {}) : null,
+                                                        controller: _adminController,
+                                                        style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                                                        onSubmitted: (String value) {
+                                                          if (_adminController.text == _adminPassphrase) {
+                                                            Navigator.pop(context);
+                                                            _changePassword();
+                                                          } else {
+                                                            showToast("Wrong Credentials", redColor);
+                                                          }
+                                                        },
+                                                        decoration: InputDecoration(
+                                                          contentPadding: const EdgeInsets.all(20),
+                                                          focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
+                                                          border: InputBorder.none,
+                                                          hintText: "Security Bypass",
+                                                          hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                                                          prefixIcon: _adminController.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
+                                                          suffixIcon: IconButton(onPressed: () => _(() => _adminState = !_adminState), icon: Icon(_adminState ? FontAwesome.eye_solid : FontAwesome.eye_slash_solid, size: 15, color: purpleColor)),
+                                                        ),
+                                                        cursorColor: purpleColor,
+                                                      );
+                                                    },
                                                   ),
-                                                  cursorColor: purpleColor,
-                                                );
-                                              },
+                                                ),
+                                                const SizedBox(height: 10),
+                                                Row(
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  children: <Widget>[
+                                                    const Spacer(),
+                                                    AnimatedButton(
+                                                      width: 100,
+                                                      height: 30,
+                                                      text: 'CONTINUE',
+                                                      selectedTextColor: whiteColor,
+                                                      animatedOn: AnimatedOn.onHover,
+                                                      animationDuration: 500.ms,
+                                                      isReverse: true,
+                                                      selectedBackgroundColor: darkColor,
+                                                      backgroundColor: greenColor,
+                                                      transitionType: TransitionType.TOP_TO_BOTTOM,
+                                                      textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                                                      onPress: () {
+                                                        if (_adminController.text == _adminPassphrase) {
+                                                          Navigator.pop(context);
+                                                          _changePassword();
+                                                        } else {
+                                                          showToast("Wrong Credentials", redColor);
+                                                        }
+                                                      },
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
                                             ),
                                           ),
-                                          const SizedBox(height: 10),
-                                          Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: <Widget>[
-                                              const Spacer(),
-                                              AnimatedButton(
-                                                width: 100,
-                                                height: 30,
-                                                text: 'CONTINUE',
-                                                selectedTextColor: whiteColor,
-                                                animatedOn: AnimatedOn.onHover,
-                                                animationDuration: 500.ms,
-                                                isReverse: true,
-                                                selectedBackgroundColor: darkColor,
-                                                backgroundColor: greenColor,
-                                                transitionType: TransitionType.TOP_TO_BOTTOM,
-                                                textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                                                onPress: () {
-                                                  if (_adminController.text == _adminPassphrase) {
-                                                    Navigator.pop(context);
-                                                    _changePassword();
-                                                  } else {
-                                                    showToast("Wrong Credentials", redColor);
-                                                  }
-                                                },
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
+                                        );
+                                      },
+                                      icon: const Icon(FontAwesome.user_secret_solid, size: 25, color: purpleColor),
                                     ),
-                                  );
-                                },
-                                icon: const Icon(FontAwesome.user_secret_solid, size: 25, color: purpleColor),
+                                  ],
+                                ),
                               ),
-                            ],
-                          ),
-                        ),
+                            ),
+                        ],
                       ),
-                  ],
-                ),
-              ),
+                    ),
             ],
           ),
         ),
