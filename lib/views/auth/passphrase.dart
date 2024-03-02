@@ -1,13 +1,10 @@
 // ignore_for_file: use_build_context_synchronously, prefer_final_fields
 
-import 'dart:convert';
-
 import 'package:animated_loading_border/animated_loading_border.dart';
 import 'package:blacklist/utils/callbacks.dart';
 import 'package:blacklist/utils/shared.dart';
 import 'package:blacklist/views/admin/stores.dart';
 import 'package:blacklist/views/vendor/cart_recipe.dart';
-import 'package:crypto/crypto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -26,10 +23,8 @@ class _PassphraseState extends State<Passphrase> {
   bool _adminButtonState = false;
   bool _vendorButtonState = false;
 
-  bool _adminEmailState = false;
   bool _adminPassphraseState = false;
 
-  bool _vendorEmailState = false;
   bool _vendorPassphraseState = false;
 
   final GlobalKey<State> _adminKey = GlobalKey<State>();
@@ -52,32 +47,34 @@ class _PassphraseState extends State<Passphrase> {
   Future<void> _signIn(GlobalKey<State> key) async {
     if (key == _adminKey) {
       if (_adminPassphraseController.text.trim().isEmpty) {
-        showToast("Please enter admin the passphrase", redColor);
+        showToast("Please enter admin passphrase", redColor);
+      } else if (_adminEmailController.text.trim().isEmpty) {
+        showToast("Please enter admin e-mail", redColor);
       } else {
         key.currentState!.setState(() => _adminButtonState = true);
         await FirebaseAuth.instance.signInWithEmailAndPassword(email: _adminEmailController.text, password: _adminPassphraseController.text);
         key.currentState!.setState(() => _adminButtonState = false);
-        if (sha512.convert(utf8.encode(_adminPassphraseController.text)) == sha512.convert(utf8.encode(_adminPassphrase))) {
+        if (FirebaseAuth.instance.currentUser != null) {
           showToast("Welcome ADMIN", greenColor);
           Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => const StoresList()));
         } else {
           showToast("Wrong Credentials", redColor);
-          _adminPassphraseFocus.requestFocus();
         }
       }
     } else {
       if (_vendorPassphraseController.text.trim().isEmpty) {
-        showToast("Please enter the vendor passphrase", redColor);
+        showToast("Please enter vendor passphrase", redColor);
+      } else if (_vendorEmailController.text.trim().isEmpty) {
+        showToast("Please enter vendor e-mail", redColor);
       } else {
         key.currentState!.setState(() => _vendorButtonState = true);
         await FirebaseAuth.instance.signInWithEmailAndPassword(email: _vendorEmailController.text, password: _vendorPassphraseController.text);
         key.currentState!.setState(() => _vendorButtonState = false);
-        if (sha512.convert(utf8.encode(_vendorPassphraseController.text)) == sha512.convert(utf8.encode(_vendorPassphrase))) {
+        if (FirebaseAuth.instance.currentUser != null) {
           showToast("Welcome VENDOR", greenColor);
           Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => const CartRecepie()));
         } else {
           showToast("Wrong Credentials", redColor);
-          _vendorPassphraseFocus.requestFocus();
         }
       }
     }
@@ -90,7 +87,6 @@ class _PassphraseState extends State<Passphrase> {
         "title": "ADMIN",
         "button_state": _adminButtonState,
         "passphrase_state": _adminPassphraseState,
-        "email_state": _adminEmailState,
         "card_key": _adminKey,
         "email_controller": _adminEmailController,
         "email_focus_node": _adminEmailFocus,
@@ -100,7 +96,6 @@ class _PassphraseState extends State<Passphrase> {
       <String, dynamic>{
         "title": "VENDOR",
         "button_state": _vendorButtonState,
-        "email_state": _vendorEmailState,
         "passphrase_state": _vendorPassphraseState,
         "card_key": _vendorKey,
         "email_controller": _vendorEmailController,
@@ -159,20 +154,18 @@ class _PassphraseState extends State<Passphrase> {
                           child: StatefulBuilder(
                             builder: (BuildContext context, void Function(void Function()) _) {
                               return TextField(
-                                obscureText: !item["passphrase_state"],
-                                focusNode: item["focus_node"],
-                                onSubmitted: (String value) => _signIn(item["key"]),
+                                focusNode: item["email_focus_node"],
+                                onSubmitted: (String value) => _signIn(item["card_key"]),
                                 onChanged: (String value) => value.trim().length <= 1 ? _(() {}) : null,
-                                controller: item["controller"],
+                                controller: item["email_controller"],
                                 style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
                                 decoration: InputDecoration(
                                   contentPadding: const EdgeInsets.all(20),
                                   focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
                                   border: InputBorder.none,
-                                  hintText: 'Passphrase',
+                                  hintText: 'abcd@xyz.tn',
                                   hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                                  prefixIcon: item["controller"].text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
-                                  suffixIcon: IconButton(onPressed: () => _(() => item["passphrase_state"] = !item["passphrase_state"]), icon: Icon(item["passphrase_state"] ? FontAwesome.eye_solid : FontAwesome.eye_slash_solid, size: 15, color: purpleColor)),
+                                  prefixIcon: item["email_controller"].text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
                                 ),
                                 cursorColor: purpleColor,
                               );
@@ -183,7 +176,7 @@ class _PassphraseState extends State<Passphrase> {
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
-                            Flexible(child: Text("Enter passphrase to continue", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor))),
+                            Flexible(child: Text("Passphrase", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor))),
                             const SizedBox(width: 5),
                             Text("*", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: redColor)),
                           ],
@@ -195,10 +188,10 @@ class _PassphraseState extends State<Passphrase> {
                             builder: (BuildContext context, void Function(void Function()) _) {
                               return TextField(
                                 obscureText: !item["passphrase_state"],
-                                focusNode: item["focus_node"],
-                                onSubmitted: (String value) => _signIn(item["key"]),
+                                focusNode: item["passphrase_focus_node"],
+                                onSubmitted: (String value) => _signIn(item["card_key"]),
                                 onChanged: (String value) => value.trim().length <= 1 ? _(() {}) : null,
-                                controller: item["controller"],
+                                controller: item["passphrase_controller"],
                                 style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
                                 decoration: InputDecoration(
                                   contentPadding: const EdgeInsets.all(20),
@@ -206,7 +199,7 @@ class _PassphraseState extends State<Passphrase> {
                                   border: InputBorder.none,
                                   hintText: 'Passphrase',
                                   hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                                  prefixIcon: item["controller"].text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
+                                  prefixIcon: item["passphrase_controller"].text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
                                   suffixIcon: IconButton(onPressed: () => _(() => item["passphrase_state"] = !item["passphrase_state"]), icon: Icon(item["passphrase_state"] ? FontAwesome.eye_solid : FontAwesome.eye_slash_solid, size: 15, color: purpleColor)),
                                 ),
                                 cursorColor: purpleColor,
@@ -216,7 +209,7 @@ class _PassphraseState extends State<Passphrase> {
                         ),
                         const SizedBox(height: 20),
                         StatefulBuilder(
-                          key: item["key"],
+                          key: item["card_key"],
                           builder: (BuildContext context, void Function(void Function()) _) {
                             return Row(
                               mainAxisSize: MainAxisSize.min,
@@ -235,7 +228,7 @@ class _PassphraseState extends State<Passphrase> {
                                     backgroundColor: purpleColor,
                                     transitionType: TransitionType.TOP_TO_BOTTOM,
                                     textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                                    onPress: () => _signIn(item["key"]),
+                                    onPress: () => _signIn(item["card_key"]),
                                   ),
                                 ),
                                 const SizedBox(width: 10),
