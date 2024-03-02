@@ -68,8 +68,8 @@ class _PerMonthState extends State<PerMonth> {
   Widget _leftTitles(double value, TitleMeta meta) {
     final TextStyle style = GoogleFonts.itim(color: whiteColor, fontWeight: FontWeight.bold, fontSize: 14);
     String text = "";
-    if (value >= 1000) {
-      text = '1K';
+    if (value % 50 == 0) {
+      text = value.toStringAsFixed(0);
     } else {
       return Container();
     }
@@ -77,10 +77,8 @@ class _PerMonthState extends State<PerMonth> {
   }
 
   Widget _bottomTitles(double value, TitleMeta meta) {
-    final List<String> titles = <String>['Mn', 'Te', 'Wd', 'Tu', 'Fr', 'St', 'Su'];
-
     showToast(value.toString(), redColor);
-    final Widget text = Text(titles[value.toInt() - 1], style: GoogleFonts.itim(color: whiteColor, fontWeight: FontWeight.bold, fontSize: 14));
+    final Widget text = Text(_months.keys.elementAt(value.toInt() - 1).toString(), style: GoogleFonts.itim(color: whiteColor, fontWeight: FontWeight.bold, fontSize: 14));
 
     return SideTitleWidget(axisSide: meta.axisSide, space: 16, child: text);
   }
@@ -104,6 +102,7 @@ class _PerMonthState extends State<PerMonth> {
                     builder: (BuildContext context, void Function(void Function()) _) {
                       return BarChart(
                         BarChartData(
+                          maxY: 100,
                           barTouchData: BarTouchData(
                             touchTooltipData: BarTouchTooltipData(tooltipBgColor: whiteColor, getTooltipItem: (BarChartGroupData a, int b, BarChartRodData c, int d) => null),
                             touchCallback: (FlTouchEvent event, response) {

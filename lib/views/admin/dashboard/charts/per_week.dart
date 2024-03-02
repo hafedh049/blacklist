@@ -16,8 +16,6 @@ class PerWeek extends StatefulWidget {
 }
 
 class _PerWeekState extends State<PerWeek> {
-  final List<String> _days = <String>["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
-
   final Map<int, double> _mappedData = <int, double>{for (int index = 1; index <= 7; index += 1) index: 0.0};
 
   int touchedGroupIndex = -1;
@@ -52,8 +50,8 @@ class _PerWeekState extends State<PerWeek> {
   Widget leftTitles(double value, TitleMeta meta) {
     final TextStyle style = GoogleFonts.itim(color: whiteColor, fontWeight: FontWeight.bold, fontSize: 14);
     String text = "";
-    if (value >= 1000) {
-      text = '1K';
+    if (value % 10 == 0) {
+      text = value.toStringAsFixed(0);
     } else {
       return Container();
     }
@@ -86,42 +84,7 @@ class _PerWeekState extends State<PerWeek> {
                     builder: (BuildContext context, void Function(void Function()) _) {
                       return BarChart(
                         BarChartData(
-                          barTouchData: BarTouchData(
-                            touchTooltipData: BarTouchTooltipData(tooltipBgColor: whiteColor, getTooltipItem: (BarChartGroupData a, int b, BarChartRodData c, int d) => null),
-                            touchCallback: (FlTouchEvent event, response) {
-                              if (response == null || response.spot == null) {
-                                _(() {
-                                  touchedGroupIndex = -1;
-                                });
-                                return;
-                              }
-
-                              touchedGroupIndex = response.spot!.touchedBarGroupIndex;
-
-                              _(
-                                () {
-                                  if (!event.isInterestedForInteractions) {
-                                    touchedGroupIndex = -1;
-                                    return;
-                                  }
-                                  // showingBarGroups = List.of(rawBarGroups);
-                                  if (touchedGroupIndex != -1) {
-                                    /*     var sum = 0.0;
-                                for (final rod in showingBarGroups[touchedGroupIndex].barRods) {
-                                  sum += rod.toY;
-                                }
-                                final avg = sum / showingBarGroups[touchedGroupIndex].barRods.length;
-
-                                showingBarGroups[touchedGroupIndex] = showingBarGroups[touchedGroupIndex].copyWith(
-                                  barRods: showingBarGroups[touchedGroupIndex].barRods.map((rod) {
-                                    return rod.copyWith(toY: avg, color: widget.avgColor);
-                                  }).toList(),
-                                );*/
-                                  }
-                                },
-                              );
-                            },
-                          ),
+                          maxY: 30,
                           titlesData: FlTitlesData(
                             show: true,
                             rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
