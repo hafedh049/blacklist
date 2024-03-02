@@ -2,8 +2,7 @@ import 'dart:math';
 
 import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'package:blacklist/utils/shared.dart';
-import 'package:blacklist/views/admin/dashboard/charts/bar_chart.dart';
-import 'package:blacklist/views/admin/dashboard/charts/pie_chart.dart';
+import 'package:blacklist/views/admin/dashboard/charts/per_week.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -93,9 +92,9 @@ class _DashboardState extends State<Dashboard> {
                 runSpacing: 20,
                 spacing: 20,
                 children: <Widget>[
-                  BarChart(),
-                  BarChart(),
-                  BarChart(),
+                  PerWeek(),
+                  PerMonth(),
+                  PerYear(),
                 ],
               ),
             ],
