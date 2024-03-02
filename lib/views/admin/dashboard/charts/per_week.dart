@@ -17,9 +17,10 @@ class PerWeek extends StatefulWidget {
 }
 
 class _PerWeekState extends State<PerWeek> {
+  final List<String> _days = <String>["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
   final Map<int, double> _mappedData = <int, double>{for (int index = 1; index <= 7; index += 1) index: 0.0};
   Future<bool> _load() async {
-    final QuerySnapshot<Map<String, dynamic>> data = (await FirebaseFirestore.instance
+    final List<Map<String, dynamic>> data = (await FirebaseFirestore.instance
             .collection("sells")
             .where(
               "timestamp",
@@ -27,11 +28,20 @@ class _PerWeekState extends State<PerWeek> {
             )
             .get())
         .docs
-        .map((QueryDocumentSnapshot<Map<String, dynamic>> e) => null);
+        .map(
+          (QueryDocumentSnapshot<Map<String, dynamic>> e) => <String, dynamic>{
+            "quantity": e.get("quantity"),
+            "price": e.get("price"),
+            "timestamp": e.get("timestamp"),
+          },
+        )
+        .toList();
     for (int index in _mappedData.keys) {
-      /*for( data.){
-
-      }*/
+      for (final Map<String, dynamic> entry in data) {
+        if (index == (entry["timestamp"].toDate() as DateTime).weekday) {
+          _mappedData[index] = _mappedData[index]! + entry["quantity"] * entry["price"];
+        }
+      }
     }
     return true;
   }
@@ -43,9 +53,9 @@ class _PerWeekState extends State<PerWeek> {
       width: 400,
       padding: const EdgeInsets.all(16),
       decoration: const BoxDecoration(color: darkColor),
-      child: FutureBuilder<List<double>>(
+      child: FutureBuilder<bool>(
         future: _load(),
-        builder: (BuildContext context, AsyncSnapshot<List<double>> snapshot) {
+        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
           if (snapshot.hasData) {
             SfSparkBarChart(data: List<double>.generate(10, (index) => Random().nextInt(4000) * Random().nextDouble()));
           } else if (snapshot.connectionState == ConnectionState.waiting) {
