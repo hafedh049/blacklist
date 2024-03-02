@@ -1,9 +1,10 @@
 import 'package:blacklist/utils/callbacks.dart';
 import 'package:blacklist/views/auth/passphrase.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+
+import 'utils/helpers/loading.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,8 +25,10 @@ class Main extends StatelessWidget {
         builder: (BuildContext context, AsyncSnapshot<FirebaseApp> snapshot) {
           if (snapshot.hasData) {
             return const Passphrase();
+          } else if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Loading();
           }
-          else if (snapshot.connectionState == ConnectionState.waiting)
+          return Errored(error: snapshot.error.toString());
         },
       ),
     );
