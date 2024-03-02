@@ -24,6 +24,26 @@ class _ChangePasswordState extends State<ChangePassword> {
   bool _oldPasswordState = true;
   bool _newPasswordState = false;
 
+  Future<void> _update() async {
+    if (_nameController.text.trim().isEmpty) {
+      showToast("Enter a valid vendor name", redColor);
+    } else if (_emailController.text.trim().isEmpty) {
+      showToast("Enter a valid vendor name", redColor);
+    } else if (_newPasswordController.text.trim().isEmpty) {
+      showToast("Enter a valid vendor password", redColor);
+    } else {
+      final Map<String, dynamic> vendorItem = <String, dynamic>{
+        "vendor_name": _nameController.text.trim(),
+        "vendor_email": _emailController.text.trim(),
+        "vendor_password": _newPasswordController.text.trim(),
+      };
+      await FirebaseFirestore.instance.collection('vendors').doc(widget.vendorID).update(vendorItem);
+      showToast("Vendor details changed successfully", greenColor);
+      // ignore: use_build_context_synchronously
+      Navigator.pop(context);
+    }
+  }
+
   @override
   void initState() {
     FirebaseFirestore.instance.collection("vendors").doc(widget.vendorID).get().then(
@@ -132,6 +152,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                   onChanged: (String value) => value.trim().length <= 1 ? _(() {}) : null,
                   controller: _newPasswordController,
                   style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                  onSubmitted: (String value) => _update(),
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.all(20),
                     focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
@@ -163,25 +184,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                 backgroundColor: greenColor,
                 transitionType: TransitionType.TOP_TO_BOTTOM,
                 textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                onPress: () async {
-                  if (_nameController.text.trim().isEmpty) {
-                    showToast("Enter a valid vendor name", redColor);
-                  } else if (_emailController.text.trim().isEmpty) {
-                    showToast("Enter a valid vendor name", redColor);
-                  } else if (_newPasswordController.text.trim().isEmpty) {
-                    showToast("Enter a valid vendor password", redColor);
-                  } else {
-                    final Map<String, dynamic> vendorItem = <String, dynamic>{
-                      "vendor_name": _nameController.text.trim(),
-                      "vendor_email": _emailController.text.trim(),
-                      "vendor_password": _newPasswordController.text.trim(),
-                    };
-                    await FirebaseFirestore.instance.collection('vendors').doc(widget.vendorID).update(vendorItem);
-                    showToast("Vendor details changed successfully", greenColor);
-                    // ignore: use_build_context_synchronously
-                    Navigator.pop(context);
-                  }
-                },
+                onPress: _update,
               ),
             ],
           ),

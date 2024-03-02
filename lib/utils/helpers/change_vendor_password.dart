@@ -24,9 +24,12 @@ class _ChangeVendorPasswordState extends State<ChangeVendorPassword> {
 
   final TextEditingController _adminController = TextEditingController();
 
+  final FocusNode _adminFocus = FocusNode();
+
   @override
   void dispose() {
     _adminController.dispose();
+    _adminFocus.dispose();
     super.dispose();
   }
 
@@ -45,6 +48,7 @@ class _ChangeVendorPasswordState extends State<ChangeVendorPassword> {
                 return TextField(
                   autofocus: true,
                   obscureText: !_adminState,
+                  focusNode: _adminFocus,
                   onChanged: (String value) => value.trim().length <= 1 ? _(() {}) : null,
                   controller: _adminController,
                   style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
@@ -53,6 +57,7 @@ class _ChangeVendorPasswordState extends State<ChangeVendorPassword> {
                       Navigator.pop(context);
                       _changePassword();
                     } else {
+                      _adminFocus.requestFocus();
                       showToast("Wrong Credentials", redColor);
                     }
                   },
