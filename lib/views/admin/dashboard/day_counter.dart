@@ -1,4 +1,7 @@
+import 'package:blacklist/utils/shared.dart';
+import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class DayCounter extends StatefulWidget {
   const DayCounter({super.key});
@@ -14,7 +17,13 @@ class _DayCounterState extends State<DayCounter> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
-        children: <Widget>[],
+        children: <Widget>[
+          Text(
+              formatDate(
+                DateTime.now(),
+              ),
+              style: GoogleFonts.itim(fontSize: 25, fontWeight: FontWeight.w500, color: purpleColor)),
+        ],
       ),
     );
   }
