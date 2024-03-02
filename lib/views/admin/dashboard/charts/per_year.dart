@@ -45,7 +45,7 @@ class _PerYearState extends State<PerYear> {
 
     Widget text;
 
-    text = Text(_months[value.toInt() - 1]!, style: style);
+    text = Text(_months[value.toInt()]!, style: style);
 
     return SideTitleWidget(axisSide: meta.axisSide, child: text);
   }
@@ -67,7 +67,7 @@ class _PerYearState extends State<PerYear> {
   Widget build(BuildContext context) {
     return Container(
       height: 400,
-      width: 400,
+      width: 600,
       padding: const EdgeInsets.all(16),
       decoration: const BoxDecoration(color: darkColor),
       child: FutureBuilder<bool>(
@@ -85,8 +85,8 @@ class _PerYearState extends State<PerYear> {
                             drawVerticalLine: true,
                             horizontalInterval: 1,
                             verticalInterval: 1,
-                            getDrawingHorizontalLine: (double value) => FlLine(color: whiteColor.withOpacity(.3), strokeWidth: 1),
-                            getDrawingVerticalLine: (double value) => FlLine(color: whiteColor.withOpacity(.3), strokeWidth: 1),
+                            getDrawingHorizontalLine: (double value) => FlLine(color: whiteColor.withOpacity(.1), strokeWidth: .1),
+                            getDrawingVerticalLine: (double value) => FlLine(color: whiteColor.withOpacity(.1), strokeWidth: .1),
                           ),
                           titlesData: FlTitlesData(
                             show: true,
@@ -96,19 +96,16 @@ class _PerYearState extends State<PerYear> {
                             leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: true, interval: 1, getTitlesWidget: leftTitleWidgets, reservedSize: 42)),
                           ),
                           borderData: FlBorderData(show: false),
-                          minX: 1,
-                          maxX: 12,
-                          minY: 0,
                           maxY: 10,
                           lineBarsData: [
                             LineChartBarData(
                               spots: const [
-                                FlSpot(0, 3),
-                                FlSpot(2.6, 2),
-                                FlSpot(4.9, 5),
-                                FlSpot(6.8, 3.1),
+                                FlSpot(1, 3),
+                                FlSpot(2, 2),
+                                FlSpot(4, 5),
+                                FlSpot(6, 3.1),
                                 FlSpot(8, 4),
-                                FlSpot(9.5, 3),
+                                FlSpot(9, 3),
                                 FlSpot(11, 4),
                               ],
                               isCurved: true,
