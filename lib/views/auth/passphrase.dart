@@ -23,13 +23,13 @@ class Passphrase extends StatefulWidget {
 }
 
 class _PassphraseState extends State<Passphrase> {
-  final String _adminPassphrase = "admin";
-  final String _vendorPassphrase = "vendor";
-
   bool _adminButtonState = false;
   bool _vendorButtonState = false;
 
+  bool _adminEmailState = false;
   bool _adminPassphraseState = false;
+
+  bool _vendorEmailState = false;
   bool _vendorPassphraseState = false;
 
   final GlobalKey<State> _adminKey = GlobalKey<State>();
@@ -41,7 +41,10 @@ class _PassphraseState extends State<Passphrase> {
   final TextEditingController _vendorPassphraseController = TextEditingController();
   final TextEditingController _vendorEmailController = TextEditingController();
 
+  final FocusNode _adminEmailFocus = FocusNode();
   final FocusNode _adminPassphraseFocus = FocusNode();
+
+  final FocusNode _vendorEmailFocus = FocusNode();
   final FocusNode _vendorPassphraseFocus = FocusNode();
 
   late final List<Map<String, dynamic>> _items;
@@ -85,21 +88,25 @@ class _PassphraseState extends State<Passphrase> {
     _items = <Map<String, dynamic>>[
       <String, dynamic>{
         "title": "ADMIN",
-        "passphrase": _adminPassphrase,
         "button_state": _adminButtonState,
         "passphrase_state": _adminPassphraseState,
-        "key": _adminKey,
-        "controller": _adminPassphraseController,
-        "focus_node": _adminPassphraseFocus,
+        "email_state": _adminEmailState,
+        "card_key": _adminKey,
+        "email_controller": _adminEmailController,
+        "email_focus_node": _adminEmailFocus,
+        "passphrase_controller": _adminPassphraseController,
+        "passphrase_focus_node": _adminPassphraseFocus,
       },
       <String, dynamic>{
         "title": "VENDOR",
-        "passphrase": _vendorPassphrase,
         "button_state": _vendorButtonState,
+        "email_state": _vendorEmailState,
         "passphrase_state": _vendorPassphraseState,
-        "key": _vendorKey,
-        "controller": _vendorPassphraseController,
-        "focus_node": _vendorPassphraseFocus,
+        "card_key": _vendorKey,
+        "email_controller": _vendorEmailController,
+        "email_focus_node": _vendorEmailFocus,
+        "passphrase_controller": _vendorPassphraseController,
+        "passphrase_focus_node": _vendorPassphraseFocus,
       },
     ];
     super.initState();
@@ -138,6 +145,41 @@ class _PassphraseState extends State<Passphrase> {
                       children: <Widget>[
                         Text(item["title"], style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
                         Container(width: MediaQuery.sizeOf(context).width, height: .3, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Flexible(child: Text("E-mail", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor))),
+                            const SizedBox(width: 5),
+                            Text("*", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: redColor)),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
+                        Container(
+                          decoration: BoxDecoration(color: scaffoldColor, borderRadius: BorderRadius.circular(3)),
+                          child: StatefulBuilder(
+                            builder: (BuildContext context, void Function(void Function()) _) {
+                              return TextField(
+                                obscureText: !item["passphrase_state"],
+                                focusNode: item["focus_node"],
+                                onSubmitted: (String value) => _signIn(item["key"]),
+                                onChanged: (String value) => value.trim().length <= 1 ? _(() {}) : null,
+                                controller: item["controller"],
+                                style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                                decoration: InputDecoration(
+                                  contentPadding: const EdgeInsets.all(20),
+                                  focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
+                                  border: InputBorder.none,
+                                  hintText: 'Passphrase',
+                                  hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                                  prefixIcon: item["controller"].text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
+                                  suffixIcon: IconButton(onPressed: () => _(() => item["passphrase_state"] = !item["passphrase_state"]), icon: Icon(item["passphrase_state"] ? FontAwesome.eye_solid : FontAwesome.eye_slash_solid, size: 15, color: purpleColor)),
+                                ),
+                                cursorColor: purpleColor,
+                              );
+                            },
+                          ),
+                        ),
+                        const SizedBox(height: 20),
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
