@@ -8,6 +8,9 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
 
+import 'charts/per_month.dart';
+import 'charts/per_year.dart';
+
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
 

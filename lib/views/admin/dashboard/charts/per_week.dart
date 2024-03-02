@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:blacklist/utils/helpers/errored.dart';
 import 'package:blacklist/utils/helpers/loading.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -57,7 +55,7 @@ class _PerWeekState extends State<PerWeek> {
         future: _load(),
         builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
           if (snapshot.hasData) {
-            SfSparkBarChart(data: List<double>.generate(10, (index) => Random().nextInt(4000) * Random().nextDouble()));
+            SfSparkBarChart(labelDisplayMode: SparkChartLabelDisplayMode.all, data: _mappedData.values.toList());
           } else if (snapshot.connectionState == ConnectionState.waiting) {
             return const Loading();
           }
