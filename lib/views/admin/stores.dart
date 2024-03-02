@@ -21,7 +21,7 @@ class _StoresListState extends State<StoresList> {
   final List<Map<String, dynamic>> _stores = List<Map<String, dynamic>>.generate(20, (int index) => <String, dynamic>{"store_name": "Store ${index + 1}", "vendor_name": "Vendor ${index + 1}", "total_products": Random().nextInt(4000).toString()});
 
   final TextEditingController _adminController = TextEditingController();
-  final TextEditingController _oldPasswordController = TextEditingController(text: "balblabl");
+  final TextEditingController _oldPasswordController = TextEditingController(text: "");
   final TextEditingController _newPasswordController = TextEditingController();
 
   final String _adminPassphrase = "admin";
@@ -141,7 +141,79 @@ class _StoresListState extends State<StoresList> {
                   AnimatedButton(
                     width: 100,
                     height: 35,
-                    text: 'Sign-Out',
+                    text: 'ADD STORE',
+                    selectedTextColor: darkColor,
+                    animatedOn: AnimatedOn.onHover,
+                    animationDuration: 500.ms,
+                    isReverse: true,
+                    selectedBackgroundColor: redColor,
+                    backgroundColor: purpleColor,
+                    transitionType: TransitionType.TOP_TO_BOTTOM,
+                    textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                    onPress: () {
+                      showModalBottomSheet(
+                        context: context,
+                        builder: (BuildContext context) => Container(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Container(
+                                color: darkColor,
+                                child: StatefulBuilder(
+                                  builder: (BuildContext context, void Function(void Function()) _) {
+                                    return TextField(
+                                      onChanged: (String value) => value.trim().length <= 1 ? _(() {}) : null,
+                                      controller: _storeNameController,
+                                      style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                                      decoration: InputDecoration(
+                                        contentPadding: const EdgeInsets.all(20),
+                                        focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
+                                        border: InputBorder.none,
+                                        hintText: 'STORE NAME',
+                                        hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                                        prefixIcon: _storeNameController.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
+                                      ),
+                                      cursorColor: purpleColor,
+                                    );
+                                  },
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  const Spacer(),
+                                  AnimatedButton(
+                                    width: 100,
+                                    height: 30,
+                                    text: 'CREATE',
+                                    selectedTextColor: whiteColor,
+                                    animatedOn: AnimatedOn.onHover,
+                                    animationDuration: 500.ms,
+                                    isReverse: true,
+                                    selectedBackgroundColor: darkColor,
+                                    backgroundColor: greenColor,
+                                    transitionType: TransitionType.TOP_TO_BOTTOM,
+                                    textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                                    onPress: () {
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(width: 20),
+                  AnimatedButton(
+                    width: 100,
+                    height: 35,
+                    text: 'SIGN-OUT',
                     selectedTextColor: darkColor,
                     animatedOn: AnimatedOn.onHover,
                     animationDuration: 500.ms,
@@ -153,15 +225,6 @@ class _StoresListState extends State<StoresList> {
                     onPress: () {
                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => const Passphrase()));
                     },
-                  ),
-                  const SizedBox(width: 20),
-                  RichText(
-                    text: TextSpan(
-                      children: <TextSpan>[
-                        TextSpan(text: "Admin", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
-                        TextSpan(text: " / Add(Choose) store", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
-                      ],
-                    ),
                   ),
                 ],
               ),
