@@ -60,7 +60,7 @@ class _PerYearState extends State<PerYear> {
 
     text = Text(value.toInt() % 2 == 0 ? _months[value.toInt()]! : "", style: style);
 
-    return SideTitleWidget(axisSide: meta.axisSide, space: -3, child: text);
+    return SideTitleWidget(axisSide: meta.axisSide, space: 0, child: text);
   }
 
   @override
