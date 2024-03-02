@@ -105,11 +105,18 @@ class _PerWeekState extends State<PerWeek> {
                             show: true,
                             rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
                             topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                            bottomTitles: AxisTitles(sideTitles: SideTitles(showTitles: true, getTitlesWidget: bottomTitles, reservedSize: 42)),
+                            bottomTitles: AxisTitles(sideTitles: SideTitles(showTitles: true, getTitlesWidget: _bottomTitles, reservedSize: 42)),
                             leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: true, reservedSize: 28, interval: 1, getTitlesWidget: leftTitles)),
                           ),
                           borderData: FlBorderData(show: false),
-                          barGroups: showingBarGroups,
+                          barGroups: _mappedData.entries
+                              .map(
+                                (MapEntry<int, double> e) => BarChartGroupData(
+                                  x: e.key,
+                                  barRods: <BarChartRodData>[BarChartRodData(toY: e.value)],
+                                ),
+                              )
+                              .toList(),
                           gridData: const FlGridData(show: false),
                         ),
                       );
@@ -122,5 +129,32 @@ class _PerWeekState extends State<PerWeek> {
         },
       ),
     );
+  }
+
+  Widget leftTitles(double value, TitleMeta meta) {
+    final TextStyle style = GoogleFonts.itim(color: whiteColor, fontWeight: FontWeight.bold, fontSize: 14);
+    String text = "";
+    if (value == 0) {
+      text = '1K';
+    } else if (value == 10) {
+      text = '5K';
+    } else if (value == 19) {
+      text = '10K';
+    } else {
+      return Container();
+    }
+    return SideTitleWidget(
+      axisSide: meta.axisSide,
+      space: 0,
+      child: Text(text, style: style),
+    );
+  }
+
+  _bottomTitles(double value, TitleMeta meta) {
+    final List<String> titles = <String>['Mn', 'Te', 'Wd', 'Tu', 'Fr', 'St', 'Su'];
+
+    final Widget text = Text(titles[value.toInt()], style: GoogleFonts.itim(color: whiteColor, fontWeight: FontWeight.bold, fontSize: 14));
+
+    return SideTitleWidget(axisSide: meta.axisSide, space: 16, child: text);
   }
 }
