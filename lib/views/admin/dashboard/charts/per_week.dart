@@ -49,6 +49,25 @@ class _PerWeekState extends State<PerWeek> {
     return true;
   }
 
+  Widget leftTitles(double value, TitleMeta meta) {
+    final TextStyle style = GoogleFonts.itim(color: whiteColor, fontWeight: FontWeight.bold, fontSize: 14);
+    String text = "";
+    if (value >= 1000) {
+      text = '1K';
+    } else {
+      return Container();
+    }
+    return SideTitleWidget(axisSide: meta.axisSide, space: 0, child: Text(text, style: style));
+  }
+
+  Widget _bottomTitles(double value, TitleMeta meta) {
+    final List<String> titles = <String>['Mn', 'Te', 'Wd', 'Tu', 'Fr', 'St', 'Su'];
+
+    final Widget text = Text(titles[value.toInt()], style: GoogleFonts.itim(color: whiteColor, fontWeight: FontWeight.bold, fontSize: 14));
+
+    return SideTitleWidget(axisSide: meta.axisSide, space: 16, child: text);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -129,32 +148,5 @@ class _PerWeekState extends State<PerWeek> {
         },
       ),
     );
-  }
-
-  Widget leftTitles(double value, TitleMeta meta) {
-    final TextStyle style = GoogleFonts.itim(color: whiteColor, fontWeight: FontWeight.bold, fontSize: 14);
-    String text = "";
-    if (value == 0) {
-      text = '1K';
-    } else if (value == 10) {
-      text = '5K';
-    } else if (value == 19) {
-      text = '10K';
-    } else {
-      return Container();
-    }
-    return SideTitleWidget(
-      axisSide: meta.axisSide,
-      space: 0,
-      child: Text(text, style: style),
-    );
-  }
-
-  _bottomTitles(double value, TitleMeta meta) {
-    final List<String> titles = <String>['Mn', 'Te', 'Wd', 'Tu', 'Fr', 'St', 'Su'];
-
-    final Widget text = Text(titles[value.toInt()], style: GoogleFonts.itim(color: whiteColor, fontWeight: FontWeight.bold, fontSize: 14));
-
-    return SideTitleWidget(axisSide: meta.axisSide, space: 16, child: text);
   }
 }
