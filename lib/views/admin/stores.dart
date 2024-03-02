@@ -55,13 +55,14 @@ class _StoresListState extends State<StoresList> {
     if (_vendorNameController.text.trim().isEmpty) {
       showToast("Enter a valid vendor name", redColor);
     } else {
-      await FirebaseFirestore.instance.collection('stores').add(
-        {
-          "store_name": _storeNameController.text.trim(),
-          "vendor_name": _vendorNameController,
-          "total_products": 0,
-        },
-      );
+      final Map<String, dynamic> item = <String, dynamic>{
+        "store_name": _storeNameController.text.trim(),
+        "vendor_name": _vendorNameController.text.trim(),
+        "total_products": 0,
+        "state": "open",
+      };
+      await FirebaseFirestore.instance.collection('stores').add(item);
+      _stores.add(item);
       _storesKey.currentState!.setState(() {});
       showToast("Store added successfully", greenColor);
       // ignore: use_build_context_synchronously
@@ -343,7 +344,7 @@ class _StoresListState extends State<StoresList> {
                                                     children: <Widget>[
                                                       Text("Total Products", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
                                                       const SizedBox(width: 10),
-                                                      Text(item["total_products"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: redColor)),
+                                                      Text(item["total_products"].toString(), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: redColor)),
                                                     ],
                                                   ),
                                                   const SizedBox(height: 20),
