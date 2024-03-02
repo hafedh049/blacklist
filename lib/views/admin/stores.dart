@@ -66,11 +66,12 @@ class _StoresListState extends State<StoresList> {
       final Map<String, dynamic> vendorItem = <String, dynamic>{
         "store_id": now,
         "vendor_name": _vendorNameController.text.trim(),
-        "password":"0000",
+        "vendor_email":_vendorEmailController.text.trim(),
+        "vendor_password":_vendorPasswordController.text.trim(),
         "vendor_id": ,
       };
-      await FirebaseFirestore.instance.collection('stores').add(item);
-      _stores.add(item);
+      await FirebaseFirestore.instance.collection('stores').add(storeItem);
+      _stores.add(storeItem);
       _storesKey.currentState!.setState(() {});
       showToast("Store added successfully", greenColor);
       // ignore: use_build_context_synchronously
