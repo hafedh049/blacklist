@@ -1,6 +1,7 @@
 import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
 
@@ -18,17 +19,20 @@ class _CountersState extends State<Counters> {
     "day": <String, dynamic>{
       "icon": FontAwesome.wallet_solid,
       "title": "SALES PER DAY",
-      "amount": 1234,
+      "amount": 00.00,
+      "callback": () {},
     },
     "month": <String, dynamic>{
       "icon": FontAwesome.circle_dollar_to_slot_solid,
       "title": "SALES PER MONTH",
-      "amount": 100.0,
+      "amount": 00.00,
+      "callback": () {},
     },
     "year": <String, dynamic>{
       "icon": FontAwesome.google_wallet_brand,
       "title": "SALES PER YEAR",
-      "amount": 746587.59,
+      "amount": 00.00,
+      "callback": () {},
     },
   };
 
@@ -45,7 +49,18 @@ class _CountersState extends State<Counters> {
               },
             )
             .toList();
-        for (final Map<String, dynamic> item in data) {}
+        for (final Map<String, dynamic> item in data) {
+          if ((item["timestamp"].toDate() as DateTime).day == DateTime.now().day) {
+            _sells["day"]!["amount"] = _sells["day"]!["amount"]! + item["quantity"] * item["price"];
+          }
+          if ((item["timestamp"].toDate() as DateTime).month == DateTime.now().month) {
+            _sells["month"]!["amount"] = _sells["month"]!["amount"]! + item["quantity"] * item["price"];
+          }
+          if ((item["timestamp"].toDate() as DateTime).year == DateTime.now().year) {
+            _sells["year"]!["amount"] = _sells["year"]!["amount"]! + item["quantity"] * item["price"];
+          }
+        }
+        setState(() {});
       },
     );
     super.initState();
@@ -54,8 +69,10 @@ class _CountersState extends State<Counters> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        for (Map<String, dynamic> item in _sells)
+        for (final Map<String, dynamic> item in _sells.values)
           Container(
             padding: const EdgeInsets.all(24),
             margin: const EdgeInsets.only(bottom: 24),
@@ -65,13 +82,7 @@ class _CountersState extends State<Counters> {
               splashColor: transparentColor,
               highlightColor: transparentColor,
               hoverColor: transparentColor,
-              onTap: () {
-                setState(
-                  () {
-                    item["amount"] = Random().nextInt(4000) * Random().nextDouble();
-                  },
-                );
-              },
+              onTap: item["callback"],
               child: Stack(
                 alignment: Alignment.centerLeft,
                 children: <Widget>[
@@ -87,7 +98,16 @@ class _CountersState extends State<Counters> {
                         children: <Widget>[
                           Text(item["title"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.bold, color: greyColor)),
                           const SizedBox(height: 5),
-                          AnimatedFlipCounter(value: item["amount"], wholeDigits: 1, fractionDigits: 2, suffix: " DT", textStyle: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.bold, color: whiteColor), duration: 1.seconds, decimalSeparator: ",", thousandSeparator: " "),
+                          AnimatedFlipCounter(
+                            value: item["amount"],
+                            wholeDigits: 1,
+                            fractionDigits: 2,
+                            suffix: " DT",
+                            textStyle: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.bold, color: whiteColor),
+                            duration: 1.seconds,
+                            decimalSeparator: ",",
+                            thousandSeparator: " ",
+                          ),
                         ],
                       ),
                     ],
