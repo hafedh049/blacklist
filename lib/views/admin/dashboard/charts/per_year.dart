@@ -41,53 +41,26 @@ class _PerYearState extends State<PerYear> {
   }
 
   Widget bottomTitleWidgets(double value, TitleMeta meta) {
-    const style = TextStyle(
-      fontWeight: FontWeight.bold,
-      fontSize: 16,
-    );
-    Widget text;
-    switch (value.toInt()) {
-      case 2:
-        text = const Text('MAR', style: style);
-        break;
-      case 5:
-        text = const Text('JUN', style: style);
-        break;
-      case 8:
-        text = const Text('SEP', style: style);
-        break;
-      default:
-        text = const Text('', style: style);
-        break;
-    }
+    final TextStyle style = GoogleFonts.itim(fontWeight: FontWeight.bold, fontSize: 16);
 
-    return SideTitleWidget(
-      axisSide: meta.axisSide,
-      child: text,
-    );
+    Widget text;
+
+    text = Text(_months[value.toInt() - 1]!, style: style);
+
+    return SideTitleWidget(axisSide: meta.axisSide, child: text);
   }
 
   Widget leftTitleWidgets(double value, TitleMeta meta) {
-    const style = TextStyle(
-      fontWeight: FontWeight.bold,
-      fontSize: 15,
-    );
-    String text;
-    switch (value.toInt()) {
-      case 1:
-        text = '10K';
-        break;
-      case 3:
-        text = '30k';
-        break;
-      case 5:
-        text = '50k';
-        break;
-      default:
-        return Container();
-    }
+    final TextStyle style = GoogleFonts.itim(fontWeight: FontWeight.bold, fontSize: 16);
 
-    return Text(text, style: style, textAlign: TextAlign.left);
+    String text = "";
+
+    if (value % 200 == 0) {
+      text = value.toStringAsFixed(0);
+    } else {
+      return Container();
+    }
+    return SideTitleWidget(axisSide: meta.axisSide, space: 0, child: Text(text, style: style));
   }
 
   @override
@@ -101,7 +74,7 @@ class _PerYearState extends State<PerYear> {
         future: _load(),
         builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
           if (snapshot.hasData) {
-            return _mappedData.values.every((double element) => element == 0.0)
+            return !_mappedData.values.every((double element) => element == 0.0)
                 ? Center(child: Text("NOT YET.", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: whiteColor)))
                 : StatefulBuilder(
                     builder: (BuildContext context, void Function(void Function()) _) {
@@ -119,31 +92,14 @@ class _PerYearState extends State<PerYear> {
                             show: true,
                             rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
                             topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                            bottomTitles: AxisTitles(
-                              sideTitles: SideTitles(
-                                showTitles: true,
-                                reservedSize: 30,
-                                interval: 1,
-                                getTitlesWidget: bottomTitleWidgets,
-                              ),
-                            ),
-                            leftTitles: AxisTitles(
-                              sideTitles: SideTitles(
-                                showTitles: true,
-                                interval: 1,
-                                getTitlesWidget: leftTitleWidgets,
-                                reservedSize: 42,
-                              ),
-                            ),
+                            bottomTitles: AxisTitles(sideTitles: SideTitles(showTitles: true, reservedSize: 30, interval: 1, getTitlesWidget: bottomTitleWidgets)),
+                            leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: true, interval: 1, getTitlesWidget: leftTitleWidgets, reservedSize: 42)),
                           ),
-                          borderData: FlBorderData(
-                            show: true,
-                            border: Border.all(color: const Color(0xff37434d)),
-                          ),
-                          minX: 0,
-                          maxX: 11,
+                          borderData: FlBorderData(show: false),
+                          minX: 1,
+                          maxX: 12,
                           minY: 0,
-                          maxY: 6,
+                          maxY: 10,
                           lineBarsData: [
                             LineChartBarData(
                               spots: const [
@@ -156,18 +112,11 @@ class _PerYearState extends State<PerYear> {
                                 FlSpot(11, 4),
                               ],
                               isCurved: true,
-                              gradient: LinearGradient(colors: <Color>[whiteColor.withOpacity(.3), purpleColor.withOpacity(6)]),
+                              gradient: LinearGradient(colors: <Color>[whiteColor.withOpacity(.3), purpleColor.withOpacity(.6)]),
                               barWidth: 5,
                               isStrokeCapRound: true,
-                              dotData: const FlDotData(
-                                show: false,
-                              ),
-                              belowBarData: BarAreaData(
-                                show: true,
-                                gradient: LinearGradient(
-                                  colors: gradientColors.map((color) => color.withOpacity(0.3)).toList(),
-                                ),
-                              ),
+                              dotData: const FlDotData(show: true),
+                              belowBarData: BarAreaData(show: true, gradient: LinearGradient(colors: <Color>[whiteColor.withOpacity(.2), purpleColor.withOpacity(.2)])),
                             ),
                           ],
                         ),
