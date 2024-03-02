@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:blacklist/utils/callbacks.dart';
+import 'package:blacklist/utils/helpers/add_store.dart';
+import 'package:blacklist/utils/helpers/change_store_password.dart';
 import 'package:blacklist/utils/helpers/errored.dart';
 import 'package:blacklist/utils/helpers/loading.dart';
 import 'package:blacklist/utils/shared.dart';
@@ -28,8 +30,6 @@ class _StoresListState extends State<StoresList> {
   final List<Map<String, dynamic>> _stores = <Map<String, dynamic>>[];
 
   final TextEditingController _adminController = TextEditingController();
-  final TextEditingController _oldPasswordController = TextEditingController();
-  final TextEditingController _newPasswordController = TextEditingController();
   final TextEditingController _storeNameController = TextEditingController();
   final TextEditingController _vendorNameController = TextEditingController();
   final TextEditingController _vendorEmailController = TextEditingController();
@@ -39,9 +39,6 @@ class _StoresListState extends State<StoresList> {
 
   bool _vendorPasswordState = false;
 
-  bool _oldPasswordState = false;
-  bool _newPasswordState = false;
-
   bool _adminState = false;
 
   @override
@@ -49,134 +46,12 @@ class _StoresListState extends State<StoresList> {
     _vendorEmailController.dispose();
     _vendorPasswordController.dispose();
     _adminController.dispose();
-    _oldPasswordController.dispose();
-    _newPasswordController.dispose();
     _storeNameController.dispose();
     _vendorNameController.dispose();
     super.dispose();
   }
 
-  Future<void> _createStore() async {
-    if (_storeNameController.text.trim().isEmpty) {
-      showToast("Enter a valid store name", redColor);
-    } else if (_vendorNameController.text.trim().isEmpty) {
-      showToast("Enter a valid vendor name", redColor);
-    } else if (_vendorEmailController.text.trim().isEmpty) {
-      showToast("Enter a valid vendor e-mail", redColor);
-    } else if (_vendorPasswordController.text.trim().isEmpty) {
-      showToast("Enter a valid vendor password", redColor);
-    } else {
-      String storeID = DateTime.now().millisecondsSinceEpoch.toString();
-      String vendorID = List<String>.generate(14, (int index) => Random().nextInt(10).toString()).join();
-      final Map<String, dynamic> storeItem = <String, dynamic>{
-        "store_name": _storeNameController.text.trim(),
-        "vendor_name": _vendorNameController.text.trim(),
-        "total_products": 0,
-        "store_state": "open",
-        "store_id": storeID,
-        "vendor_id": vendorID,
-      };
-      final Map<String, dynamic> vendorItem = <String, dynamic>{
-        "store_id": storeID,
-        "vendor_id": vendorID,
-        "vendor_name": _vendorNameController.text.trim(),
-        "vendor_email": _vendorEmailController.text.trim(),
-        "vendor_password": _vendorPasswordController.text.trim(),
-      };
-      await FirebaseFirestore.instance.collection('stores').add(storeItem);
-      await FirebaseFirestore.instance.collection('vendors').doc(storeID).set(vendorItem);
-      _stores.add(storeItem);
-      _storesKey.currentState!.setState(() {});
-      showToast("Store added successfully", greenColor);
-      // ignore: use_build_context_synchronously
-      Navigator.pop(context);
-    }
-  }
-
-  void _changePassword() {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) => Container(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              color: darkColor,
-              child: StatefulBuilder(
-                builder: (BuildContext context, void Function(void Function()) _) {
-                  return TextField(
-                    obscureText: !_oldPasswordState,
-                    onChanged: (String value) => value.trim().length <= 1 ? _(() {}) : null,
-                    controller: _oldPasswordController,
-                    style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.all(20),
-                      focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
-                      border: InputBorder.none,
-                      hintText: 'OLD PASSWORD',
-                      hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                      prefixIcon: _oldPasswordController.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
-                      suffixIcon: IconButton(onPressed: () => _(() => _oldPasswordState = !_oldPasswordState), icon: Icon(_oldPasswordState ? FontAwesome.eye_solid : FontAwesome.eye_slash_solid, size: 15, color: purpleColor)),
-                    ),
-                    cursorColor: purpleColor,
-                  );
-                },
-              ),
-            ),
-            const SizedBox(height: 20),
-            Container(
-              color: darkColor,
-              child: StatefulBuilder(
-                builder: (BuildContext context, void Function(void Function()) _) {
-                  return TextField(
-                    obscureText: !_newPasswordState,
-                    onChanged: (String value) => value.trim().length <= 1 ? _(() {}) : null,
-                    controller: _newPasswordController,
-                    style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.all(20),
-                      focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
-                      border: InputBorder.none,
-                      hintText: 'NEW PASSWORD',
-                      hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                      prefixIcon: _newPasswordController.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
-                      suffixIcon: IconButton(onPressed: () => _(() => _newPasswordState = !_newPasswordState), icon: Icon(_newPasswordState ? FontAwesome.eye_solid : FontAwesome.eye_slash_solid, size: 15, color: purpleColor)),
-                    ),
-                    cursorColor: purpleColor,
-                  );
-                },
-              ),
-            ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                const Spacer(),
-                AnimatedButton(
-                  width: 100,
-                  height: 30,
-                  text: 'CHANGE',
-                  selectedTextColor: whiteColor,
-                  animatedOn: AnimatedOn.onHover,
-                  animationDuration: 500.ms,
-                  isReverse: true,
-                  selectedBackgroundColor: darkColor,
-                  backgroundColor: greenColor,
-                  transitionType: TransitionType.TOP_TO_BOTTOM,
-                  textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                  onPress: () {
-                    Navigator.pop(context);
-                  },
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  void _changePassword() => showModalBottomSheet(context: context, builder: (BuildContext context) => const ChangeStorePassword());
 
   @override
   Widget build(BuildContext context) {
@@ -203,141 +78,7 @@ class _StoresListState extends State<StoresList> {
                   backgroundColor: purpleColor,
                   transitionType: TransitionType.TOP_TO_BOTTOM,
                   textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                  onPress: () {
-                    showModalBottomSheet(
-                      context: context,
-                      builder: (BuildContext context) => Container(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Container(
-                              color: darkColor,
-                              child: StatefulBuilder(
-                                builder: (BuildContext context, void Function(void Function()) _) {
-                                  return TextField(
-                                    onChanged: (String value) => value.trim().length <= 1 ? _(() {}) : null,
-                                    onSubmitted: (String value) => _createStore(),
-                                    controller: _storeNameController,
-                                    style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                                    decoration: InputDecoration(
-                                      contentPadding: const EdgeInsets.all(20),
-                                      focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
-                                      border: InputBorder.none,
-                                      hintText: 'STORE NAME',
-                                      hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                                      prefixIcon: _storeNameController.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
-                                    ),
-                                    cursorColor: purpleColor,
-                                  );
-                                },
-                              ),
-                            ),
-                            const SizedBox(height: 20),
-                            Container(
-                              color: darkColor,
-                              child: StatefulBuilder(
-                                builder: (BuildContext context, void Function(void Function()) _) {
-                                  return TextField(
-                                    onChanged: (String value) => value.trim().length <= 1 ? _(() {}) : null,
-                                    onSubmitted: (String value) => _createStore(),
-                                    controller: _vendorNameController,
-                                    style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                                    decoration: InputDecoration(
-                                      contentPadding: const EdgeInsets.all(20),
-                                      focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
-                                      border: InputBorder.none,
-                                      hintText: 'VENDOR NAME',
-                                      hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                                      prefixIcon: _vendorNameController.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
-                                    ),
-                                    cursorColor: purpleColor,
-                                  );
-                                },
-                              ),
-                            ),
-                            const SizedBox(height: 20),
-                            Container(
-                              color: darkColor,
-                              child: StatefulBuilder(
-                                builder: (BuildContext context, void Function(void Function()) _) {
-                                  return TextField(
-                                    onChanged: (String value) => value.trim().length <= 1 ? _(() {}) : null,
-                                    controller: _vendorEmailController,
-                                    onSubmitted: (String value) => _createStore(),
-                                    style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                                    decoration: InputDecoration(
-                                      contentPadding: const EdgeInsets.all(20),
-                                      focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
-                                      border: InputBorder.none,
-                                      hintText: 'VENDOR E-MAIL',
-                                      hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                                      prefixIcon: _vendorEmailController.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
-                                    ),
-                                    cursorColor: purpleColor,
-                                  );
-                                },
-                              ),
-                            ),
-                            const SizedBox(height: 20),
-                            Container(
-                              color: darkColor,
-                              child: StatefulBuilder(
-                                builder: (BuildContext context, void Function(void Function()) _) {
-                                  return TextField(
-                                    obscureText: !_vendorPasswordState,
-                                    onSubmitted: (String value) => _createStore(),
-                                    onChanged: (String value) => value.trim().length <= 1 ? _(() {}) : null,
-                                    controller: _vendorPasswordController,
-                                    style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                                    decoration: InputDecoration(
-                                      contentPadding: const EdgeInsets.all(20),
-                                      focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
-                                      border: InputBorder.none,
-                                      hintText: '**********',
-                                      hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                                      prefixIcon: _vendorPasswordController.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
-                                      suffixIcon: IconButton(onPressed: () => _(() => _vendorPasswordState = !_vendorPasswordState), icon: Icon(_vendorPasswordState ? FontAwesome.eye_solid : FontAwesome.eye_slash_solid, size: 15, color: purpleColor)),
-                                    ),
-                                    cursorColor: purpleColor,
-                                  );
-                                },
-                              ),
-                            ),
-                            const SizedBox(height: 20),
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                const Spacer(),
-                                AnimatedButton(
-                                  width: 100,
-                                  height: 30,
-                                  text: 'CREATE',
-                                  selectedTextColor: whiteColor,
-                                  animatedOn: AnimatedOn.onHover,
-                                  animationDuration: 500.ms,
-                                  isReverse: true,
-                                  selectedBackgroundColor: darkColor,
-                                  backgroundColor: greenColor,
-                                  transitionType: TransitionType.TOP_TO_BOTTOM,
-                                  textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                                  onPress: () async => await _createStore(),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ).then(
-                      (void value) {
-                        _storeNameController.clear();
-                        _vendorEmailController.clear();
-                        _vendorPasswordController.clear();
-                        _vendorNameController.clear();
-                      },
-                    );
-                  },
+                  onPress: () => showModalBottomSheet(context: context, builder: (BuildContext context) => const AddStore()),
                 ),
                 const SizedBox(width: 20),
                 AnimatedButton(
