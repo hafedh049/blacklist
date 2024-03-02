@@ -9,8 +9,8 @@ import '../shared.dart';
 import 'change_password.dart';
 
 class ChangeVendorPassword extends StatefulWidget {
-  const ChangeVendorPassword({super.key});
-
+  const ChangeVendorPassword({super.key, required this.vendorID});
+  final String vendorID;
   @override
   State<ChangeVendorPassword> createState() => _ChangeVendorPasswordState();
 }

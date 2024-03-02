@@ -19,7 +19,7 @@ class _ChangePasswordState extends State<ChangePassword> {
   final TextEditingController _oldPasswordController = TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
 
-  bool _oldPasswordState = false;
+  bool _oldPasswordState = true;
   bool _newPasswordState = false;
 
   @override
@@ -44,9 +44,8 @@ class _ChangePasswordState extends State<ChangePassword> {
             child: StatefulBuilder(
               builder: (BuildContext context, void Function(void Function()) _) {
                 return TextField(
-                  obscureText: !_oldPasswordState,
                   onChanged: (String value) => value.trim().length <= 1 ? _(() {}) : null,
-                  controller: _oldPasswordController,
+                  controller: _nameController,
                   style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.all(20),
@@ -54,7 +53,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                     border: InputBorder.none,
                     hintText: 'VENDOR NAME',
                     hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                    prefixIcon: _oldPasswordController.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
+                    prefixIcon: _nameController.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
                   ),
                   cursorColor: purpleColor,
                 );
@@ -67,9 +66,8 @@ class _ChangePasswordState extends State<ChangePassword> {
             child: StatefulBuilder(
               builder: (BuildContext context, void Function(void Function()) _) {
                 return TextField(
-                  obscureText: !_oldPasswordState,
                   onChanged: (String value) => value.trim().length <= 1 ? _(() {}) : null,
-                  controller: _oldPasswordController,
+                  controller: _emailController,
                   style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.all(20),
@@ -77,7 +75,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                     border: InputBorder.none,
                     hintText: 'VENDOR E-MAIL',
                     hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                    prefixIcon: _oldPasswordController.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
+                    prefixIcon: _emailController.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
                   ),
                   cursorColor: purpleColor,
                 );
