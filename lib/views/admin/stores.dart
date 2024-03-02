@@ -55,11 +55,19 @@ class _StoresListState extends State<StoresList> {
     if (_vendorNameController.text.trim().isEmpty) {
       showToast("Enter a valid vendor name", redColor);
     } else {
-      final Map<String, dynamic> item = <String, dynamic>{
+      String now = DateTime.now().millisecondsSinceEpoch.toString();
+      final Map<String, dynamic> storeItem = <String, dynamic>{
         "store_name": _storeNameController.text.trim(),
+        "store_vendor_name": _vendorNameController.text.trim(),
+        "store_total_products": 0,
+        "store_state": "open",
+        "store_id": now,
+      };
+      final Map<String, dynamic> vendorItem = <String, dynamic>{
+        "store_id": now,
         "vendor_name": _vendorNameController.text.trim(),
-        "total_products": 0,
-        "state": "open",
+        "password":"0000",
+        "vendor_id": ,
       };
       await FirebaseFirestore.instance.collection('stores').add(item);
       _stores.add(item);
