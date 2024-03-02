@@ -73,7 +73,7 @@ class _PerYearState extends State<PerYear> {
   Widget _bottomTitles(double value, TitleMeta meta) {
     final List<String> titles = <String>['Mn', 'Te', 'Wd', 'Tu', 'Fr', 'St', 'Su'];
 
-    final Widget text = Text(titles[value.toInt()], style: GoogleFonts.itim(color: whiteColor, fontWeight: FontWeight.bold, fontSize: 14));
+    final Widget text = Text(titles[value.toInt() - 1], style: GoogleFonts.itim(color: whiteColor, fontWeight: FontWeight.bold, fontSize: 14));
 
     return SideTitleWidget(axisSide: meta.axisSide, space: 16, child: text);
   }

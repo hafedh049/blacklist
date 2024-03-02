@@ -63,7 +63,7 @@ class _PerWeekState extends State<PerWeek> {
   Widget _bottomTitles(double value, TitleMeta meta) {
     final List<String> titles = <String>['Mn', 'Te', 'Wd', 'Tu', 'Fr', 'St', 'Su'];
 
-    final Widget text = Text(titles[value.toInt()], style: GoogleFonts.itim(color: whiteColor, fontWeight: FontWeight.bold, fontSize: 14));
+    final Widget text = Text(titles[value.toInt() - 1], style: GoogleFonts.itim(color: whiteColor, fontWeight: FontWeight.bold, fontSize: 14));
 
     return SideTitleWidget(axisSide: meta.axisSide, space: 16, child: text);
   }
@@ -98,14 +98,15 @@ class _PerWeekState extends State<PerWeek> {
 
                               touchedGroupIndex = response.spot!.touchedBarGroupIndex;
 
-                              _(() {
-                                if (!event.isInterestedForInteractions) {
-                                  touchedGroupIndex = -1;
-                                  return;
-                                }
-                                // showingBarGroups = List.of(rawBarGroups);
-                                if (touchedGroupIndex != -1) {
-                                  /*     var sum = 0.0;
+                              _(
+                                () {
+                                  if (!event.isInterestedForInteractions) {
+                                    touchedGroupIndex = -1;
+                                    return;
+                                  }
+                                  // showingBarGroups = List.of(rawBarGroups);
+                                  if (touchedGroupIndex != -1) {
+                                    /*     var sum = 0.0;
                                 for (final rod in showingBarGroups[touchedGroupIndex].barRods) {
                                   sum += rod.toY;
                                 }
@@ -116,8 +117,9 @@ class _PerWeekState extends State<PerWeek> {
                                     return rod.copyWith(toY: avg, color: widget.avgColor);
                                   }).toList(),
                                 );*/
-                                }
-                              });
+                                  }
+                                },
+                              );
                             },
                           ),
                           titlesData: FlTitlesData(

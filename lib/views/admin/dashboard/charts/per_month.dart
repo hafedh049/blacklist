@@ -1,3 +1,4 @@
+import 'package:blacklist/utils/callbacks.dart';
 import 'package:blacklist/utils/helpers/errored.dart';
 import 'package:blacklist/utils/helpers/loading.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -78,6 +79,7 @@ class _PerMonthState extends State<PerMonth> {
   Widget _bottomTitles(double value, TitleMeta meta) {
     final List<String> titles = <String>['Mn', 'Te', 'Wd', 'Tu', 'Fr', 'St', 'Su'];
 
+    showToast(value.toString(), redColor);
     final Widget text = Text(titles[value.toInt() - 1], style: GoogleFonts.itim(color: whiteColor, fontWeight: FontWeight.bold, fontSize: 14));
 
     return SideTitleWidget(axisSide: meta.axisSide, space: 16, child: text);
@@ -147,7 +149,7 @@ class _PerMonthState extends State<PerMonth> {
                           barGroups: _mappedData.entries
                               .map(
                                 (MapEntry<int, double> e) => BarChartGroupData(
-                                  x: e.key - 1,
+                                  x: e.key,
                                   barRods: <BarChartRodData>[BarChartRodData(toY: e.value)],
                                 ),
                               )
