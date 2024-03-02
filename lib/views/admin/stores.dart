@@ -4,6 +4,7 @@ import 'package:blacklist/utils/callbacks.dart';
 import 'package:blacklist/utils/shared.dart';
 import 'package:blacklist/views/admin/holder.dart';
 import 'package:blacklist/views/auth/passphrase.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_animated_button/flutter_animated_button.dart';
@@ -21,8 +22,10 @@ class _StoresListState extends State<StoresList> {
   final List<Map<String, dynamic>> _stores = List<Map<String, dynamic>>.generate(20, (int index) => <String, dynamic>{"store_name": "Store ${index + 1}", "vendor_name": "Vendor ${index + 1}", "total_products": Random().nextInt(4000).toString()});
 
   final TextEditingController _adminController = TextEditingController();
-  final TextEditingController _oldPasswordController = TextEditingController(text: "");
+  final TextEditingController _oldPasswordController = TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
+  final TextEditingController _storeNameController = TextEditingController();
+  final TextEditingController _vendorNameController = TextEditingController();
 
   final String _adminPassphrase = "admin";
 
@@ -36,6 +39,8 @@ class _StoresListState extends State<StoresList> {
     _adminController.dispose();
     _oldPasswordController.dispose();
     _newPasswordController.dispose();
+    _storeNameController.dispose();
+    _vendorNameController.dispose();
     super.dispose();
   }
 
@@ -181,6 +186,28 @@ class _StoresListState extends State<StoresList> {
                                 ),
                               ),
                               const SizedBox(height: 20),
+                              Container(
+                                color: darkColor,
+                                child: StatefulBuilder(
+                                  builder: (BuildContext context, void Function(void Function()) _) {
+                                    return TextField(
+                                      onChanged: (String value) => value.trim().length <= 1 ? _(() {}) : null,
+                                      controller: _vendorNameController,
+                                      style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                                      decoration: InputDecoration(
+                                        contentPadding: const EdgeInsets.all(20),
+                                        focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
+                                        border: InputBorder.none,
+                                        hintText: 'VENDOR NAME',
+                                        hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                                        prefixIcon: _vendorNameController.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
+                                      ),
+                                      cursorColor: purpleColor,
+                                    );
+                                  },
+                                ),
+                              ),
+                              const SizedBox(height: 20),
                               Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
@@ -198,7 +225,21 @@ class _StoresListState extends State<StoresList> {
                                     transitionType: TransitionType.TOP_TO_BOTTOM,
                                     textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
                                     onPress: () {
-                                      Navigator.pop(context);
+                                      if (_storeNameController.text.trim().isEmpty) {
+                                        showToast("Enter a valid store name", redColor);
+                                      }
+                                      if (_vendorNameController.text.trim().isEmpty) {
+                                        showToast("Enter a valid store name", redColor);
+                                      } else {
+                                        FirebaseFirestore.instance.collection('stores').add(
+                                          {
+                                            "store_name": _storeNameController.text.trim(),
+                                            "vendor_name": "Vendor ${index + 1}",
+                                            "total_products": Random().nextInt(4000).toString(),
+                                          },
+                                        );
+                                        Navigator.pop(context);
+                                      }
                                     },
                                   ),
                                 ],
