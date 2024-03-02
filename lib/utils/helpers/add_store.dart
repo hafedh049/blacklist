@@ -1,19 +1,31 @@
+import 'dart:math';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_animated_button/flutter_animated_button.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
 
+import '../callbacks.dart';
 import '../shared.dart';
 
 class AddStore extends StatefulWidget {
-  const AddStore({super.key});
-
+  const AddStore({super.key, required this.callback, required this.stores});
+  final List<Map<String, dynamic>> stores;
+  final void Function() callback;
   @override
   State<AddStore> createState() => _AddStoreState();
 }
 
 class _AddStoreState extends State<AddStore> {
+  final TextEditingController _storeNameController = TextEditingController();
+  final TextEditingController _vendorNameController = TextEditingController();
+  final TextEditingController _vendorEmailController = TextEditingController();
+  final TextEditingController _vendorPasswordController = TextEditingController();
+
+  bool _vendorPasswordState = false;
+
   Future<void> _createStore() async {
     if (_storeNameController.text.trim().isEmpty) {
       showToast("Enter a valid store name", redColor);
@@ -43,12 +55,21 @@ class _AddStoreState extends State<AddStore> {
       };
       await FirebaseFirestore.instance.collection('stores').add(storeItem);
       await FirebaseFirestore.instance.collection('vendors').doc(storeID).set(vendorItem);
-      _stores.add(storeItem);
-      _storesKey.currentState!.setState(() {});
+      widget.stores.add(storeItem);
+      widget.callback();
       showToast("Store added successfully", greenColor);
       // ignore: use_build_context_synchronously
       Navigator.pop(context);
     }
+  }
+
+  @override
+  void dispose() {
+    _vendorEmailController.dispose();
+    _vendorPasswordController.dispose();
+    _storeNameController.dispose();
+    _vendorNameController.dispose();
+    super.dispose();
   }
 
   @override
