@@ -40,21 +40,54 @@ class _PerYearState extends State<PerYear> {
     return true;
   }
 
-  Widget _leftTitles(double value, TitleMeta meta) {
-    final TextStyle style = GoogleFonts.itim(color: whiteColor, fontWeight: FontWeight.bold, fontSize: 14);
-    String text = "";
-    if (value % 100 == 0) {
-      text = value.toStringAsFixed(0);
-    } else {
-      return Container();
+  Widget bottomTitleWidgets(double value, TitleMeta meta) {
+    const style = TextStyle(
+      fontWeight: FontWeight.bold,
+      fontSize: 16,
+    );
+    Widget text;
+    switch (value.toInt()) {
+      case 2:
+        text = const Text('MAR', style: style);
+        break;
+      case 5:
+        text = const Text('JUN', style: style);
+        break;
+      case 8:
+        text = const Text('SEP', style: style);
+        break;
+      default:
+        text = const Text('', style: style);
+        break;
     }
-    return SideTitleWidget(axisSide: meta.axisSide, space: 0, child: Text(text, style: style));
+
+    return SideTitleWidget(
+      axisSide: meta.axisSide,
+      child: text,
+    );
   }
 
-  Widget _bottomTitles(double value, TitleMeta meta) {
-    final Widget text = Text(_months[value.toInt() - 1]!, style: GoogleFonts.itim(color: whiteColor, fontWeight: FontWeight.bold, fontSize: 14));
+  Widget leftTitleWidgets(double value, TitleMeta meta) {
+    const style = TextStyle(
+      fontWeight: FontWeight.bold,
+      fontSize: 15,
+    );
+    String text;
+    switch (value.toInt()) {
+      case 1:
+        text = '10K';
+        break;
+      case 3:
+        text = '30k';
+        break;
+      case 5:
+        text = '50k';
+        break;
+      default:
+        return Container();
+    }
 
-    return SideTitleWidget(axisSide: meta.axisSide, space: 16, child: text);
+    return Text(text, style: style, textAlign: TextAlign.left);
   }
 
   @override
@@ -72,60 +105,71 @@ class _PerYearState extends State<PerYear> {
                 ? Center(child: Text("NOT YET.", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: whiteColor)))
                 : StatefulBuilder(
                     builder: (BuildContext context, void Function(void Function()) _) {
-                      return BarChart(
-                        BarChartData(
-                          maxY: 1000,
-                          barTouchData: BarTouchData(
-                            touchTooltipData: BarTouchTooltipData(tooltipBgColor: whiteColor, getTooltipItem: (BarChartGroupData a, int b, BarChartRodData c, int d) => null),
-                            touchCallback: (FlTouchEvent event, response) {
-                              if (response == null || response.spot == null) {
-                                _(() {
-                                  touchedGroupIndex = -1;
-                                });
-                                return;
-                              }
-
-                              touchedGroupIndex = response.spot!.touchedBarGroupIndex;
-
-                              _(() {
-                                if (!event.isInterestedForInteractions) {
-                                  touchedGroupIndex = -1;
-                                  return;
-                                }
-                                // showingBarGroups = List.of(rawBarGroups);
-                                if (touchedGroupIndex != -1) {
-                                  /*     var sum = 0.0;
-                                for (final rod in showingBarGroups[touchedGroupIndex].barRods) {
-                                  sum += rod.toY;
-                                }
-                                final avg = sum / showingBarGroups[touchedGroupIndex].barRods.length;
-
-                                showingBarGroups[touchedGroupIndex] = showingBarGroups[touchedGroupIndex].copyWith(
-                                  barRods: showingBarGroups[touchedGroupIndex].barRods.map((rod) {
-                                    return rod.copyWith(toY: avg, color: widget.avgColor);
-                                  }).toList(),
-                                );*/
-                                }
-                              });
-                            },
+                      return LineChart(
+                        LineChartData(
+                          gridData: FlGridData(
+                            show: true,
+                            drawVerticalLine: true,
+                            horizontalInterval: 1,
+                            verticalInterval: 1,
+                            getDrawingHorizontalLine: (double value) => FlLine(color: whiteColor.withOpacity(.3), strokeWidth: 1),
+                            getDrawingVerticalLine: (double value) => FlLine(color: whiteColor.withOpacity(.3), strokeWidth: 1),
                           ),
                           titlesData: FlTitlesData(
                             show: true,
                             rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
                             topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                            bottomTitles: AxisTitles(sideTitles: SideTitles(showTitles: true, getTitlesWidget: _bottomTitles, reservedSize: 42)),
-                            leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: true, reservedSize: 28, interval: 1, getTitlesWidget: _leftTitles)),
+                            bottomTitles: AxisTitles(
+                              sideTitles: SideTitles(
+                                showTitles: true,
+                                reservedSize: 30,
+                                interval: 1,
+                                getTitlesWidget: bottomTitleWidgets,
+                              ),
+                            ),
+                            leftTitles: AxisTitles(
+                              sideTitles: SideTitles(
+                                showTitles: true,
+                                interval: 1,
+                                getTitlesWidget: leftTitleWidgets,
+                                reservedSize: 42,
+                              ),
+                            ),
                           ),
-                          borderData: FlBorderData(show: false),
-                          barGroups: _mappedData.entries
-                              .map(
-                                (MapEntry<int, double> e) => BarChartGroupData(
-                                  x: e.key,
-                                  barRods: <BarChartRodData>[BarChartRodData(toY: e.value)],
+                          borderData: FlBorderData(
+                            show: true,
+                            border: Border.all(color: const Color(0xff37434d)),
+                          ),
+                          minX: 0,
+                          maxX: 11,
+                          minY: 0,
+                          maxY: 6,
+                          lineBarsData: [
+                            LineChartBarData(
+                              spots: const [
+                                FlSpot(0, 3),
+                                FlSpot(2.6, 2),
+                                FlSpot(4.9, 5),
+                                FlSpot(6.8, 3.1),
+                                FlSpot(8, 4),
+                                FlSpot(9.5, 3),
+                                FlSpot(11, 4),
+                              ],
+                              isCurved: true,
+                              gradient: LinearGradient(colors: <Color>[whiteColor.withOpacity(.3), purpleColor.withOpacity(6)]),
+                              barWidth: 5,
+                              isStrokeCapRound: true,
+                              dotData: const FlDotData(
+                                show: false,
+                              ),
+                              belowBarData: BarAreaData(
+                                show: true,
+                                gradient: LinearGradient(
+                                  colors: gradientColors.map((color) => color.withOpacity(0.3)).toList(),
                                 ),
-                              )
-                              .toList(),
-                          gridData: const FlGridData(show: false),
+                              ),
+                            ),
+                          ],
                         ),
                       );
                     },

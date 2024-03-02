@@ -77,7 +77,6 @@ class _PerWeekState extends State<PerWeek> {
         future: _load(),
         builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
           if (snapshot.hasData) {
-            _mappedData[1] = 6;
             return _mappedData.values.every((double element) => element == 0.0)
                 ? Center(child: Text("NOT YET.", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: whiteColor)))
                 : StatefulBuilder(

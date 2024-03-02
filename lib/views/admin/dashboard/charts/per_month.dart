@@ -85,8 +85,6 @@ class _PerMonthState extends State<PerMonth> {
 
   @override
   Widget build(BuildContext context) {
-    int touchedGroupIndex = -1;
-
     return Container(
       height: 400,
       width: 400,
@@ -103,40 +101,6 @@ class _PerMonthState extends State<PerMonth> {
                       return BarChart(
                         BarChartData(
                           maxY: 100,
-                          barTouchData: BarTouchData(
-                            touchTooltipData: BarTouchTooltipData(tooltipBgColor: whiteColor, getTooltipItem: (BarChartGroupData a, int b, BarChartRodData c, int d) => null),
-                            touchCallback: (FlTouchEvent event, response) {
-                              if (response == null || response.spot == null) {
-                                _(() {
-                                  touchedGroupIndex = -1;
-                                });
-                                return;
-                              }
-
-                              touchedGroupIndex = response.spot!.touchedBarGroupIndex;
-
-                              _(() {
-                                if (!event.isInterestedForInteractions) {
-                                  touchedGroupIndex = -1;
-                                  return;
-                                }
-                                // showingBarGroups = List.of(rawBarGroups);
-                                if (touchedGroupIndex != -1) {
-                                  /*     var sum = 0.0;
-                                for (final rod in showingBarGroups[touchedGroupIndex].barRods) {
-                                  sum += rod.toY;
-                                }
-                                final avg = sum / showingBarGroups[touchedGroupIndex].barRods.length;
-
-                                showingBarGroups[touchedGroupIndex] = showingBarGroups[touchedGroupIndex].copyWith(
-                                  barRods: showingBarGroups[touchedGroupIndex].barRods.map((rod) {
-                                    return rod.copyWith(toY: avg, color: widget.avgColor);
-                                  }).toList(),
-                                );*/
-                                }
-                              });
-                            },
-                          ),
                           titlesData: FlTitlesData(
                             show: true,
                             rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
