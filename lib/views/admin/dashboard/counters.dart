@@ -1,6 +1,8 @@
 import 'package:animated_flip_counter/animated_flip_counter.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:icons_plus/icons_plus.dart';
 
 import '../../../utils/shared.dart';
 
@@ -12,11 +14,48 @@ class Counters extends StatefulWidget {
 }
 
 class _CountersState extends State<Counters> {
+  final Map<String, Map<String, dynamic>> _sells = <String, Map<String, dynamic>>{
+    "day": <String, dynamic>{
+      "icon": FontAwesome.wallet_solid,
+      "title": "SALES PER DAY",
+      "amount": 1234,
+    },
+    "month": <String, dynamic>{
+      "icon": FontAwesome.circle_dollar_to_slot_solid,
+      "title": "SALES PER MONTH",
+      "amount": 100.0,
+    },
+    "year": <String, dynamic>{
+      "icon": FontAwesome.google_wallet_brand,
+      "title": "SALES PER YEAR",
+      "amount": 746587.59,
+    },
+  };
+
+  @override
+  void initState() {
+    FirebaseFirestore.instance.collection("sells").get().then(
+      (QuerySnapshot<Map<String, dynamic>> value) {
+        final List<Map<String, dynamic>> data = value.docs
+            .map(
+              (QueryDocumentSnapshot<Map<String, dynamic>> e) => <String, dynamic>{
+                "timestamp": e.get("timestamp"),
+                "quantity": e.get("quantity"),
+                "price": e.get("price"),
+              },
+            )
+            .toList();
+        for (final Map<String, dynamic> item in data) {}
+      },
+    );
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        for (Map<String, dynamic> item in _gains)
+        for (Map<String, dynamic> item in _sells)
           Container(
             padding: const EdgeInsets.all(24),
             margin: const EdgeInsets.only(bottom: 24),
