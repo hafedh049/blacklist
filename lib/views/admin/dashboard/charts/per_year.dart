@@ -14,6 +14,20 @@ class PerYear extends StatefulWidget {
 }
 
 class _PerYearState extends State<PerYear> {
+  final Map<int, String> _months = {
+    1: "Jan",
+    2: "Fév",
+    3: "Mar",
+    4: "Avr",
+    5: "Mai",
+    6: "Jui",
+    7: "Juil",
+    8: "Aoû",
+    9: "Sep",
+    10: "Oct",
+    11: "Nov",
+    12: "Déc",
+  };
   final Map<int, double> _mappedData = <int, double>{for (int index = 1; index <= 12; index += 1) index: 0.0};
   Future<bool> _load() async {
     final List<Map<String, dynamic>> data = (await FirebaseFirestore.instance
@@ -34,7 +48,7 @@ class _PerYearState extends State<PerYear> {
         .toList();
     for (int index in _mappedData.keys) {
       for (final Map<String, dynamic> entry in data) {
-        if (index == (entry["timestamp"].toDate() as DateTime).weekday) {
+        if (index == (entry["timestamp"].toDate() as DateTime).month) {
           _mappedData[index] = _mappedData[index]! + entry["quantity"] * entry["price"];
         }
       }

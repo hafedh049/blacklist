@@ -14,8 +14,28 @@ class PerMonth extends StatefulWidget {
 }
 
 class _PerMonthState extends State<PerMonth> {
-  final Map<int,int> _months = <int,int>{};
-  final Map<int, double> _mappedData = <int, double>{for (int index = 1; index <=  DateTime.now().; index += 1) index: 0.0};
+  final Map<int, int> _months = {
+    1: 31, // Janvier
+    2: 28, // Février
+    3: 31, // Mars
+    4: 30, // Avril
+    5: 31, // Mai
+    6: 30, // Juin
+    7: 31, // Juillet
+    8: 31, // Août
+    9: 30, // Septembre
+    10: 31, // Octobre
+    11: 30, // Novembre
+    12: 31, // Décembre
+  };
+  late final Map<int, double> _mappedData;
+
+  @override
+  void initState() {
+    super.initState();
+    _mappedData = <int, double>{for (int index = 1; index <= _months[DateTime.now().month]!; index += 1) index: 0.0};
+  }
+
   Future<bool> _load() async {
     final List<Map<String, dynamic>> data = (await FirebaseFirestore.instance
             .collection("sells")
@@ -35,7 +55,7 @@ class _PerMonthState extends State<PerMonth> {
         .toList();
     for (int index in _mappedData.keys) {
       for (final Map<String, dynamic> entry in data) {
-        if (index == (entry["timestamp"].toDate() as DateTime).weekday) {
+        if (index == (entry["timestamp"].toDate() as DateTime).day) {
           _mappedData[index] = _mappedData[index]! + entry["quantity"] * entry["price"];
         }
       }
