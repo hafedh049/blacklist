@@ -40,17 +40,7 @@ class _PerYearState extends State<PerYear> {
     return true;
   }
 
-  Widget bottomTitleWidgets(double value, TitleMeta meta) {
-    final TextStyle style = GoogleFonts.itim(fontWeight: FontWeight.bold, fontSize: 16);
-
-    Widget text;
-
-    text = Text(value.toInt() % 3 == 0 ? _months[value.toInt()]! : "", style: style);
-
-    return SideTitleWidget(axisSide: meta.axisSide, child: text);
-  }
-
-  Widget leftTitleWidgets(double value, TitleMeta meta) {
+  Widget _leftTitleWidgets(double value, TitleMeta meta) {
     final TextStyle style = GoogleFonts.itim(fontWeight: FontWeight.bold, fontSize: 16);
 
     String text = "";
@@ -60,7 +50,17 @@ class _PerYearState extends State<PerYear> {
     } else {
       return Container();
     }
-    return SideTitleWidget(axisSide: meta.axisSide, fitInside: SideTitleFitInsideData(enabled: true, axisPosition: 0, parentAxisSize: 0, distanceFromEdge: 0), child: Text(text, style: style));
+    return SideTitleWidget(axisSide: meta.axisSide, space: 0, child: Text(text, style: style));
+  }
+
+  Widget _bottomTitleWidgets(double value, TitleMeta meta) {
+    final TextStyle style = GoogleFonts.itim(fontWeight: FontWeight.bold, fontSize: 16);
+
+    Widget text;
+
+    text = Text(value.toInt() % 2 == 0 ? _months[value.toInt()]! : "", style: style);
+
+    return SideTitleWidget(axisSide: meta.axisSide, space: -3, child: text);
   }
 
   @override
@@ -92,22 +92,14 @@ class _PerYearState extends State<PerYear> {
                             show: true,
                             rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
                             topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                            bottomTitles: AxisTitles(sideTitles: SideTitles(showTitles: true, interval: 1, getTitlesWidget: bottomTitleWidgets)),
-                            leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: true, interval: 1, getTitlesWidget: leftTitleWidgets)),
+                            bottomTitles: AxisTitles(sideTitles: SideTitles(showTitles: true, interval: 1, getTitlesWidget: _bottomTitleWidgets)),
+                            leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: true, interval: 1, getTitlesWidget: _leftTitleWidgets)),
                           ),
                           borderData: FlBorderData(show: false),
                           maxY: 10,
-                          lineBarsData: [
+                          lineBarsData: <LineChartBarData>[
                             LineChartBarData(
-                              spots: const [
-                                FlSpot(1, 3),
-                                FlSpot(2, 2),
-                                FlSpot(4, 5),
-                                FlSpot(6, 3.1),
-                                FlSpot(8, 4),
-                                FlSpot(9, 3),
-                                FlSpot(11, 4),
-                              ],
+                              spots: _mappedData.entries.map((MapEntry<int, double> e) => FlSpot(e.key.toDouble(), e.value)).toList(),
                               isCurved: true,
                               gradient: LinearGradient(colors: <Color>[whiteColor.withOpacity(.3), purpleColor.withOpacity(.6)]),
                               barWidth: 5,
