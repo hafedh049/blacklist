@@ -67,7 +67,7 @@ class _PerYearState extends State<PerYear> {
         future: _load(),
         builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
           if (snapshot.hasData) {
-            SfSparkBarChart(labelDisplayMode: SparkChartLabelDisplayMode.all, data: _mappedData.values.toList());
+            return SfSparkBarChart(labelDisplayMode: SparkChartLabelDisplayMode.all, data: _mappedData.values.toList());
           } else if (snapshot.connectionState == ConnectionState.waiting) {
             return const Loading();
           }

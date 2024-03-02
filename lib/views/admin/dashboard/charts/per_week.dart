@@ -18,7 +18,7 @@ class _PerWeekState extends State<PerWeek> {
   final List<String> _days = <String>["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
   final Map<int, double> _mappedData = <int, double>{for (int index = 1; index <= 7; index += 1) index: 0.0};
   Future<bool> _load() async {
-    final List<Map<String, dynamic>> data = (await FirebaseFirestore.instance
+    /* final List<Map<String, dynamic>> data = (await FirebaseFirestore.instance
             .collection("sells")
             .where(
               "timestamp",
@@ -40,7 +40,7 @@ class _PerWeekState extends State<PerWeek> {
           _mappedData[index] = _mappedData[index]! + entry["quantity"] * entry["price"];
         }
       }
-    }
+    }*/
     return true;
   }
 
@@ -53,9 +53,9 @@ class _PerWeekState extends State<PerWeek> {
       decoration: const BoxDecoration(color: darkColor),
       child: FutureBuilder<bool>(
         future: _load(),
-        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+        builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
           if (snapshot.hasData) {
-            SfSparkBarChart(labelDisplayMode: SparkChartLabelDisplayMode.all, data: _mappedData.values.toList());
+            return SfSparkBarChart(labelDisplayMode: SparkChartLabelDisplayMode.all, data: _mappedData.values.toList());
           } else if (snapshot.connectionState == ConnectionState.waiting) {
             return const Loading();
           }

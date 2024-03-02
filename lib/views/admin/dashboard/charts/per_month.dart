@@ -33,7 +33,7 @@ class _PerMonthState extends State<PerMonth> {
   @override
   void initState() {
     super.initState();
-    _mappedData = <int, double>{for (int index = 1; index <= _months[DateTime.now().month]!; index += 1) index: 0.0};
+    _mappedData = <int, double>{for (int index = 1; index <= _months[DateTime.now().month]!; index += 1) index: 10};
   }
 
   Future<bool> _load() async {
@@ -74,7 +74,7 @@ class _PerMonthState extends State<PerMonth> {
         future: _load(),
         builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
           if (snapshot.hasData) {
-            SfSparkBarChart(labelDisplayMode: SparkChartLabelDisplayMode.all, data: _mappedData.values.toList());
+            return SfSparkBarChart(data: _mappedData.values.toList());
           } else if (snapshot.connectionState == ConnectionState.waiting) {
             return const Loading();
           }
