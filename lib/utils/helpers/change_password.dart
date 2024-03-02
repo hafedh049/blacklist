@@ -6,14 +6,16 @@ import 'package:icons_plus/icons_plus.dart';
 
 import '../shared.dart';
 
-class ChangeStorePassword extends StatefulWidget {
-  const ChangeStorePassword({super.key});
+class ChangePassword extends StatefulWidget {
+  const ChangePassword({super.key});
 
   @override
-  State<ChangeStorePassword> createState() => _ChangeStorePasswordState();
+  State<ChangePassword> createState() => _ChangePasswordState();
 }
 
-class _ChangeStorePasswordState extends State<ChangeStorePassword> {
+class _ChangePasswordState extends State<ChangePassword> {
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _oldPasswordController = TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
 
@@ -22,6 +24,8 @@ class _ChangeStorePasswordState extends State<ChangeStorePassword> {
 
   @override
   void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
     _newPasswordController.dispose();
     _oldPasswordController.dispose();
     super.dispose();
@@ -35,6 +39,52 @@ class _ChangeStorePasswordState extends State<ChangeStorePassword> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
+          Container(
+            color: darkColor,
+            child: StatefulBuilder(
+              builder: (BuildContext context, void Function(void Function()) _) {
+                return TextField(
+                  obscureText: !_oldPasswordState,
+                  onChanged: (String value) => value.trim().length <= 1 ? _(() {}) : null,
+                  controller: _oldPasswordController,
+                  style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                  decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.all(20),
+                    focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
+                    border: InputBorder.none,
+                    hintText: 'VENDOR NAME',
+                    hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                    prefixIcon: _oldPasswordController.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
+                  ),
+                  cursorColor: purpleColor,
+                );
+              },
+            ),
+          ),
+          const SizedBox(height: 20),
+          Container(
+            color: darkColor,
+            child: StatefulBuilder(
+              builder: (BuildContext context, void Function(void Function()) _) {
+                return TextField(
+                  obscureText: !_oldPasswordState,
+                  onChanged: (String value) => value.trim().length <= 1 ? _(() {}) : null,
+                  controller: _oldPasswordController,
+                  style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                  decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.all(20),
+                    focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
+                    border: InputBorder.none,
+                    hintText: 'VENDOR E-MAIL',
+                    hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                    prefixIcon: _oldPasswordController.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
+                  ),
+                  cursorColor: purpleColor,
+                );
+              },
+            ),
+          ),
+          const SizedBox(height: 20),
           Container(
             color: darkColor,
             child: StatefulBuilder(

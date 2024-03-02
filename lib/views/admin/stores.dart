@@ -1,6 +1,6 @@
 import 'package:blacklist/utils/callbacks.dart';
 import 'package:blacklist/utils/helpers/add_store.dart';
-import 'package:blacklist/utils/helpers/change_store_password.dart';
+import 'package:blacklist/utils/helpers/change_vendor_password.dart';
 import 'package:blacklist/utils/helpers/errored.dart';
 import 'package:blacklist/utils/helpers/loading.dart';
 import 'package:blacklist/utils/shared.dart';
@@ -24,20 +24,6 @@ class _StoresListState extends State<StoresList> {
   final GlobalKey<State> _storesKey = GlobalKey<State>();
 
   final List<Map<String, dynamic>> _stores = <Map<String, dynamic>>[];
-
-  final TextEditingController _adminController = TextEditingController();
-
-  final String _adminPassphrase = "admin";
-
-  bool _adminState = false;
-
-  @override
-  void dispose() {
-    _adminController.dispose();
-    super.dispose();
-  }
-
-  void _changePassword() => showModalBottomSheet(context: context, builder: (BuildContext context) => const ChangeStorePassword());
 
   @override
   Widget build(BuildContext context) {
@@ -192,12 +178,7 @@ class _StoresListState extends State<StoresList> {
                                                 ],
                                               ),
                                               IconButton(
-                                                onPressed: () {
-                                                  showModalBottomSheet(
-                                                    context: context,
-                                                    builder: (BuildContext context) =>
-                                                  );
-                                                },
+                                                onPressed: () => showModalBottomSheet(context: context, builder: (BuildContext context) => const ChangeVendorPassword()),
                                                 icon: const Icon(FontAwesome.user_secret_solid, size: 25, color: purpleColor),
                                               ),
                                             ],

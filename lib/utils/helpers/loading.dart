@@ -11,6 +11,7 @@ class Errored extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: scaffoldColor,
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
