@@ -84,7 +84,7 @@ class _StoresListState extends State<StoresList> {
         "vendor_password": _vendorPasswordController.text.trim(),
       };
       await FirebaseFirestore.instance.collection('stores').add(storeItem);
-      await FirebaseFirestore.instance.collection('vendors').add(vendorItem);
+      await FirebaseFirestore.instance.collection('vendors').doc(storeID).set(vendorItem);
       _stores.add(storeItem);
       _storesKey.currentState!.setState(() {});
       showToast("Store added successfully", greenColor);
@@ -273,7 +273,7 @@ class _StoresListState extends State<StoresList> {
                                       border: InputBorder.none,
                                       hintText: 'VENDOR E-MAIL',
                                       hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                                      prefixIcon: _storeNameController.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
+                                      prefixIcon: _vendorEmailController.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
                                     ),
                                     cursorColor: purpleColor,
                                   );
@@ -329,6 +329,13 @@ class _StoresListState extends State<StoresList> {
                           ],
                         ),
                       ),
+                    ).then(
+                      (void value) {
+                        _storeNameController.clear();
+                        _vendorEmailController.clear();
+                        _vendorPasswordController.clear();
+                        _vendorNameController.clear();
+                      },
                     );
                   },
                 ),
