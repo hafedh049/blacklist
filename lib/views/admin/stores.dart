@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:blacklist/utils/callbacks.dart';
 import 'package:blacklist/utils/helpers/errored.dart';
 import 'package:blacklist/utils/helpers/loading.dart';
@@ -64,16 +66,19 @@ class _StoresListState extends State<StoresList> {
     } else if (_vendorPasswordController.text.trim().isEmpty) {
       showToast("Enter a valid vendor password", redColor);
     } else {
-      String now = DateTime.now().millisecondsSinceEpoch.toString();
+      String storeID = DateTime.now().millisecondsSinceEpoch.toString();
+      String vendorID = List<String>.generate(14, (int index) => Random().nextInt(10).toString()).join();
       final Map<String, dynamic> storeItem = <String, dynamic>{
         "store_name": _storeNameController.text.trim(),
-        "store_vendor_name": _vendorNameController.text.trim(),
-        "store_total_products": 0,
+        "vendor_name": _vendorNameController.text.trim(),
+        "total_products": 0,
         "store_state": "open",
-        "store_id": now,
+        "store_id": storeID,
+        "vendor_id": vendorID,
       };
       final Map<String, dynamic> vendorItem = <String, dynamic>{
-        "store_id": now,
+        "store_id": storeID,
+        "vendor_id": vendorID,
         "vendor_name": _vendorNameController.text.trim(),
         "vendor_email": _vendorEmailController.text.trim(),
         "vendor_password": _vendorPasswordController.text.trim(),
