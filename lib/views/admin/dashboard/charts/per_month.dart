@@ -2,6 +2,7 @@ import 'package:blacklist/utils/helpers/errored.dart';
 import 'package:blacklist/utils/helpers/loading.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 
 import '../../../../utils/shared.dart';
@@ -33,7 +34,7 @@ class _PerMonthState extends State<PerMonth> {
   @override
   void initState() {
     super.initState();
-    _mappedData = <int, double>{for (int index = 1; index <= _months[DateTime.now().month]!; index += 1) index: 10};
+    _mappedData = <int, double>{for (int index = 1; index <= _months[DateTime.now().month]!; index += 1) index: 0.0};
   }
 
   Future<bool> _load() async {
@@ -74,7 +75,16 @@ class _PerMonthState extends State<PerMonth> {
         future: _load(),
         builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
           if (snapshot.hasData) {
-            return SfSparkBarChart(data: _mappedData.values.toList());
+            return _mappedData.values.every((double element) => element == 0.0)
+                ? Center(
+                    child: Text(
+                      "NOT YET.",
+                      style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: whiteColor),
+                    ),
+                  )
+                : SfSparkBarChart(
+                    data: _mappedData.values.toList(),
+                  );
           } else if (snapshot.connectionState == ConnectionState.waiting) {
             return const Loading();
           }
