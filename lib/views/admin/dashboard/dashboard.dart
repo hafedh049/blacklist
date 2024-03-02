@@ -56,9 +56,11 @@ class _DashboardState extends State<Dashboard> {
                     highlightColor: transparentColor,
                     hoverColor: transparentColor,
                     onTap: () {
-                      setState(() {
-                        item["amount"] = Random().nextInt(4000) * Random().nextDouble();
-                      });
+                      setState(
+                        () {
+                          item["amount"] = Random().nextInt(4000) * Random().nextDouble();
+                        },
+                      );
                     },
                     child: Stack(
                       alignment: Alignment.centerLeft,
@@ -91,7 +93,8 @@ class _DashboardState extends State<Dashboard> {
                 runSpacing: 20,
                 spacing: 20,
                 children: <Widget>[
-                  PieChart(),
+                  BarChart(),
+                  BarChart(),
                   BarChart(),
                 ],
               ),
