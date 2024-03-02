@@ -30,8 +30,12 @@ class _StoresListState extends State<StoresList> {
   final TextEditingController _newPasswordController = TextEditingController();
   final TextEditingController _storeNameController = TextEditingController();
   final TextEditingController _vendorNameController = TextEditingController();
+  final TextEditingController _vendorEmailController = TextEditingController();
+  final TextEditingController _vendorPasswordController = TextEditingController();
 
   final String _adminPassphrase = "admin";
+
+  bool _vendorPasswordState = false;
 
   bool _oldPasswordState = false;
   bool _newPasswordState = false;
@@ -40,6 +44,8 @@ class _StoresListState extends State<StoresList> {
 
   @override
   void dispose() {
+    _vendorEmailController.dispose();
+    _vendorPasswordController.dispose();
     _adminController.dispose();
     _oldPasswordController.dispose();
     _newPasswordController.dispose();
@@ -51,9 +57,12 @@ class _StoresListState extends State<StoresList> {
   Future<void> _createStore() async {
     if (_storeNameController.text.trim().isEmpty) {
       showToast("Enter a valid store name", redColor);
-    }
-    if (_vendorNameController.text.trim().isEmpty) {
+    } else if (_vendorNameController.text.trim().isEmpty) {
       showToast("Enter a valid vendor name", redColor);
+    } else if (_vendorEmailController.text.trim().isEmpty) {
+      showToast("Enter a valid vendor e-mail", redColor);
+    } else if (_vendorPasswordController.text.trim().isEmpty) {
+      showToast("Enter a valid vendor password", redColor);
     } else {
       String now = DateTime.now().millisecondsSinceEpoch.toString();
       final Map<String, dynamic> storeItem = <String, dynamic>{
@@ -66,11 +75,11 @@ class _StoresListState extends State<StoresList> {
       final Map<String, dynamic> vendorItem = <String, dynamic>{
         "store_id": now,
         "vendor_name": _vendorNameController.text.trim(),
-        "vendor_email":_vendorEmailController.text.trim(),
-        "vendor_password":_vendorPasswordController.text.trim(),
-        "vendor_id": ,
+        "vendor_email": _vendorEmailController.text.trim(),
+        "vendor_password": _vendorPasswordController.text.trim(),
       };
       await FirebaseFirestore.instance.collection('stores').add(storeItem);
+      await FirebaseFirestore.instance.collection('vendors').add(vendorItem);
       _stores.add(storeItem);
       _storesKey.currentState!.setState(() {});
       showToast("Store added successfully", greenColor);
@@ -204,6 +213,7 @@ class _StoresListState extends State<StoresList> {
                                 builder: (BuildContext context, void Function(void Function()) _) {
                                   return TextField(
                                     onChanged: (String value) => value.trim().length <= 1 ? _(() {}) : null,
+                                    onSubmitted: (String value) => _createStore(),
                                     controller: _storeNameController,
                                     style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
                                     decoration: InputDecoration(
@@ -226,9 +236,9 @@ class _StoresListState extends State<StoresList> {
                                 builder: (BuildContext context, void Function(void Function()) _) {
                                   return TextField(
                                     onChanged: (String value) => value.trim().length <= 1 ? _(() {}) : null,
+                                    onSubmitted: (String value) => _createStore(),
                                     controller: _vendorNameController,
                                     style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                                    onSubmitted: (String value) async => await _createStore(),
                                     decoration: InputDecoration(
                                       contentPadding: const EdgeInsets.all(20),
                                       focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
@@ -236,6 +246,54 @@ class _StoresListState extends State<StoresList> {
                                       hintText: 'VENDOR NAME',
                                       hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
                                       prefixIcon: _vendorNameController.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
+                                    ),
+                                    cursorColor: purpleColor,
+                                  );
+                                },
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            Container(
+                              color: darkColor,
+                              child: StatefulBuilder(
+                                builder: (BuildContext context, void Function(void Function()) _) {
+                                  return TextField(
+                                    onChanged: (String value) => value.trim().length <= 1 ? _(() {}) : null,
+                                    controller: _vendorEmailController,
+                                    onSubmitted: (String value) => _createStore(),
+                                    style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                                    decoration: InputDecoration(
+                                      contentPadding: const EdgeInsets.all(20),
+                                      focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
+                                      border: InputBorder.none,
+                                      hintText: 'VENDOR E-MAIL',
+                                      hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                                      prefixIcon: _storeNameController.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
+                                    ),
+                                    cursorColor: purpleColor,
+                                  );
+                                },
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            Container(
+                              color: darkColor,
+                              child: StatefulBuilder(
+                                builder: (BuildContext context, void Function(void Function()) _) {
+                                  return TextField(
+                                    obscureText: !_vendorPasswordState,
+                                    onSubmitted: (String value) => _createStore(),
+                                    onChanged: (String value) => value.trim().length <= 1 ? _(() {}) : null,
+                                    controller: _vendorPasswordController,
+                                    style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                                    decoration: InputDecoration(
+                                      contentPadding: const EdgeInsets.all(20),
+                                      focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
+                                      border: InputBorder.none,
+                                      hintText: '**********',
+                                      hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                                      prefixIcon: _vendorPasswordController.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
+                                      suffixIcon: IconButton(onPressed: () => _(() => _vendorPasswordState = !_vendorPasswordState), icon: Icon(_vendorPasswordState ? FontAwesome.eye_solid : FontAwesome.eye_slash_solid, size: 15, color: purpleColor)),
                                     ),
                                     cursorColor: purpleColor,
                                   );
