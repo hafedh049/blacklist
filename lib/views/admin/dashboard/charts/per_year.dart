@@ -45,7 +45,7 @@ class _PerYearState extends State<PerYear> {
 
     Widget text;
 
-    text = Text(_months[value.toInt()]!, style: style);
+    text = Text(value.toInt() % 3 == 0 ? _months[value.toInt()]! : "", style: style);
 
     return SideTitleWidget(axisSide: meta.axisSide, child: text);
   }
@@ -60,7 +60,7 @@ class _PerYearState extends State<PerYear> {
     } else {
       return Container();
     }
-    return SideTitleWidget(axisSide: meta.axisSide, space: 0, child: Text(text, style: style));
+    return SideTitleWidget(axisSide: meta.axisSide, fitInside: SideTitleFitInsideData(enabled: true, axisPosition: 0, parentAxisSize: 0, distanceFromEdge: 0), child: Text(text, style: style));
   }
 
   @override
@@ -92,8 +92,8 @@ class _PerYearState extends State<PerYear> {
                             show: true,
                             rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
                             topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                            bottomTitles: AxisTitles(sideTitles: SideTitles(showTitles: true, reservedSize: 30, interval: 1, getTitlesWidget: bottomTitleWidgets)),
-                            leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: true, interval: 1, getTitlesWidget: leftTitleWidgets, reservedSize: 42)),
+                            bottomTitles: AxisTitles(sideTitles: SideTitles(showTitles: true, interval: 1, getTitlesWidget: bottomTitleWidgets)),
+                            leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: true, interval: 1, getTitlesWidget: leftTitleWidgets)),
                           ),
                           borderData: FlBorderData(show: false),
                           maxY: 10,
