@@ -17,12 +17,23 @@ class PerWeek extends StatefulWidget {
 }
 
 class _PerWeekState extends State<PerWeek> {
-  Future<List<double>> _load() async {
-  final Query<Map<String, dynamic>>  FirebaseFirestore.instance.collection("sells").where(
-          "timestamp",
-          isGreaterThanOrEqualTo: DateTime.now().subtract(DateTime.now().weekday.days),
-        );
-    return;
+  final Map<int, double> _mappedData = <int, double>{for (int index = 1; index <= 7; index += 1) index: 0.0};
+  Future<bool> _load() async {
+    final QuerySnapshot<Map<String, dynamic>> data = (await FirebaseFirestore.instance
+            .collection("sells")
+            .where(
+              "timestamp",
+              isGreaterThanOrEqualTo: DateTime.now().subtract(DateTime.now().weekday.days),
+            )
+            .get())
+        .docs
+        .map((QueryDocumentSnapshot<Map<String, dynamic>> e) => null);
+    for (int index in _mappedData.keys) {
+      /*for( data.){
+
+      }*/
+    }
+    return true;
   }
 
   @override
