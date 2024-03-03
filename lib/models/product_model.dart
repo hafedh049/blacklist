@@ -5,10 +5,13 @@ class ProductModel {
   double realPrice;
   double newPrice;
   String productReference;
-  bool stockAlert;
+  int productQuantity;
+  int stockAlert;
   DateTime date;
+  bool selected = false;
 
   ProductModel({
+    required this.productQuantity,
     required this.categoryID,
     required this.date,
     required this.productName,
@@ -21,6 +24,7 @@ class ProductModel {
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
     return ProductModel(
+      productQuantity: json["productQuantity"],
       categoryID: json["categoryID"],
       date: json["date"].toDate(),
       productName: json['productName'],
@@ -34,6 +38,7 @@ class ProductModel {
 
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
+      "productQuantity": productQuantity,
       "categoryID": categoryID,
       "date": date,
       'productName': productName,

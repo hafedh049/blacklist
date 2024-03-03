@@ -9,14 +9,14 @@ import '../shared.dart';
 import 'change_password.dart';
 
 class ChangeVendorPassword extends StatefulWidget {
-  const ChangeVendorPassword({super.key, required this.vendorID});
-  final String vendorID;
+  const ChangeVendorPassword({super.key, required this.storeID});
+  final String storeID;
   @override
   State<ChangeVendorPassword> createState() => _ChangeVendorPasswordState();
 }
 
 class _ChangeVendorPasswordState extends State<ChangeVendorPassword> {
-  void _changePassword() => showModalBottomSheet(context: context, builder: (BuildContext context) => ChangePassword(vendorID: widget.vendorID));
+  void _changePassword() => showModalBottomSheet(context: context, builder: (BuildContext context) => ChangePassword(senderID: widget.storeID));
 
   final String _adminPassphrase = "admin";
 

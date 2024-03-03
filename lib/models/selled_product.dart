@@ -9,12 +9,14 @@ class SelledProductModel extends ProductModel {
     required double realPrice,
     required double newPrice,
     required String productReference,
-    required bool stockAlert,
+    required int stockAlert,
     required categoryID,
     required this.timestamp,
     required date,
+    required productQuantity,
   }) : super(
           date: date,
+          productQuantity: productQuantity,
           categoryID: categoryID,
           productName: productName,
           productCategory: productCategory,
@@ -26,6 +28,7 @@ class SelledProductModel extends ProductModel {
 
   factory SelledProductModel.fromJson(Map<String, dynamic> json) {
     return SelledProductModel(
+      productQuantity: json["productQuantity"],
       productName: json['productName'],
       productCategory: json['productCategory'],
       realPrice: json['realPrice'].toDouble(),

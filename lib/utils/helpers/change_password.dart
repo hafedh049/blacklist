@@ -9,8 +9,8 @@ import '../callbacks.dart';
 import '../shared.dart';
 
 class ChangePassword extends StatefulWidget {
-  const ChangePassword({super.key, required this.vendorID});
-  final String vendorID;
+  const ChangePassword({super.key, required this.senderID});
+  final String senderID;
   @override
   State<ChangePassword> createState() => _ChangePasswordState();
 }
@@ -28,16 +28,16 @@ class _ChangePasswordState extends State<ChangePassword> {
     if (_nameController.text.trim().isEmpty) {
       showToast("Enter a valid vendor name", redColor);
     } else if (_emailController.text.trim().isEmpty) {
-      showToast("Enter a valid vendor name", redColor);
+      showToast("Enter a valid vendor email", redColor);
     } else if (_newPasswordController.text.trim().isEmpty) {
       showToast("Enter a valid vendor password", redColor);
     } else {
       final Map<String, dynamic> vendorItem = <String, dynamic>{
-        "vendor_name": _nameController.text.trim(),
-        "vendor_email": _emailController.text.trim(),
-        "vendor_password": _newPasswordController.text.trim(),
+        "storeVendorName": _nameController.text.trim(),
+        "storeVendorEmail": _emailController.text.trim(),
+        "storeVendorPassword": _newPasswordController.text.trim(),
       };
-      await FirebaseFirestore.instance.collection('vendors').doc(widget.vendorID).update(vendorItem);
+      await FirebaseFirestore.instance.collection('stores').doc(widget.senderID).update(vendorItem);
       showToast("Vendor details changed successfully", greenColor);
       // ignore: use_build_context_synchronously
       Navigator.pop(context);
@@ -46,12 +46,12 @@ class _ChangePasswordState extends State<ChangePassword> {
 
   @override
   void initState() {
-    FirebaseFirestore.instance.collection("vendors").doc(widget.vendorID).get().then(
+    FirebaseFirestore.instance.collection("stores").doc(widget.senderID).get().then(
       (DocumentSnapshot snapshot) {
         if (snapshot.exists) {
-          _nameController.text = snapshot.get("vendor_name");
-          _emailController.text = snapshot.get("vendor_email");
-          _oldPasswordController.text = snapshot.get("vendor_password");
+          _nameController.text = snapshot.get("storeVendorName");
+          _emailController.text = snapshot.get("storeVendorEmail");
+          _oldPasswordController.text = snapshot.get("storeVendorPassword");
         }
       },
     );

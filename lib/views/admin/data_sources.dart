@@ -6,15 +6,17 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:data_table_2/data_table_2.dart';
 
+import '../../models/product_model.dart';
+
 class RestorableProductSelections extends RestorableProperty<Set<int>> {
   Set<int> _productSelections = <int>{};
 
   bool isSelected(int index) => _productSelections.contains(index);
 
-  void setProductSelections(List<Product> products) {
+  void setProductSelections(List<ProductModel> products) {
     final Set<int> updatedSet = <int>{};
     for (int index = 0; index < products.length; index += 1) {
-      Product product = products[index];
+      ProductModel product = products[index];
       if (product.selected) {
         updatedSet.add(index);
       }
@@ -42,41 +44,26 @@ class RestorableProductSelections extends RestorableProperty<Set<int>> {
   Object toPrimitives() => _productSelections.toList();
 }
 
-class Product {
-  Product(this.name, this.category, this.date, this.reference, this.realPrice, this.newPrice, this.quantity, this.stockAlert, this.actions);
-
-  final String name;
-  final String category;
-  final DateTime date;
-  final String reference;
-  final double realPrice;
-  final double newPrice;
-  final int quantity;
-  final int stockAlert;
-  final bool actions;
-  bool selected = false;
-}
-
 class ProductDataSource extends DataTableSource {
   ProductDataSource.empty(this.context) {
-    products = <Product>[];
+    products = <ProductModel>[];
   }
 
   ProductDataSource(this.context, this.products, [sortedByNames = true, this.hasRowTaps = true, this.hasRowHeightOverrides = true, this.hasZebraStripes = true]) {
     if (sortedByNames) {
-      sort((Product p) => p.name, true);
+      sort((ProductModel p) => p.productName, true);
     }
   }
 
   final BuildContext context;
-  late List<Product> products;
+  late List<ProductModel> products;
   bool hasRowTaps = true;
   bool hasRowHeightOverrides = true;
   bool hasZebraStripes = true;
 
-  void sort<T>(Comparable<T> Function(Product p) getField, bool ascending) {
+  void sort<T>(Comparable<T> Function(ProductModel p) getField, bool ascending) {
     products.sort(
-      (Product a, Product b) {
+      (ProductModel a, ProductModel b) {
         final Comparable<T> aValue = getField(a);
         final Comparable<T> bValue = getField(b);
         return ascending ? Comparable.compare(aValue, bValue) : Comparable.compare(bValue, aValue);
@@ -88,7 +75,7 @@ class ProductDataSource extends DataTableSource {
   void updateSelectedProducts(RestorableProductSelections selectedRows) {
     _selectedCount = 0;
     for (int index = 0; index < products.length; index += 1) {
-      Product product = products[index];
+      ProductModel product = products[index];
       if (selectedRows.isSelected(index)) {
         product.selected = true;
         _selectedCount += 1;
@@ -103,7 +90,7 @@ class ProductDataSource extends DataTableSource {
   DataRow2 getRow(int index, [Color? color]) {
     assert(index >= 0);
     if (index >= products.length) throw 'index > _products.length';
-    final Product product = products[index];
+    final ProductModel product = products[index];
     return DataRow2.byIndex(
       index: index,
       selected: product.selected,
@@ -116,28 +103,35 @@ class ProductDataSource extends DataTableSource {
           notifyListeners();
         }
       },
-      onTap: hasRowTaps ? () => _showSnackbar(context, 'Tapped on row ${product.name}') : null,
+      onTap: hasRowTaps ? () => _showSnackbar(context, 'Tapped on row ${product.productName}') : null,
       cells: <DataCell>[
         DataCell(Text(formatDate(product.date, <String>[yyyy, " ", MM, " ", dd]))),
-        DataCell(Text(product.reference)),
-        DataCell(Text(product.name)),
-        DataCell(Text(product.category)),
+        DataCell(Text(product.productReference)),
+        DataCell(Text(product.productName)),
+        DataCell(Text(product.productCategory)),
         DataCell(Text(product.realPrice.toStringAsFixed(2))),
         DataCell(Text(product.newPrice.toStringAsFixed(2))),
-        DataCell(Text(product.quantity.toString())),
+        DataCell(Text(product.productQuantity.toString())),
         DataCell(Text(product.stockAlert.toString())),
         DataCell(
           Row(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               IconButton(
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const EditProduct()));
-                },
+                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => EditProduct(productID: product.productReference))),
                 icon: const Icon(FontAwesome.pen_solid, color: purpleColor, size: 15),
               ),
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  showModalBottomSheet(
+                    context: context,
+                    builder: (BuildContext context) => Container(
+                      child: Row(
+                        children: <Widget>[],
+                      ),
+                    ),
+                  );
+                },
                 icon: const Icon(FontAwesome.x_solid, color: redColor, size: 15),
               ),
             ],

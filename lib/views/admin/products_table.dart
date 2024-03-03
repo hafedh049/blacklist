@@ -1,15 +1,21 @@
+import 'package:blacklist/utils/helpers/errored.dart';
+import 'package:blacklist/utils/helpers/loading.dart';
 import 'package:blacklist/utils/shared.dart';
 import 'package:blacklist/views/admin/add_product.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_animated_button/flutter_animated_button.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
 
+import '../../models/product_model.dart';
 import 'data_sources.dart';
 
 class ProductTable extends StatefulWidget {
-  const ProductTable({super.key});
+  const ProductTable({super.key, required this.categoryID, required this.categoryName});
+  final String categoryID;
+  final String categoryName;
 
   @override
   State<ProductTable> createState() => ProductTableState();
@@ -26,8 +32,9 @@ class ProductTableState extends State<ProductTable> with RestorationMixin {
   final List<String> _columns = const <String>["Date", "Reference", "Name", "Category", "Real Price", "New Price", "Quantity", "Stock Alert", "Actions"];
   final GlobalKey<State> _pagerKey = GlobalKey<State>();
   final GlobalKey<State> _searchKey = GlobalKey<State>();
+  final GlobalKey<State> _futureKey = GlobalKey<State>();
   final TextEditingController _searchController = TextEditingController();
-  final List<Product> _products = <Product>[for (int index = 0; index < 100; index++) Product("P${index + 1}", "C${index + 1}", DateTime.now(), "Ref${index + 1}", 100, 150, 200, 20, true)];
+  List<ProductModel> _products = <ProductModel>[];
 
   @override
   String get restorationId => 'paginated_product_table';
@@ -36,14 +43,14 @@ class ProductTableState extends State<ProductTable> with RestorationMixin {
   @override
   void initState() {
     _map = <int, void Function()>{
-      0: () => _productsDataSource.sort<DateTime>((Product p) => p.date, _sortAscending.value),
-      1: () => _productsDataSource.sort<String>((Product p) => p.reference, _sortAscending.value),
-      2: () => _productsDataSource.sort<String>((Product p) => p.name, _sortAscending.value),
-      3: () => _productsDataSource.sort<String>((Product p) => p.category, _sortAscending.value),
-      4: () => _productsDataSource.sort<num>((Product p) => p.realPrice, _sortAscending.value),
-      5: () => _productsDataSource.sort<num>((Product p) => p.newPrice, _sortAscending.value),
-      6: () => _productsDataSource.sort<num>((Product p) => p.quantity, _sortAscending.value),
-      7: () => _productsDataSource.sort<num>((Product p) => p.stockAlert, _sortAscending.value),
+      0: () => _productsDataSource.sort<DateTime>((ProductModel p) => p.date, _sortAscending.value),
+      1: () => _productsDataSource.sort<String>((ProductModel p) => p.productReference, _sortAscending.value),
+      2: () => _productsDataSource.sort<String>((ProductModel p) => p.productName, _sortAscending.value),
+      3: () => _productsDataSource.sort<String>((ProductModel p) => p.productCategory, _sortAscending.value),
+      4: () => _productsDataSource.sort<num>((ProductModel p) => p.realPrice, _sortAscending.value),
+      5: () => _productsDataSource.sort<num>((ProductModel p) => p.newPrice, _sortAscending.value),
+      6: () => _productsDataSource.sort<num>((ProductModel p) => p.productQuantity, _sortAscending.value),
+      7: () => _productsDataSource.sort<num>((ProductModel p) => p.stockAlert, _sortAscending.value),
     };
     super.initState();
   }
@@ -79,7 +86,7 @@ class ProductTableState extends State<ProductTable> with RestorationMixin {
     _productSelections.setProductSelections(_productsDataSource.products);
   }
 
-  void sort<T>(Comparable<T> Function(Product p) getField, int columnIndex, bool ascending) {
+  void sort<T>(Comparable<T> Function(ProductModel p) getField, int columnIndex, bool ascending) {
     _productsDataSource.sort<T>(getField, ascending);
     _pagerKey.currentState!.setState(
       () {
@@ -98,6 +105,16 @@ class ProductTableState extends State<ProductTable> with RestorationMixin {
     _productsDataSource.dispose();
     _searchController.dispose();
     super.dispose();
+  }
+
+  Future<bool> _load() async {
+    await FirebaseFirestore.instance.collection("products").where("categoryID", isEqualTo: widget.categoryID).get().then(
+      (QuerySnapshot<Map<String, dynamic>> value) {
+        _products = value.docs.map((QueryDocumentSnapshot<Map<String, dynamic>> e) => ProductModel.fromJson(e.data())).toList();
+        _productsDataSource = ProductDataSource(context, _products, true, true, true, true);
+      },
+    );
+    return true;
   }
 
   @override
@@ -128,21 +145,22 @@ class ProductTableState extends State<ProductTable> with RestorationMixin {
                       backgroundColor: purpleColor,
                       transitionType: TransitionType.TOP_TO_BOTTOM,
                       textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                      onPress: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const AddProduct()));
-                      },
+                      onPress: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (BuildContext context) => AddProduct(
+                            callback: () {
+                              _futureKey.currentState!.setState(() {});
+                            },
+                            categoryName: widget.categoryName,
+                            categoryID: widget.categoryID,
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),
                 const Spacer(),
-                RichText(
-                  text: TextSpan(
-                    children: <TextSpan>[
-                      TextSpan(text: "Products", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
-                      TextSpan(text: " / List Products", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
-                    ],
-                  ),
-                ),
               ],
             ),
             Container(width: MediaQuery.sizeOf(context).width, height: .3, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),
@@ -155,7 +173,7 @@ class ProductTableState extends State<ProductTable> with RestorationMixin {
                     _pagerKey.currentState!.setState(
                       () => _productsDataSource = ProductDataSource(
                         context,
-                        _products.where((Product element) => element.name.toLowerCase().startsWith(value.toLowerCase())).toList(),
+                        _products.where((ProductModel element) => element.productName.toLowerCase().startsWith(value.toLowerCase())).toList(),
                         true,
                         true,
                         true,
@@ -170,38 +188,50 @@ class ProductTableState extends State<ProductTable> with RestorationMixin {
                     hintText: "Search Products",
                     hintStyle: GoogleFonts.itim(fontSize: 16, color: whiteColor, fontWeight: FontWeight.w500),
                     prefixIcon: const Icon(Icons.search, color: purpleColor, size: 25),
-                    suffixIcon: IconButton(
-                      onPressed: () => _searchController.clear(),
-                      icon: const Icon(FontAwesome.x_solid, size: 18, color: purpleColor),
-                    ),
+                    suffixIcon: IconButton(onPressed: () => _searchController.clear(), icon: const Icon(FontAwesome.x_solid, size: 18, color: purpleColor)),
                   ),
                 );
               },
             ),
             Container(width: MediaQuery.sizeOf(context).width, height: .3, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),
             Expanded(
-              child: ListView(
-                restorationId: restorationId,
-                children: <Widget>[
-                  StatefulBuilder(
-                    key: _pagerKey,
-                    builder: (BuildContext context, void Function(void Function()) _) {
-                      return PaginatedDataTable(
-                        availableRowsPerPage: const <int>[20, 30],
-                        arrowHeadColor: purpleColor,
-                        rowsPerPage: _rowsPerPage.value,
-                        onRowsPerPageChanged: (int? value) => _(() => _rowsPerPage.value = value!),
-                        initialFirstRowIndex: _rowIndex.value,
-                        onPageChanged: (int rowIndex) => _(() => _rowIndex.value = rowIndex),
-                        sortColumnIndex: _sortColumnIndex.value,
-                        sortAscending: _sortAscending.value,
-                        onSelectAll: _productsDataSource.selectAll,
-                        columns: <DataColumn>[for (final String column in _columns) DataColumn(label: Text(column), onSort: (int columnIndex, bool ascending) => _map[columnIndex])],
-                        source: _productsDataSource,
-                      );
+              child: StatefulBuilder(
+                key: _futureKey,
+                builder: (BuildContext context, void Function(void Function()) _) {
+                  return FutureBuilder<bool>(
+                    future: _load(),
+                    builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                      if (snapshot.hasData) {
+                        return ListView(
+                          restorationId: restorationId,
+                          children: <Widget>[
+                            StatefulBuilder(
+                              key: _pagerKey,
+                              builder: (BuildContext context, void Function(void Function()) _) {
+                                return PaginatedDataTable(
+                                  availableRowsPerPage: const <int>[20, 30],
+                                  arrowHeadColor: purpleColor,
+                                  rowsPerPage: _rowsPerPage.value,
+                                  onRowsPerPageChanged: (int? value) => _(() => _rowsPerPage.value = value!),
+                                  initialFirstRowIndex: _rowIndex.value,
+                                  onPageChanged: (int rowIndex) => _(() => _rowIndex.value = rowIndex),
+                                  sortColumnIndex: _sortColumnIndex.value,
+                                  sortAscending: _sortAscending.value,
+                                  onSelectAll: _productsDataSource.selectAll,
+                                  columns: <DataColumn>[for (final String column in _columns) DataColumn(label: Text(column), onSort: (int columnIndex, bool ascending) => _map[columnIndex])],
+                                  source: _productsDataSource,
+                                );
+                              },
+                            ),
+                          ],
+                        );
+                      } else if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Loading();
+                      }
+                      return Errored(error: snapshot.error.toString());
                     },
-                  ),
-                ],
+                  );
+                },
               ),
             ),
           ],

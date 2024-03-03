@@ -1,5 +1,5 @@
-import 'dart:math';
-
+import 'package:blacklist/utils/callbacks.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,20 +7,23 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_animated_button/flutter_animated_button.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:uuid/v8.dart';
 
 import '../../utils/shared.dart';
 
 class AddProduct extends StatefulWidget {
-  const AddProduct({super.key});
-
+  const AddProduct({super.key, required this.categoryID, required this.categoryName, required this.callback});
+  final String categoryID;
+  final String categoryName;
+  final void Function() callback;
   @override
   State<AddProduct> createState() => _AddProductState();
 }
 
 class _AddProductState extends State<AddProduct> {
   final TextEditingController _productNameController = TextEditingController();
-  final TextEditingController _productDateController = TextEditingController(text: formatDate(DateTime.now(), const <String>[yy, '-', M, '-', d, " ", HH, ':', nn, ':', ss]).toUpperCase());
-  final TextEditingController _productReferenceController = TextEditingController(text: "#${List<String>.generate(8, (int index) => Random().nextInt(10).toString()).join()}");
+  final TextEditingController _productDateController = TextEditingController();
+  final TextEditingController _productReferenceController = TextEditingController(text: const UuidV8().generate());
   final TextEditingController _productOldPriceController = TextEditingController();
   final TextEditingController _productNewPriceController = TextEditingController();
   final TextEditingController _productQuantityController = TextEditingController();
@@ -37,7 +40,7 @@ class _AddProductState extends State<AddProduct> {
       "controller": _productDateController,
       "type": "date",
       "required": false,
-      "hint": "",
+      "hint": formatDate(DateTime.now(), const <String>[yy, '-', M, '-', d, " ", HH, ':', nn, ':', ss]).toUpperCase(),
     },
     "Reference": <String, dynamic>{
       "controller": _productReferenceController,
@@ -97,14 +100,6 @@ class _AddProductState extends State<AddProduct> {
                 children: <Widget>[
                   Text("ADD PRODUCT", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
                   const Spacer(),
-                  RichText(
-                    text: TextSpan(
-                      children: <TextSpan>[
-                        TextSpan(text: "Dashboard", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
-                        TextSpan(text: " / Add Product", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
-                      ],
-                    ),
-                  ),
                 ],
               ),
               Container(width: MediaQuery.sizeOf(context).width, height: .3, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),
@@ -178,7 +173,37 @@ class _AddProductState extends State<AddProduct> {
                 backgroundColor: purpleColor,
                 transitionType: TransitionType.TOP_TO_BOTTOM,
                 textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                onPress: () {},
+                onPress: () async {
+                  if (_productNameController.text.trim().isEmpty) {
+                    showToast("Please fill the product name", redColor);
+                  } else if (_productOldPriceController.text.trim().isEmpty) {
+                    showToast("Please fill the product old price", redColor);
+                  } else if (_productNewPriceController.text.trim().isEmpty) {
+                    showToast("Please fill the product new price", redColor);
+                  } else if (_productQuantityController.text.trim().isEmpty) {
+                    showToast("Please fill the product quantity field", redColor);
+                  } else if (_productStockAlertController.text.trim().isEmpty) {
+                    showToast("Please fill the product quantity field", redColor);
+                  } else {
+                    await FirebaseFirestore.instance.collection('products').add(
+                      <String, dynamic>{
+                        "productQuantity": int.parse(_productQuantityController.text),
+                        "categoryID": widget.categoryID,
+                        "date": DateTime.now(),
+                        'productName': _productNameController.text.trim(),
+                        'productCategory': widget.categoryName,
+                        'realPrice': double.parse(_productOldPriceController.text),
+                        'newPrice': double.parse(_productNewPriceController.text),
+                        'productReference': _productReferenceController.text,
+                        'stockAlert': double.parse(_productStockAlertController.text),
+                      },
+                    );
+                    showToast("Product added successfully", greenColor);
+                    // ignore: use_build_context_synchronously
+                    Navigator.pop(context);
+                    widget.callback();
+                  }
+                },
               ),
             ],
           ),

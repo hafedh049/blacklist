@@ -1,5 +1,4 @@
-import 'dart:math';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,20 +10,37 @@ import 'package:icons_plus/icons_plus.dart';
 import '../../utils/shared.dart';
 
 class EditProduct extends StatefulWidget {
-  const EditProduct({super.key});
-
+  const EditProduct({super.key, required this.productID});
+  final String productID;
   @override
   State<EditProduct> createState() => _EditProductState();
 }
 
 class _EditProductState extends State<EditProduct> {
   final TextEditingController _productNameController = TextEditingController();
-  final TextEditingController _productDateController = TextEditingController(text: formatDate(DateTime.now(), const <String>[yy, '-', M, '-', d, " ", HH, ':', nn, ':', ss]).toUpperCase());
-  final TextEditingController _productReferenceController = TextEditingController(text: "#${List<String>.generate(8, (int index) => Random().nextInt(10).toString()).join()}");
+  final TextEditingController _productDateController = TextEditingController();
+  final TextEditingController _productReferenceController = TextEditingController();
   final TextEditingController _productOldPriceController = TextEditingController();
   final TextEditingController _productNewPriceController = TextEditingController();
   final TextEditingController _productQuantityController = TextEditingController();
   final TextEditingController _productStockAlertController = TextEditingController();
+
+  @override
+  void initState() {
+    FirebaseFirestore.instance.collection("products").where("productID", isEqualTo: widget.productID).get().then(
+      (QuerySnapshot querySnapshot) {
+        final QueryDocumentSnapshot query = querySnapshot.docs.first;
+        _productNameController.text = query.get("productName");
+        _productDateController.text = formatDate(query.get("productDate").toDate(), const <String>[yy, '-', M, '-', d, " ", HH, ':', nn, ':', ss]).toUpperCase();
+        _productNewPriceController.text = query.get("productNewPrice").toString();
+        _productOldPriceController.text = query.get("productOldPrice").toString();
+        _productQuantityController.text = query.get("productQuantity").toString();
+        _productReferenceController.text = query.get("productReference");
+        _productStockAlertController.text = query.get("productStockAlert").toString();
+      },
+    );
+    super.initState();
+  }
 
   late final Map<String, Map<String, dynamic>> _productTemplate = <String, Map<String, dynamic>>{
     "Product Name": <String, dynamic>{
@@ -97,14 +113,6 @@ class _EditProductState extends State<EditProduct> {
                 children: <Widget>[
                   Text("EDIT PRODUCT", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
                   const Spacer(),
-                  RichText(
-                    text: TextSpan(
-                      children: <TextSpan>[
-                        TextSpan(text: "Admin", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
-                        TextSpan(text: " / Edit Product", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
-                      ],
-                    ),
-                  ),
                 ],
               ),
               Container(width: MediaQuery.sizeOf(context).width, height: .3, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),
@@ -169,7 +177,7 @@ class _EditProductState extends State<EditProduct> {
               AnimatedButton(
                 width: 150,
                 height: 40,
-                text: 'SUBMIT',
+                text: 'UPDATE',
                 selectedTextColor: darkColor,
                 animatedOn: AnimatedOn.onHover,
                 animationDuration: 500.ms,

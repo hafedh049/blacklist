@@ -1,18 +1,18 @@
-import 'dart:math';
-
+import 'package:blacklist/models/store_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_animated_button/flutter_animated_button.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:uuid/v8.dart';
 
 import '../callbacks.dart';
 import '../shared.dart';
 
 class AddStore extends StatefulWidget {
   const AddStore({super.key, required this.callback, required this.stores});
-  final List<Map<String, dynamic>> stores;
+  final List<StoreModel> stores;
   final void Function() callback;
   @override
   State<AddStore> createState() => _AddStoreState();
@@ -36,26 +36,21 @@ class _AddStoreState extends State<AddStore> {
     } else if (_vendorPasswordController.text.trim().isEmpty) {
       showToast("Enter a valid vendor password", redColor);
     } else {
-      String storeID = DateTime.now().millisecondsSinceEpoch.toString();
-      String vendorID = List<String>.generate(14, (int index) => Random().nextInt(10).toString()).join();
+      String storeID = const UuidV8().generate();
+
       final Map<String, dynamic> storeItem = <String, dynamic>{
-        "store_name": _storeNameController.text.trim(),
-        "vendor_name": _vendorNameController.text.trim(),
-        "total_products": 0,
-        "store_state": "open",
-        "store_id": storeID,
-        "vendor_id": vendorID,
+        'storeID': storeID,
+        'storeName': _storeNameController.text.trim(),
+        'storeState': "open",
+        'storeVendorName': _vendorNameController.text.trim(),
+        'storeVendorEmail': _vendorEmailController.text.trim(),
+        'storeVendorPassword': _vendorPasswordController.text.trim(),
+        "storeTotalProducts": 0,
       };
-      final Map<String, dynamic> vendorItem = <String, dynamic>{
-        "store_id": storeID,
-        "vendor_id": vendorID,
-        "vendor_name": _vendorNameController.text.trim(),
-        "vendor_email": _vendorEmailController.text.trim(),
-        "vendor_password": _vendorPasswordController.text.trim(),
-      };
+
       await FirebaseFirestore.instance.collection('stores').doc(storeID).set(storeItem);
-      await FirebaseFirestore.instance.collection('vendors').doc(vendorID).set(vendorItem);
-      widget.stores.add(storeItem);
+
+      widget.stores.add(StoreModel.fromJson(storeItem));
       widget.callback();
       showToast("Store added successfully", greenColor);
       // ignore: use_build_context_synchronously

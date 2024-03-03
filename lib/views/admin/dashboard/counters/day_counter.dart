@@ -1,4 +1,6 @@
 import 'package:blacklist/models/selled_product.dart';
+import 'package:blacklist/utils/helpers/errored.dart';
+import 'package:blacklist/utils/helpers/loading.dart';
 import 'package:blacklist/utils/shared.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_format/date_format.dart';
@@ -43,29 +45,34 @@ class _DayCounterState extends State<DayCounter> {
               child: FutureBuilder<bool>(
                 future: _load(),
                 builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-                  return _data.isEmpty
-                      ? Center(child: LottieBuilder.asset("assets/lotties/empty.json"))
-                      : ListView.separated(
-                          itemBuilder: (BuildContext context, int index) => Container(
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(color: darkColor, borderRadius: BorderRadius.circular(15)),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                Text(_data[index].productName, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.bold, color: whiteColor)),
-                                const SizedBox(height: 20),
-                                Text(_data[index].productCategory, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.bold, color: whiteColor)),
-                                const SizedBox(height: 20),
-                                Text(_data[index].newPrice.toStringAsFixed(2), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.bold, color: whiteColor)),
-                                const SizedBox(height: 20),
-                                Text("1", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.bold, color: whiteColor)),
-                              ],
+                  if (snapshot.hasData) {
+                    return _data.isEmpty
+                        ? Center(child: LottieBuilder.asset("assets/lotties/empty.json"))
+                        : ListView.separated(
+                            itemBuilder: (BuildContext context, int index) => Container(
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(color: darkColor, borderRadius: BorderRadius.circular(15)),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Text(_data[index].productName, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.bold, color: whiteColor)),
+                                  const SizedBox(height: 20),
+                                  Text(_data[index].productCategory, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.bold, color: whiteColor)),
+                                  const SizedBox(height: 20),
+                                  Text(_data[index].newPrice.toStringAsFixed(2), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.bold, color: whiteColor)),
+                                  const SizedBox(height: 20),
+                                  Text("1", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.bold, color: whiteColor)),
+                                ],
+                              ),
                             ),
-                          ),
-                          separatorBuilder: (BuildContext context, int index) => const SizedBox(height: 20),
-                          itemCount: _data.length,
-                        );
+                            separatorBuilder: (BuildContext context, int index) => const SizedBox(height: 20),
+                            itemCount: _data.length,
+                          );
+                  } else if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Loading();
+                  }
+                  return Errored(error: snapshot.error.toString());
                 },
               ),
             ),

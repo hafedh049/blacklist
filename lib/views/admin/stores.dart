@@ -1,3 +1,4 @@
+import 'package:blacklist/models/store_model.dart';
 import 'package:blacklist/utils/callbacks.dart';
 import 'package:blacklist/utils/helpers/add_store.dart';
 import 'package:blacklist/utils/helpers/change_vendor_password.dart';
@@ -23,7 +24,7 @@ class StoresList extends StatefulWidget {
 class _StoresListState extends State<StoresList> {
   final GlobalKey<State> _storesKey = GlobalKey<State>();
 
-  final List<Map<String, dynamic>> _stores = <Map<String, dynamic>>[];
+  final List<StoreModel> _stores = <StoreModel>[];
 
   @override
   Widget build(BuildContext context) {
@@ -74,9 +75,9 @@ class _StoresListState extends State<StoresList> {
             Container(width: MediaQuery.sizeOf(context).width, height: .3, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),
             Expanded(
               child: Center(
-                child: FutureBuilder<List<Map<String, dynamic>>>(
+                child: FutureBuilder<List<StoreModel>>(
                   future: loadStores(),
-                  builder: (BuildContext context, AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
+                  builder: (BuildContext context, AsyncSnapshot<List<StoreModel>> snapshot) {
                     if (snapshot.hasData) {
                       _stores.addAll(snapshot.data!);
                       return StatefulBuilder(
@@ -97,14 +98,12 @@ class _StoresListState extends State<StoresList> {
                                   runSpacing: 20,
                                   spacing: 20,
                                   children: <Widget>[
-                                    for (final Map<String, dynamic> item in _stores)
+                                    for (final StoreModel item in _stores)
                                       InkWell(
                                         splashColor: transparentColor,
                                         hoverColor: transparentColor,
                                         highlightColor: transparentColor,
-                                        onTap: () {
-                                          Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const Holder()));
-                                        },
+                                        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const Holder())),
                                         child: Container(
                                           width: 300,
                                           padding: const EdgeInsets.all(16),
@@ -120,7 +119,7 @@ class _StoresListState extends State<StoresList> {
                                                     children: <Widget>[
                                                       Text("Store", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
                                                       const SizedBox(width: 10),
-                                                      Text(item["store_name"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: blueColor)),
+                                                      Text(item.storeName, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: blueColor)),
                                                     ],
                                                   ),
                                                   const SizedBox(height: 10),
@@ -128,7 +127,7 @@ class _StoresListState extends State<StoresList> {
                                                     children: <Widget>[
                                                       Text("Vendor", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
                                                       const SizedBox(width: 10),
-                                                      Text(item["vendor_name"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greenColor)),
+                                                      Text(item.storeVendorName, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greenColor)),
                                                     ],
                                                   ),
                                                   const SizedBox(height: 10),
@@ -136,7 +135,7 @@ class _StoresListState extends State<StoresList> {
                                                     children: <Widget>[
                                                       Text("Total Products", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
                                                       const SizedBox(width: 10),
-                                                      Text(item["total_products"].toString(), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: redColor)),
+                                                      Text(item.storeTotalProducts.toString(), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: redColor)),
                                                     ],
                                                   ),
                                                   const SizedBox(height: 20),
@@ -178,7 +177,7 @@ class _StoresListState extends State<StoresList> {
                                                 ],
                                               ),
                                               IconButton(
-                                                onPressed: () => showModalBottomSheet(context: context, builder: (BuildContext context) => ChangeVendorPassword(vendorID: item["vendor_id"])),
+                                                onPressed: () => showModalBottomSheet(context: context, builder: (BuildContext context) => ChangeVendorPassword(storeID: item.storeID)),
                                                 icon: const Icon(FontAwesome.user_secret_solid, size: 25, color: purpleColor),
                                               ),
                                             ],
