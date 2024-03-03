@@ -1,6 +1,6 @@
-import 'dart:math';
-
+import 'package:blacklist/models/category_model.dart';
 import 'package:blacklist/utils/shared.dart';
+import 'package:blacklist/views/admin/add_category.dart';
 import 'package:blacklist/views/admin/products_table.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,8 +8,6 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_animated_button/flutter_animated_button.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
-
-import '../../utils/callbacks.dart';
 
 class CategoryList extends StatefulWidget {
   const CategoryList({super.key});
@@ -19,17 +17,7 @@ class CategoryList extends StatefulWidget {
 }
 
 class _CategoryListState extends State<CategoryList> {
-  final List<Map<String, dynamic>> _categories = List<Map<String, dynamic>>.generate(
-    20,
-    (int index) => <String, dynamic>{
-      "background_image": "assets/images/bg.jpg",
-      "category_name": "Category ${index + 1}",
-      "total_products": Random().nextInt(4000),
-      "total_articles": Random().nextInt(20),
-      "state": false,
-      "gift_state": false,
-    },
-  );
+  final List<CategoryModel> _categories = <CategoryModel>[];
   bool _deleteState = false;
 
   @override
@@ -56,7 +44,7 @@ class _CategoryListState extends State<CategoryList> {
                                 AnimatedButton(
                                   width: 150,
                                   height: 30,
-                                  text: _categories.map((Map<String, dynamic> e) => e["state"]).toList().every((dynamic element) => element == true) ? "UNSELECT ALL" : 'SELECT ALL',
+                                  text: _categories.map((CategoryModel e) => e.categoryState).toList().every((bool element) => element == true) ? "UNSELECT ALL" : 'SELECT ALL',
                                   selectedTextColor: whiteColor,
                                   animatedOn: AnimatedOn.onHover,
                                   animationDuration: 500.ms,
@@ -66,13 +54,13 @@ class _CategoryListState extends State<CategoryList> {
                                   transitionType: TransitionType.TOP_TO_BOTTOM,
                                   textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
                                   onPress: () {
-                                    if (!_categories.map((Map<String, dynamic> e) => e["state"]).toList().every((dynamic element) => element == true)) {
-                                      for (Map<String, dynamic> item in _categories) {
-                                        item["state"] = true;
+                                    if (!_categories.map((CategoryModel e) => e.categoryState).toList().every((bool element) => element == true)) {
+                                      for (CategoryModel item in _categories) {
+                                        item.categoryState = true;
                                       }
                                     } else {
-                                      for (Map<String, dynamic> item in _categories) {
-                                        item["state"] = false;
+                                      for (CategoryModel item in _categories) {
+                                        item.categoryState = false;
                                       }
                                     }
                                     setState(() {});
@@ -92,8 +80,8 @@ class _CategoryListState extends State<CategoryList> {
                                   transitionType: TransitionType.TOP_TO_BOTTOM,
                                   textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
                                   onPress: () {
-                                    for (Map<String, dynamic> item in _categories) {
-                                      item["state"] = false;
+                                    for (CategoryModel item in _categories) {
+                                      item.categoryState = false;
                                     }
                                     setState(() => _deleteState = false);
                                   },
@@ -103,114 +91,7 @@ class _CategoryListState extends State<CategoryList> {
                           : Column(
                               mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
-                                AnimatedButton(
-                                  width: 80,
-                                  height: 30,
-                                  text: 'ADD',
-                                  selectedTextColor: whiteColor,
-                                  animatedOn: AnimatedOn.onHover,
-                                  animationDuration: 500.ms,
-                                  isReverse: true,
-                                  selectedBackgroundColor: darkColor,
-                                  backgroundColor: greenColor,
-                                  transitionType: TransitionType.TOP_TO_BOTTOM,
-                                  textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                                  onPress: () {
-                                    final TextEditingController categoryName = TextEditingController();
-                                    showModalBottomSheet<void>(
-                                      context: context,
-                                      builder: (BuildContext context) => Container(
-                                        padding: const EdgeInsets.all(16),
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: <Widget>[
-                                            Text("Category Name", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
-                                            const SizedBox(height: 10),
-                                            Container(
-                                              color: darkColor,
-                                              child: StatefulBuilder(
-                                                builder: (BuildContext context, void Function(void Function()) _) {
-                                                  return TextField(
-                                                    onChanged: (String value) {
-                                                      if (value.trim().length <= 1) {
-                                                        _(() {});
-                                                      }
-                                                    },
-                                                    autofocus: true,
-                                                    controller: categoryName,
-                                                    style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                                                    decoration: InputDecoration(
-                                                      contentPadding: const EdgeInsets.all(20),
-                                                      focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
-                                                      border: InputBorder.none,
-                                                      hintText: "Choose a category name",
-                                                      hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                                                      suffixIcon: categoryName.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
-                                                    ),
-                                                    cursorColor: purpleColor,
-                                                  );
-                                                },
-                                              ),
-                                            ),
-                                            const SizedBox(height: 20),
-                                            Row(
-                                              children: <Widget>[
-                                                const Spacer(),
-                                                AnimatedButton(
-                                                  width: 80,
-                                                  height: 30,
-                                                  text: 'ADD',
-                                                  selectedTextColor: whiteColor,
-                                                  animatedOn: AnimatedOn.onHover,
-                                                  animationDuration: 500.ms,
-                                                  isReverse: true,
-                                                  selectedBackgroundColor: darkColor,
-                                                  backgroundColor: greenColor,
-                                                  transitionType: TransitionType.TOP_TO_BOTTOM,
-                                                  textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                                                  onPress: () {
-                                                    if (categoryName.text.trim().isNotEmpty) {
-                                                      showToast("New category has been added", greenColor);
-                                                      _categories.add(
-                                                        <String, dynamic>{
-                                                          "background_image": "assets/images/bg.jpg",
-                                                          "category_name": categoryName.text.trim(),
-                                                          "total_products": 0,
-                                                          "total_articles": 0,
-                                                          "state": false,
-                                                        },
-                                                      );
-                                                      Navigator.pop(context);
-                                                      setState(() {});
-                                                    } else {
-                                                      showToast("Please enter a category name", redColor);
-                                                    }
-                                                  },
-                                                ),
-                                                const SizedBox(width: 20),
-                                                AnimatedButton(
-                                                  width: 80,
-                                                  height: 30,
-                                                  text: 'CANCEL',
-                                                  selectedTextColor: whiteColor,
-                                                  animatedOn: AnimatedOn.onHover,
-                                                  animationDuration: 500.ms,
-                                                  isReverse: true,
-                                                  selectedBackgroundColor: darkColor,
-                                                  backgroundColor: greyColor,
-                                                  transitionType: TransitionType.TOP_TO_BOTTOM,
-                                                  textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                                                  onPress: () => Navigator.pop(context),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
+                                AddCategory(categories: _categories, setS: setState),
                                 const SizedBox(height: 20),
                                 AnimatedButton(
                                   width: 80,
@@ -241,7 +122,7 @@ class _CategoryListState extends State<CategoryList> {
                   runSpacing: 20,
                   spacing: 20,
                   children: <Widget>[
-                    for (Map<String, dynamic> item in _categories)
+                    for (CategoryModel item in _categories)
                       InkWell(
                         splashColor: transparentColor,
                         hoverColor: transparentColor,
@@ -264,7 +145,7 @@ class _CategoryListState extends State<CategoryList> {
                                     children: <Widget>[
                                       Text("Category", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
                                       const SizedBox(width: 10),
-                                      Text(item["category_name"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: blueColor)),
+                                      Text(item.categoryName, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: blueColor)),
                                     ],
                                   ),
                                   const SizedBox(height: 10),
@@ -272,7 +153,7 @@ class _CategoryListState extends State<CategoryList> {
                                     children: <Widget>[
                                       Text("Total Articles", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
                                       const SizedBox(width: 10),
-                                      Text(item["total_articles"].toString(), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greenColor)),
+                                      Text(item.categoryArticlesCount.toString(), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greenColor)),
                                     ],
                                   ),
                                   const SizedBox(height: 10),
@@ -280,7 +161,7 @@ class _CategoryListState extends State<CategoryList> {
                                     children: <Widget>[
                                       Text("Total Products", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
                                       const SizedBox(width: 10),
-                                      Text(item["total_products"].toString(), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
+                                      Text(item.categoryProductsCount.toString(), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
                                     ],
                                   ),
                                 ],
@@ -391,8 +272,8 @@ class _CategoryListState extends State<CategoryList> {
                                               builder: (BuildContext context, void Function(void Function()) _) {
                                                 return Checkbox(
                                                   activeColor: purpleColor,
-                                                  value: item["state"],
-                                                  onChanged: (bool? value) => _(() => item["state"] = value),
+                                                  value: item.categoryState,
+                                                  onChanged: (bool? value) => _(() => item.categoryState = value!),
                                                 );
                                               },
                                             ),

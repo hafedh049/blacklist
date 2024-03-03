@@ -1,11 +1,14 @@
 import 'package:animated_flip_counter/animated_flip_counter.dart';
+import 'package:blacklist/views/admin/dashboard/counters/day_counter.dart';
+import 'package:blacklist/views/admin/dashboard/counters/month_counter.dart';
+import 'package:blacklist/views/admin/dashboard/counters/year_counter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
 
-import '../../../utils/shared.dart';
+import '../../../../utils/shared.dart';
 
 class Counters extends StatefulWidget {
   const Counters({super.key});
@@ -20,19 +23,19 @@ class _CountersState extends State<Counters> {
       "icon": FontAwesome.wallet_solid,
       "title": "SALES PER DAY",
       "amount": 00.00,
-      "callback": () {},
+      "callback": (BuildContext context) => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const DayCounter())),
     },
     "month": <String, dynamic>{
       "icon": FontAwesome.circle_dollar_to_slot_solid,
       "title": "SALES PER MONTH",
       "amount": 00.00,
-      "callback": () {},
+      "callback": (BuildContext context) => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const MonthCounter())),
     },
     "year": <String, dynamic>{
       "icon": FontAwesome.google_wallet_brand,
       "title": "SALES PER YEAR",
       "amount": 00.00,
-      "callback": () {},
+      "callback": (BuildContext context) => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const YearCounter())),
     },
   };
 
@@ -82,7 +85,7 @@ class _CountersState extends State<Counters> {
               splashColor: transparentColor,
               highlightColor: transparentColor,
               hoverColor: transparentColor,
-              onTap: item["callback"],
+              onTap: () => item["callback"](context),
               child: Stack(
                 alignment: Alignment.centerLeft,
                 children: <Widget>[

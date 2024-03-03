@@ -1,6 +1,6 @@
 import 'package:blacklist/utils/shared.dart';
 import 'package:blacklist/views/admin/dashboard/charts/per_week.dart';
-import 'package:blacklist/views/admin/dashboard/counters.dart';
+import 'package:blacklist/views/admin/dashboard/counters/counters.dart';
 import 'package:flutter/material.dart';
 
 import 'charts/per_month.dart';
