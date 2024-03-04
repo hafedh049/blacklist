@@ -39,7 +39,7 @@ class _HolderState extends State<Holder> with TickerProviderStateMixin {
         "title": "Stock Alerts",
       },
       <String, dynamic>{
-        "screen": const ClientsList(),
+        "screen": ClientsList(storeID: widget.storeID),
         "title": "Clients",
       },
     ];
