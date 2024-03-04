@@ -107,16 +107,6 @@ class ProductTableState extends State<ProductTable> with RestorationMixin {
     super.dispose();
   }
 
-  Future<bool> _load() async {
-    await FirebaseFirestore.instance.collection("products").where("categoryID", isEqualTo: widget.categoryID).get().then(
-      (QuerySnapshot<Map<String, dynamic>> value) {
-        _products = value.docs.map((QueryDocumentSnapshot<Map<String, dynamic>> e) => ProductModel.fromJson(e.data())).toList();
-        _productsDataSource = ProductDataSource(context, _products, true, true, true, true);
-      },
-    );
-    return true;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -198,10 +188,12 @@ class ProductTableState extends State<ProductTable> with RestorationMixin {
               child: StatefulBuilder(
                 key: _futureKey,
                 builder: (BuildContext context, void Function(void Function()) _) {
-                  return FutureBuilder<bool>(
-                    future: _load(),
-                    builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                  return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                    stream: FirebaseFirestore.instance.collection("products").where("categoryID", isEqualTo: widget.categoryID).snapshots(),
+                    builder: (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
                       if (snapshot.hasData) {
+                        _products = snapshot.data!.docs.map((QueryDocumentSnapshot<Map<String, dynamic>> e) => ProductModel.fromJson(e.data())).toList();
+                        _productsDataSource = ProductDataSource(context, _products, true, true, true, true);
                         return ListView(
                           restorationId: restorationId,
                           children: <Widget>[

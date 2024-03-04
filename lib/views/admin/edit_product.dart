@@ -11,9 +11,8 @@ import '../../utils/callbacks.dart';
 import '../../utils/shared.dart';
 
 class EditProduct extends StatefulWidget {
-  const EditProduct({super.key, required this.productID, required this.callback});
+  const EditProduct({super.key, required this.productID});
   final String productID;
-  final void Function() callback;
   @override
   State<EditProduct> createState() => _EditProductState();
 }
@@ -27,16 +26,13 @@ class _EditProductState extends State<EditProduct> {
   final TextEditingController _productQuantityController = TextEditingController();
   final TextEditingController _productStockAlertController = TextEditingController();
 
-  String _categoryID = "";
-  String _categoryName = "";
-
+  DocumentReference? _docRef;
   @override
   void initState() {
     FirebaseFirestore.instance.collection("products").where("productReference", isEqualTo: widget.productID).get().then(
       (QuerySnapshot querySnapshot) {
         final QueryDocumentSnapshot query = querySnapshot.docs.first;
-        _categoryID = query.get("categoryID");
-        _categoryName = query.get("categoryName");
+        _docRef = query.reference;
         _productNameController.text = query.get("productName");
         _productDateController.text = formatDate(query.get("date").toDate(), const <String>[yy, '-', M, '-', d, " ", HH, ':', nn, ':', ss]).toUpperCase();
         _productNewPriceController.text = query.get("newPrice").toString();
@@ -205,23 +201,19 @@ class _EditProductState extends State<EditProduct> {
                   } else if (_productStockAlertController.text.trim().isEmpty) {
                     showToast("Please fill the product quantity field", redColor);
                   } else {
-                    await FirebaseFirestore.instance.collection('products').add(
+                    await _docRef!.update(
                       <String, dynamic>{
                         "productQuantity": int.parse(_productQuantityController.text),
-                        "categoryID": _categoryID,
                         "date": DateTime.now(),
                         'productName': _productNameController.text.trim(),
-                        'productCategory': _categoryName,
                         'realPrice': double.parse(_productOldPriceController.text),
                         'newPrice': double.parse(_productNewPriceController.text),
-                        'productReference': _productReferenceController.text,
                         'stockAlert': double.parse(_productStockAlertController.text),
                       },
                     );
                     showToast("Product added successfully", greenColor);
                     // ignore: use_build_context_synchronously
                     Navigator.pop(context);
-                    widget.callback();
                   }
                 },
               ),

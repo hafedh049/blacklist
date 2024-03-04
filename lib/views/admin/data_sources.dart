@@ -121,7 +121,7 @@ class ProductDataSource extends DataTableSource {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               IconButton(
-                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => EditProduct(productID: product.productReference, callback: notifyListeners))),
+                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => EditProduct(productID: product.productReference))),
                 icon: const Icon(FontAwesome.pen_solid, color: purpleColor, size: 15),
               ),
               IconButton(
@@ -137,6 +137,8 @@ class ProductDataSource extends DataTableSource {
                               await FirebaseFirestore.instance.collection("products").where("productReference", isEqualTo: product.productReference).get().then(
                                     (QuerySnapshot<Map<String, dynamic>> value) async => await value.docs.first.reference.delete(),
                                   );
+                              // ignore: use_build_context_synchronously
+                              Navigator.pop(context);
                               showToast("Product has been deleted", greenColor);
                             },
                             child: Text("CONFIRM", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
