@@ -2,8 +2,9 @@ import 'package:blacklist/models/product_model.dart';
 
 class SelledProductModel extends ProductModel {
   DateTime timestamp;
-
+  String clientID;
   SelledProductModel({
+    required this.clientID,
     required String productName,
     required String productCategory,
     required double realPrice,
@@ -30,6 +31,7 @@ class SelledProductModel extends ProductModel {
 
   factory SelledProductModel.fromJson(Map<String, dynamic> json) {
     return SelledProductModel(
+      clientID: json["clientID"],
       storeID: json["storeID"],
       productQuantity: json["productQuantity"],
       productName: json['productName'],
@@ -48,6 +50,7 @@ class SelledProductModel extends ProductModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = super.toJson();
     data['timestamp'] = timestamp;
+    data["clientID"] = clientID;
     return data;
   }
 }
