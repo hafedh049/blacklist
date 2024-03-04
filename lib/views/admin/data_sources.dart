@@ -1,8 +1,11 @@
+import 'package:blacklist/utils/callbacks.dart';
 import 'package:blacklist/utils/shared.dart';
 import 'package:blacklist/views/admin/edit_product.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:data_table_2/data_table_2.dart';
 
@@ -118,7 +121,7 @@ class ProductDataSource extends DataTableSource {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               IconButton(
-                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => EditProduct(productID: product.productReference))),
+                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => EditProduct(productID: product.productReference, callback: notifyListeners))),
                 icon: const Icon(FontAwesome.pen_solid, color: purpleColor, size: 15),
               ),
               IconButton(
@@ -126,8 +129,24 @@ class ProductDataSource extends DataTableSource {
                   showModalBottomSheet(
                     context: context,
                     builder: (BuildContext context) => Container(
+                      padding: const EdgeInsets.all(16),
                       child: Row(
-                        children: <Widget>[],
+                        children: <Widget>[
+                          TextButton(
+                            onPressed: () async {
+                              await FirebaseFirestore.instance.collection("products").where("productReference", isEqualTo: product.productReference).get().then(
+                                    (QuerySnapshot<Map<String, dynamic>> value) async => await value.docs.first.reference.delete(),
+                                  );
+                              showToast("Product has been deleted", greenColor);
+                            },
+                            child: Text("CONFIRM", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
+                          ),
+                          const Spacer(),
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: Text("CANCEL", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
+                          ),
+                        ],
                       ),
                     ),
                   );

@@ -7,11 +7,13 @@ import 'package:flutter_animated_button/flutter_animated_button.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
 
+import '../../utils/callbacks.dart';
 import '../../utils/shared.dart';
 
 class EditProduct extends StatefulWidget {
-  const EditProduct({super.key, required this.productID});
+  const EditProduct({super.key, required this.productID, required this.callback});
   final String productID;
+  final void Function() callback;
   @override
   State<EditProduct> createState() => _EditProductState();
 }
@@ -25,18 +27,23 @@ class _EditProductState extends State<EditProduct> {
   final TextEditingController _productQuantityController = TextEditingController();
   final TextEditingController _productStockAlertController = TextEditingController();
 
+  String _categoryID = "";
+  String _categoryName = "";
+
   @override
   void initState() {
-    FirebaseFirestore.instance.collection("products").where("productID", isEqualTo: widget.productID).get().then(
+    FirebaseFirestore.instance.collection("products").where("productReference", isEqualTo: widget.productID).get().then(
       (QuerySnapshot querySnapshot) {
         final QueryDocumentSnapshot query = querySnapshot.docs.first;
+        _categoryID = query.get("categoryID");
+        _categoryName = query.get("categoryName");
         _productNameController.text = query.get("productName");
-        _productDateController.text = formatDate(query.get("productDate").toDate(), const <String>[yy, '-', M, '-', d, " ", HH, ':', nn, ':', ss]).toUpperCase();
-        _productNewPriceController.text = query.get("productNewPrice").toString();
-        _productOldPriceController.text = query.get("productOldPrice").toString();
+        _productDateController.text = formatDate(query.get("date").toDate(), const <String>[yy, '-', M, '-', d, " ", HH, ':', nn, ':', ss]).toUpperCase();
+        _productNewPriceController.text = query.get("newPrice").toString();
+        _productOldPriceController.text = query.get("realPrice").toString();
         _productQuantityController.text = query.get("productQuantity").toString();
         _productReferenceController.text = query.get("productReference");
-        _productStockAlertController.text = query.get("productStockAlert").toString();
+        _productStockAlertController.text = query.get("stockAlert").toString();
       },
     );
     super.initState();
@@ -186,7 +193,37 @@ class _EditProductState extends State<EditProduct> {
                 backgroundColor: purpleColor,
                 transitionType: TransitionType.TOP_TO_BOTTOM,
                 textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                onPress: () {},
+                onPress: () async {
+                  if (_productNameController.text.trim().isEmpty) {
+                    showToast("Please fill the product name", redColor);
+                  } else if (_productOldPriceController.text.trim().isEmpty) {
+                    showToast("Please fill the product old price", redColor);
+                  } else if (_productNewPriceController.text.trim().isEmpty) {
+                    showToast("Please fill the product new price", redColor);
+                  } else if (_productQuantityController.text.trim().isEmpty) {
+                    showToast("Please fill the product quantity field", redColor);
+                  } else if (_productStockAlertController.text.trim().isEmpty) {
+                    showToast("Please fill the product quantity field", redColor);
+                  } else {
+                    await FirebaseFirestore.instance.collection('products').add(
+                      <String, dynamic>{
+                        "productQuantity": int.parse(_productQuantityController.text),
+                        "categoryID": _categoryID,
+                        "date": DateTime.now(),
+                        'productName': _productNameController.text.trim(),
+                        'productCategory': _categoryName,
+                        'realPrice': double.parse(_productOldPriceController.text),
+                        'newPrice': double.parse(_productNewPriceController.text),
+                        'productReference': _productReferenceController.text,
+                        'stockAlert': double.parse(_productStockAlertController.text),
+                      },
+                    );
+                    showToast("Product added successfully", greenColor);
+                    // ignore: use_build_context_synchronously
+                    Navigator.pop(context);
+                    widget.callback();
+                  }
+                },
               ),
             ],
           ),
