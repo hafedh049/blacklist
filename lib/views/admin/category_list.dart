@@ -15,8 +15,8 @@ import '../../utils/helpers/errored.dart';
 import '../../utils/helpers/loading.dart';
 
 class CategoryList extends StatefulWidget {
-  const CategoryList({super.key});
-
+  const CategoryList({super.key, required this.storeID});
+  final String storeID;
   @override
   State<CategoryList> createState() => _CategoryListState();
 }
@@ -118,7 +118,7 @@ class _CategoryListState extends State<CategoryList> {
                         : Column(
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
-                              AddCategory(categories: _categories, setS: setState),
+                              AddCategory(categories: _categories, setS: setState, storeID: widget.storeID),
                               const SizedBox(height: 20),
                               AnimatedButton(
                                 width: 80,
@@ -168,7 +168,7 @@ class _CategoryListState extends State<CategoryList> {
                                             splashColor: transparentColor,
                                             hoverColor: transparentColor,
                                             highlightColor: transparentColor,
-                                            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => ProductTable(categoryName: item.categoryName, categoryID: item.categoryID))),
+                                            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => ProductTable(storeID: widget.storeID, categoryName: item.categoryName, categoryID: item.categoryID))),
                                             child: Container(
                                               width: 400,
                                               padding: const EdgeInsets.all(16),

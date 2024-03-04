@@ -7,6 +7,8 @@ import 'package:blacklist/utils/helpers/loading.dart';
 import 'package:blacklist/utils/shared.dart';
 import 'package:blacklist/views/admin/holder.dart';
 import 'package:blacklist/views/auth/passphrase.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_animated_button/flutter_animated_button.dart';
@@ -25,6 +27,19 @@ class _StoresListState extends State<StoresList> {
   final GlobalKey<State> _storesKey = GlobalKey<State>();
 
   final List<StoreModel> _stores = <StoreModel>[];
+
+  final Map<String, DocumentReference> _refs = <String, DocumentReference>{};
+
+  Future<List<StoreModel>> _loadStores() async {
+    try {
+      return (await FirebaseFirestore.instance.collection("stores").get()).docs.map((QueryDocumentSnapshot<Map<String, dynamic>> e) {
+        _refs[e.get("storeID")] = e.reference;
+        return StoreModel.fromJson(e.data());
+      }).toList();
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +81,10 @@ class _StoresListState extends State<StoresList> {
                   backgroundColor: purpleColor,
                   transitionType: TransitionType.TOP_TO_BOTTOM,
                   textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                  onPress: () {
+                  onPress: () async {
+                    await FirebaseAuth.instance.signOut();
+                    showToast("Bye Bye", redColor);
+                    // ignore: use_build_context_synchronously
                     Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => const Passphrase()));
                   },
                 ),
@@ -76,7 +94,7 @@ class _StoresListState extends State<StoresList> {
             Expanded(
               child: Center(
                 child: FutureBuilder<List<StoreModel>>(
-                  future: loadStores(),
+                  future: _loadStores(),
                   builder: (BuildContext context, AsyncSnapshot<List<StoreModel>> snapshot) {
                     if (snapshot.hasData) {
                       _stores.addAll(snapshot.data!);
@@ -103,7 +121,7 @@ class _StoresListState extends State<StoresList> {
                                         splashColor: transparentColor,
                                         hoverColor: transparentColor,
                                         highlightColor: transparentColor,
-                                        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const Holder())),
+                                        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Holder(storeID: item.storeID))),
                                         child: Container(
                                           width: 300,
                                           padding: const EdgeInsets.all(16),
@@ -138,6 +156,18 @@ class _StoresListState extends State<StoresList> {
                                                       Text(item.storeTotalProducts.toString(), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: redColor)),
                                                     ],
                                                   ),
+                                                  const SizedBox(height: 10),
+                                                  Row(
+                                                    children: <Widget>[
+                                                      Text("State", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
+                                                      const SizedBox(width: 10),
+                                                      Container(
+                                                        decoration: BoxDecoration(color: item.storeState.toUpperCase() == "OPEN" ? greenColor : redColor, borderRadius: BorderRadius.circular(5)),
+                                                        padding: const EdgeInsets.all(4),
+                                                        child: Text(item.storeState.toUpperCase(), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
+                                                      ),
+                                                    ],
+                                                  ),
                                                   const SizedBox(height: 20),
                                                   Text("Vendor Acess", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
                                                   const SizedBox(height: 10),
@@ -155,7 +185,15 @@ class _StoresListState extends State<StoresList> {
                                                         backgroundColor: purpleColor,
                                                         transitionType: TransitionType.TOP_TO_BOTTOM,
                                                         textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                                                        onPress: () {},
+                                                        onPress: () async {
+                                                          if (item.storeState != "open") {
+                                                            await _refs[item.storeID]!.update(<String, dynamic>{"storeState": "open"});
+                                                            showToast("Store opened", greenColor);
+                                                            _storesKey.currentState!.setState(() => item.storeState = "open");
+                                                          } else {
+                                                            showToast("Store is already open", redColor);
+                                                          }
+                                                        },
                                                       ),
                                                       const SizedBox(width: 20),
                                                       AnimatedButton(
@@ -170,7 +208,15 @@ class _StoresListState extends State<StoresList> {
                                                         backgroundColor: purpleColor,
                                                         transitionType: TransitionType.TOP_TO_BOTTOM,
                                                         textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                                                        onPress: () {},
+                                                        onPress: () async {
+                                                          if (item.storeState != "closed") {
+                                                            await _refs[item.storeID]!.update(<String, dynamic>{"storeState": "closed"});
+                                                            showToast("Store closed", greenColor);
+                                                            _storesKey.currentState!.setState(() => item.storeState = "closed");
+                                                          } else {
+                                                            showToast("Store is already closed", redColor);
+                                                          }
+                                                        },
                                                       ),
                                                     ],
                                                   ),

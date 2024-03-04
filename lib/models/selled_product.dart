@@ -14,7 +14,9 @@ class SelledProductModel extends ProductModel {
     required this.timestamp,
     required date,
     required productQuantity,
+    required storeID,
   }) : super(
+          storeID: storeID,
           date: date,
           productQuantity: productQuantity,
           categoryID: categoryID,
@@ -28,6 +30,7 @@ class SelledProductModel extends ProductModel {
 
   factory SelledProductModel.fromJson(Map<String, dynamic> json) {
     return SelledProductModel(
+      storeID: json["storeID"],
       productQuantity: json["productQuantity"],
       productName: json['productName'],
       productCategory: json['productCategory'],

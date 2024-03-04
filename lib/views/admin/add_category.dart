@@ -11,9 +11,10 @@ import '../../utils/callbacks.dart';
 import '../../utils/shared.dart';
 
 class AddCategory extends StatefulWidget {
-  const AddCategory({super.key, required this.categories, required this.setS});
+  const AddCategory({super.key, required this.storeID, required this.categories, required this.setS});
   final List<CategoryModel> categories;
   final void Function(void Function()) setS;
+  final String storeID;
   @override
   State<AddCategory> createState() => _AddCategoryState();
 }
@@ -102,6 +103,7 @@ class _AddCategoryState extends State<AddCategory> {
                             'categoryArticlesCount': 0,
                             'categoryProductsCount': 0,
                             'categoryState': false,
+                            'storeID': widget.storeID,
                           };
 
                           await FirebaseFirestore.instance.collection("categories").add(categoryItem);

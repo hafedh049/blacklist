@@ -9,8 +9,8 @@ import 'package:lottie/lottie.dart';
 import '../../utils/shared.dart';
 
 class StockAlerts extends StatefulWidget {
-  const StockAlerts({super.key});
-
+  const StockAlerts({super.key, required this.storeID});
+  final String storeID;
   @override
   State<StockAlerts> createState() => _StockAlertsState();
 }
@@ -35,7 +35,7 @@ class _StockAlertsState extends State<StockAlerts> {
             Container(width: MediaQuery.sizeOf(context).width, height: .3, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),
             Expanded(
               child: FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                future: FirebaseFirestore.instance.collection("products").get(),
+                future: FirebaseFirestore.instance.collection("products").where("storeID", isEqualTo: widget.storeID).get(),
                 builder: (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
                   if (snapshot.hasData) {
                     _alerts = snapshot.data!.docs.map((QueryDocumentSnapshot<Map<String, dynamic>> e) => ProductModel.fromJson(e.data())).where((ProductModel element) => element.productQuantity <= element.stockAlert).toList();

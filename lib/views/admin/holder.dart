@@ -9,31 +9,14 @@ import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Holder extends StatefulWidget {
-  const Holder({super.key});
-
+  const Holder({super.key, required this.storeID});
+  final String storeID;
   @override
   State<Holder> createState() => _HolderState();
 }
 
 class _HolderState extends State<Holder> with TickerProviderStateMixin {
-  final List<Map<String, dynamic>> _screens = const <Map<String, dynamic>>[
-    <String, dynamic>{
-      "screen": Dashboard(),
-      "title": "Dashboard",
-    },
-    <String, dynamic>{
-      "screen": CategoryList(),
-      "title": "Categories List",
-    },
-    <String, dynamic>{
-      "screen": StockAlerts(),
-      "title": "Stock Alerts",
-    },
-    <String, dynamic>{
-      "screen": ClientsList(),
-      "title": "Clients",
-    },
-  ];
+  late final List<Map<String, dynamic>> _screens;
   String _selectedScreen = "Dashboard";
 
   final ZoomDrawerController _zoomController = ZoomDrawerController();
@@ -42,6 +25,24 @@ class _HolderState extends State<Holder> with TickerProviderStateMixin {
 
   @override
   void initState() {
+    _screens = <Map<String, dynamic>>[
+      <String, dynamic>{
+        "screen": const Dashboard(),
+        "title": "Dashboard",
+      },
+      <String, dynamic>{
+        "screen": CategoryList(storeID: widget.storeID),
+        "title": "Categories List",
+      },
+      <String, dynamic>{
+        "screen": StockAlerts(storeID: widget.storeID),
+        "title": "Stock Alerts",
+      },
+      <String, dynamic>{
+        "screen": const ClientsList(),
+        "title": "Clients",
+      },
+    ];
     _animationController = AnimationController(vsync: this, duration: 1000.ms);
     super.initState();
   }

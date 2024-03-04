@@ -1,30 +1,19 @@
-import 'dart:math';
-
+import 'package:blacklist/models/selled_product.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../utils/shared.dart';
 
 class ClientsProducts extends StatefulWidget {
-  const ClientsProducts({super.key});
-
+  const ClientsProducts({super.key, required this.clientID});
+  final String clientID;
   @override
   State<ClientsProducts> createState() => _ClientsProductsState();
 }
 
 class _ClientsProductsState extends State<ClientsProducts> {
-  final List<Map<String, dynamic>> _productsPerClient = List<Map<String, dynamic>>.generate(
-    100,
-    (int index) => <String, dynamic>{
-      "product_name": "Product ${index + 1}",
-      "quantity": Random().nextInt(1000).toString(),
-      "total_price": (Random().nextInt(1000) * Random().nextDouble()).toStringAsFixed(2),
-      "category": "Category ${index + 1}",
-      "date": formatDate(DateTime.now(), const <String>[dd, '/', M, '/', yyyy]).toString(),
-    },
-  );
+  final List<SelledProductModel> _productsPerClient = <SelledProductModel>[];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,14 +27,6 @@ class _ClientsProductsState extends State<ClientsProducts> {
               children: <Widget>[
                 Text("Products Baught", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
                 const Spacer(),
-                RichText(
-                  text: TextSpan(
-                    children: <TextSpan>[
-                      TextSpan(text: "Admin", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
-                      TextSpan(text: " / Baught Products List", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
-                    ],
-                  ),
-                ),
               ],
             ),
             Container(width: MediaQuery.sizeOf(context).width, height: .3, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),
@@ -67,7 +48,7 @@ class _ClientsProductsState extends State<ClientsProducts> {
                             child: Text("Date", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: whiteColor)),
                           ),
                           const SizedBox(width: 10),
-                          Text(_productsPerClient[index]["date"], style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: whiteColor)),
+                          Text(formatDate(_productsPerClient[index].date, const <String>[dd, " / ", MM, " / ", yyyy, " - ", HH, " : ", n]).toUpperCase(), style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: whiteColor)),
                         ],
                       ),
                       const SizedBox(height: 10),

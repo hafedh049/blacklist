@@ -13,9 +13,10 @@ import '../../models/product_model.dart';
 import 'data_sources.dart';
 
 class ProductTable extends StatefulWidget {
-  const ProductTable({super.key, required this.categoryID, required this.categoryName});
+  const ProductTable({super.key, required this.storeID, required this.categoryID, required this.categoryName});
   final String categoryID;
   final String categoryName;
+  final String storeID;
 
   @override
   State<ProductTable> createState() => ProductTableState();
@@ -139,6 +140,7 @@ class ProductTableState extends State<ProductTable> with RestorationMixin {
                         context,
                         MaterialPageRoute(
                           builder: (BuildContext context) => AddProduct(
+                            storeID: widget.storeID,
                             callback: () {
                               _futureKey.currentState!.setState(() {});
                             },

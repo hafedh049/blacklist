@@ -12,9 +12,10 @@ import 'package:uuid/v8.dart';
 import '../../utils/shared.dart';
 
 class AddProduct extends StatefulWidget {
-  const AddProduct({super.key, required this.categoryID, required this.categoryName, required this.callback});
+  const AddProduct({super.key, required this.storeID, required this.categoryID, required this.categoryName, required this.callback});
   final String categoryID;
   final String categoryName;
+  final String storeID;
   final void Function() callback;
   @override
   State<AddProduct> createState() => _AddProductState();
@@ -196,6 +197,7 @@ class _AddProductState extends State<AddProduct> {
                         'newPrice': double.parse(_productNewPriceController.text),
                         'productReference': _productReferenceController.text,
                         'stockAlert': double.parse(_productStockAlertController.text),
+                        "storeID": widget.storeID,
                       },
                     );
                     showToast("Product added successfully", greenColor);
