@@ -1,3 +1,4 @@
+import 'package:blacklist/models/selled_product.dart';
 import 'package:blacklist/utils/helpers/errored.dart';
 import 'package:blacklist/utils/helpers/loading.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -8,8 +9,8 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../../utils/shared.dart';
 
 class PerYear extends StatefulWidget {
-  const PerYear({super.key});
-
+  const PerYear({super.key, required this.storeID});
+  final String storeID;
   @override
   State<PerYear> createState() => _PerYearState();
 }
@@ -17,23 +18,21 @@ class PerYear extends StatefulWidget {
 class _PerYearState extends State<PerYear> {
   int touchedGroupIndex = -1;
 
-  final Map<int, String> _months = {1: "Jan", 2: "Fév", 3: "Mar", 4: "Avr", 5: "Mai", 6: "Jui", 7: "Juil", 8: "Aoû", 9: "Sep", 10: "Oct", 11: "Nov", 12: "Déc"};
+  final Map<int, String> _months = <int, String>{1: "Jan", 2: "Fév", 3: "Mar", 4: "Avr", 5: "Mai", 6: "Jui", 7: "Juil", 8: "Aoû", 9: "Sep", 10: "Oct", 11: "Nov", 12: "Déc"};
   final Map<int, double> _mappedData = <int, double>{for (int index = 1; index <= 12; index += 1) index: 0.0};
   Future<bool> _load() async {
-    final List<Map<String, dynamic>> data = (await FirebaseFirestore.instance.collection("sells").where("timestamp", isGreaterThanOrEqualTo: DateTime(DateTime.now().year, DateTime.now().month - 1)).get())
+    List<SelledProductModel> data = (await FirebaseFirestore.instance.collection("sells").where("timestamp", isGreaterThanOrEqualTo: DateTime(DateTime.now().year)).get())
         .docs
         .map(
-          (QueryDocumentSnapshot<Map<String, dynamic>> e) => <String, dynamic>{
-            "quantity": e.get("quantity"),
-            "price": e.get("price"),
-            "timestamp": e.get("timestamp"),
-          },
+          (QueryDocumentSnapshot<Map<String, dynamic>> e) => SelledProductModel.fromJson(e.data()),
         )
         .toList();
+    data = data.where((SelledProductModel element) => element.storeID == widget.storeID).toList();
+
     for (int index in _mappedData.keys) {
-      for (final Map<String, dynamic> entry in data) {
-        if (index == (entry["timestamp"].toDate() as DateTime).month) {
-          _mappedData[index] = _mappedData[index]! + entry["quantity"] * entry["price"];
+      for (final SelledProductModel entry in data) {
+        if (index == entry.timestamp.month) {
+          _mappedData[index] = _mappedData[index]! + entry.newPrice - entry.realPrice;
         }
       }
     }

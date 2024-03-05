@@ -1,3 +1,4 @@
+import 'package:blacklist/models/selled_product.dart';
 import 'package:blacklist/utils/callbacks.dart';
 import 'package:blacklist/utils/helpers/errored.dart';
 import 'package:blacklist/utils/helpers/loading.dart';
@@ -9,27 +10,15 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../../utils/shared.dart';
 
 class PerMonth extends StatefulWidget {
-  const PerMonth({super.key});
-
+  const PerMonth({super.key, required this.storeID});
+  final String storeID;
   @override
   State<PerMonth> createState() => _PerMonthState();
 }
 
 class _PerMonthState extends State<PerMonth> {
-  final Map<int, int> _months = {
-    1: 31, // Janvier
-    2: 28, // Février
-    3: 31, // Mars
-    4: 30, // Avril
-    5: 31, // Mai
-    6: 30, // Juin
-    7: 31, // Juillet
-    8: 31, // Août
-    9: 30, // Septembre
-    10: 31, // Octobre
-    11: 30, // Novembre
-    12: 31, // Décembre
-  };
+  final Map<int, int> _months = <int, int>{1: 31, 2: 28, 3: 31, 4: 30, 5: 31, 6: 30, 7: 31, 8: 31, 9: 30, 10: 31, 11: 30, 12: 31};
+
   late final Map<int, double> _mappedData;
 
   @override
@@ -39,26 +28,18 @@ class _PerMonthState extends State<PerMonth> {
   }
 
   Future<bool> _load() async {
-    final List<Map<String, dynamic>> data = (await FirebaseFirestore.instance
-            .collection("sells")
-            .where(
-              "timestamp",
-              isGreaterThanOrEqualTo: DateTime(DateTime.now().year, DateTime.now().month),
-            )
-            .get())
+    List<SelledProductModel> data = (await FirebaseFirestore.instance.collection("sells").where("timestamp", isGreaterThanOrEqualTo: DateTime(DateTime.now().year, DateTime.now().month)).get())
         .docs
-        .map(
-          (QueryDocumentSnapshot<Map<String, dynamic>> e) => <String, dynamic>{
-            "quantity": e.get("quantity"),
-            "price": e.get("price"),
-            "timestamp": e.get("timestamp"),
-          },
-        )
+        .map((
+          QueryDocumentSnapshot<Map<String, dynamic>> e,
+        ) =>
+            SelledProductModel.fromJson(e.data()))
         .toList();
+    data = data.where((SelledProductModel element) => element.storeID == widget.storeID).toList();
     for (int index in _mappedData.keys) {
-      for (final Map<String, dynamic> entry in data) {
-        if (index == (entry["timestamp"].toDate() as DateTime).day) {
-          _mappedData[index] = _mappedData[index]! + entry["quantity"] * entry["price"];
+      for (final SelledProductModel entry in data) {
+        if (index == entry.timestamp.day) {
+          _mappedData[index] = _mappedData[index]! + entry.newPrice - entry.realPrice;
         }
       }
     }
@@ -79,7 +60,6 @@ class _PerMonthState extends State<PerMonth> {
   Widget _bottomTitles(double value, TitleMeta meta) {
     showToast(value.toString(), redColor);
     final Widget text = Text(_months.keys.elementAt(value.toInt() - 1).toString(), style: GoogleFonts.itim(color: whiteColor, fontWeight: FontWeight.bold, fontSize: 14));
-
     return SideTitleWidget(axisSide: meta.axisSide, space: 16, child: text);
   }
 

@@ -27,7 +27,7 @@ class _HolderState extends State<Holder> with TickerProviderStateMixin {
   void initState() {
     _screens = <Map<String, dynamic>>[
       <String, dynamic>{
-        "screen": const Dashboard(),
+        "screen": Dashboard(storeID: widget.storeID),
         "title": "Dashboard",
       },
       <String, dynamic>{

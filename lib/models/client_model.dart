@@ -20,7 +20,7 @@ class ClientModel {
       storesID: List<String>.from(json['storesID']),
       clientName: json['clientName'],
       clientCIN: json['clientCIN'],
-      clientBirthdate: DateTime.parse(json['clientBirthdate']),
+      clientBirthdate: json['clientBirthdate'].toDate(),
       clientPhone: json['clientPhone'],
     );
   }

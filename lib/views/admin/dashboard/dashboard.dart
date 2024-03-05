@@ -7,8 +7,8 @@ import 'charts/per_month.dart';
 import 'charts/per_year.dart';
 
 class Dashboard extends StatefulWidget {
-  const Dashboard({super.key});
-
+  const Dashboard({super.key, required this.storeID});
+  final String storeID;
   @override
   State<Dashboard> createState() => _DashboardState();
 }
@@ -16,15 +16,15 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       backgroundColor: scaffoldColor,
       body: Padding(
-        padding: EdgeInsets.all(24),
+        padding: const EdgeInsets.all(24),
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
-              SizedBox(height: 30),
-              Counters(),
+              const SizedBox(height: 30),
+              const Counters(),
               Wrap(
                 alignment: WrapAlignment.center,
                 crossAxisAlignment: WrapCrossAlignment.center,
@@ -32,9 +32,9 @@ class _DashboardState extends State<Dashboard> {
                 runSpacing: 20,
                 spacing: 20,
                 children: <Widget>[
-                  PerWeek(),
-                  PerMonth(),
-                  PerYear(),
+                  PerWeek(storeID: widget.storeID),
+                  PerMonth(storeID: widget.storeID),
+                  PerYear(storeID: widget.storeID),
                 ],
               ),
             ],

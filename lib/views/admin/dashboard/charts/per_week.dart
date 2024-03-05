@@ -6,11 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../../models/selled_product.dart';
 import '../../../../utils/shared.dart';
 
 class PerWeek extends StatefulWidget {
-  const PerWeek({super.key});
-
+  const PerWeek({super.key, required this.storeID});
+  final String storeID;
   @override
   State<PerWeek> createState() => _PerWeekState();
 }
@@ -21,26 +22,17 @@ class _PerWeekState extends State<PerWeek> {
   int touchedGroupIndex = -1;
 
   Future<bool> _load() async {
-    final List<Map<String, dynamic>> data = (await FirebaseFirestore.instance
-            .collection("sells")
-            .where(
-              "timestamp",
-              isGreaterThanOrEqualTo: DateTime.now().subtract(DateTime.now().weekday.days),
-            )
-            .get())
+    List<SelledProductModel> data = (await FirebaseFirestore.instance.collection("sells").where("timestamp", isGreaterThanOrEqualTo: DateTime.now().subtract(DateTime.now().weekday.days)).get())
         .docs
         .map(
-          (QueryDocumentSnapshot<Map<String, dynamic>> e) => <String, dynamic>{
-            "quantity": e.get("quantity"),
-            "price": e.get("price"),
-            "timestamp": e.get("timestamp"),
-          },
+          (QueryDocumentSnapshot<Map<String, dynamic>> e) => SelledProductModel.fromJson(e.data()),
         )
         .toList();
+    data = data.where((SelledProductModel element) => element.storeID == widget.storeID).toList();
     for (int index in _mappedData.keys) {
-      for (final Map<String, dynamic> entry in data) {
-        if (index == (entry["timestamp"].toDate() as DateTime).weekday) {
-          _mappedData[index] = _mappedData[index]! + entry["quantity"] * entry["price"];
+      for (final SelledProductModel entry in data) {
+        if (index == entry.timestamp.weekday) {
+          _mappedData[index] = _mappedData[index]! + entry.newPrice - entry.realPrice;
         }
       }
     }
