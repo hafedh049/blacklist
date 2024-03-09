@@ -4,6 +4,8 @@ import 'package:animated_loading_border/animated_loading_border.dart';
 import 'package:blacklist/utils/callbacks.dart';
 import 'package:blacklist/utils/shared.dart';
 import 'package:blacklist/views/admin/stores.dart';
+import 'package:blacklist/views/vendor/cart_recipe.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -28,20 +30,45 @@ class _PassphraseState extends State<Passphrase> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  bool _isVendor = false;
+
   Future<void> _signIn() async {
     if (_passwordController.text.trim().isEmpty) {
-      showToast("Please enter the passphrase", redColor);
+      showToast("Please enter the password", redColor);
     } else if (_emailController.text.trim().isEmpty) {
       showToast("Please enter the e-mail", redColor);
     } else {
       _cardKey.currentState!.setState(() => _submitButtonState = true);
-      await FirebaseAuth.instance.signInWithEmailAndPassword(email: _emailController.text, password: _passwordController.text);
-      _cardKey.currentState!.setState(() => _submitButtonState = false);
-      if (FirebaseAuth.instance.currentUser != null) {
-        showToast("Welcome ADMIN", greenColor);
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => const StoresList()));
-      } else {
-        showToast("Wrong Credentials", redColor);
+      try {
+        if (!_isVendor) {
+          await FirebaseAuth.instance.signInWithEmailAndPassword(email: _emailController.text, password: _passwordController.text);
+          _cardKey.currentState!.setState(() => _submitButtonState = false);
+          if (FirebaseAuth.instance.currentUser != null) {
+            showToast("Welcome ADMIN", greenColor);
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => const StoresList()));
+          }
+        } else {
+          await FirebaseFirestore.instance.collection("stores").where("storeVendorEmail", isEqualTo: _emailController.text).limit(1).get().then(
+            (QuerySnapshot<Map<String, dynamic>> value) {
+              if (value.docs.isNotEmpty) {
+                if (value.docs[0]["storeVendorPassword"] == _passwordController.text) {
+                  _cardKey.currentState!.setState(() => _submitButtonState = false);
+                  showToast("Welcome VENDOR", greenColor);
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => CartRecepie(storeID: value.docs[0]["storeID"])));
+                } else {
+                  _cardKey.currentState!.setState(() => _submitButtonState = false);
+                  showToast("Invalid password", redColor);
+                }
+              } else {
+                _cardKey.currentState!.setState(() => _submitButtonState = false);
+                showToast("Invalid E-mail", redColor);
+              }
+            },
+          );
+        }
+      } catch (e) {
+        _cardKey.currentState!.setState(() => _submitButtonState = false);
+        showToast(e.toString(), redColor);
       }
     }
   }
@@ -74,7 +101,24 @@ class _PassphraseState extends State<Passphrase> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      Text("WELCOME", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
+                      Row(
+                        children: <Widget>[
+                          Text("WELCOME", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
+                          const Spacer(),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              Text("AS VENDOR", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
+                              const SizedBox(width: 10),
+                              StatefulBuilder(
+                                builder: (BuildContext context, void Function(void Function()) _) {
+                                  return Checkbox(value: _isVendor, onChanged: (bool? value) => _(() => _isVendor = value!));
+                                },
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
                       Container(width: MediaQuery.sizeOf(context).width, height: .3, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),
                       Row(
                         mainAxisSize: MainAxisSize.min,

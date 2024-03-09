@@ -15,8 +15,8 @@ import 'package:pretty_qr_code/pretty_qr_code.dart';
 import 'package:searchfield/searchfield.dart';
 
 class Client extends StatefulWidget {
-  const Client({super.key});
-
+  const Client({super.key, required this.storeID});
+  final String storeID;
   @override
   State<Client> createState() => _ClientState();
 }
@@ -90,7 +90,7 @@ class _ClientState extends State<Client> {
                   splashColor: transparentColor,
                   onTap: () {
                     //SCAN THE QR
-                    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const AfterQRScan()));
+                    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => AfterQRScan(storeID: widget.storeID)));
                   },
                   child: AnimatedLoadingBorder(
                     borderWidth: 4,

@@ -11,8 +11,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
 
 class AfterQRScan extends StatefulWidget {
-  const AfterQRScan({super.key});
-
+  const AfterQRScan({super.key, required this.storeID});
+  final String storeID;
   @override
   State<AfterQRScan> createState() => _AfterQRScanState();
 }
@@ -78,7 +78,7 @@ class _AfterQRScanState extends State<AfterQRScan> {
                         backgroundColor: greenColor,
                         transitionType: TransitionType.TOP_TO_BOTTOM,
                         textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                        onPress: () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const VendorTable())),
+                        onPress: () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => VendorTable(storeID: widget.storeID))),
                       ),
                       const SizedBox(height: 10),
                       AnimatedButton(
@@ -93,7 +93,7 @@ class _AfterQRScanState extends State<AfterQRScan> {
                         backgroundColor: greenColor,
                         transitionType: TransitionType.TOP_TO_BOTTOM,
                         textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                        onPress: () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const VendorTable())),
+                        onPress: () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => VendorTable(storeID: widget.storeID))),
                       ),
                       const SizedBox(height: 10),
                       AnimatedButton(

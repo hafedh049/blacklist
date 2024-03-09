@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CartRecepie extends StatefulWidget {
-  const CartRecepie({super.key});
-
+  const CartRecepie({super.key, required this.storeID});
+  final String storeID;
   @override
   State<CartRecepie> createState() => _CartRecepieState();
 }
@@ -20,7 +20,7 @@ class _CartRecepieState extends State<CartRecepie> {
     _items = <Map<String, dynamic>>[
       <String, dynamic>{
         "title": "Cart",
-        "callback": () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const AnonymousClient())),
+        "callback": () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => AnonymousClient(storeID: widget.storeID))),
       },
       <String, dynamic>{
         "title": "Recepie",
@@ -44,14 +44,6 @@ class _CartRecepieState extends State<CartRecepie> {
               children: <Widget>[
                 Text("Home", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
                 const Spacer(),
-                RichText(
-                  text: TextSpan(
-                    children: <TextSpan>[
-                      TextSpan(text: "Vendor", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
-                      TextSpan(text: " / Home Page", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
-                    ],
-                  ),
-                ),
               ],
             ),
             Container(width: MediaQuery.sizeOf(context).width, height: .3, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),

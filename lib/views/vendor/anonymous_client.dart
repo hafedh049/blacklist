@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AnonymousClient extends StatefulWidget {
-  const AnonymousClient({super.key});
-
+  const AnonymousClient({super.key, required this.storeID});
+  final String storeID;
   @override
   State<AnonymousClient> createState() => _AnonymousClientState();
 }
@@ -20,11 +20,11 @@ class _AnonymousClientState extends State<AnonymousClient> {
     _items = <Map<String, dynamic>>[
       <String, dynamic>{
         "title": "Anonymous",
-        "callback": () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const VendorTable())),
+        "callback": () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => VendorTable(storeID: widget.storeID))),
       },
       <String, dynamic>{
         "title": "Client",
-        "callback": () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const Client())),
+        "callback": () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Client(storeID: widget.storeID))),
       },
     ];
     super.initState();

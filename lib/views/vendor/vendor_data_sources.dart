@@ -12,10 +12,10 @@ class RestorableProductSelections extends RestorableProperty<Set<int>> {
 
   bool isSelected(int index) => _productSelections.contains(index);
 
-  void setProductSelections(List<Product> products) {
+  void setProductSelections(List<VendorProduct> products) {
     final Set<int> updatedSet = <int>{};
     for (int index = 0; index < products.length; index += 1) {
-      Product product = products[index];
+      VendorProduct product = products[index];
       if (product.selected) {
         updatedSet.add(index);
       }
@@ -43,17 +43,63 @@ class RestorableProductSelections extends RestorableProperty<Set<int>> {
   Object toPrimitives() => _productSelections.toList();
 }
 
-class Product {
-  Product(this.name, this.category, this.date, this.reference, this.newPrice, this.quantity);
-
-  final String name;
-  final String category;
-  final DateTime date;
-  final String reference;
-  final double newPrice;
-  int quantity;
-  final TextEditingController cartController = TextEditingController(text: "0");
+class VendorProduct {
+  String productName;
+  String storeID;
+  String productCategory;
+  String categoryID;
+  double realPrice;
+  double newPrice;
+  String productReference;
+  int productQuantity;
+  int stockAlert;
+  DateTime date;
   bool selected = false;
+
+  VendorProduct({
+    required this.storeID,
+    required this.productQuantity,
+    required this.categoryID,
+    required this.date,
+    required this.productName,
+    required this.productCategory,
+    required this.realPrice,
+    required this.newPrice,
+    required this.productReference,
+    required this.stockAlert,
+  });
+
+  factory VendorProduct.fromJson(Map<String, dynamic> json) {
+    return VendorProduct(
+      storeID: json["storeID"],
+      productQuantity: json["productQuantity"],
+      categoryID: json["categoryID"],
+      date: json["date"].toDate(),
+      productName: json['productName'],
+      productCategory: json['productCategory'],
+      realPrice: json['realPrice'].toDouble(),
+      newPrice: json['newPrice'].toDouble(),
+      productReference: json['productReference'],
+      stockAlert: json['stockAlert'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      "storeID": storeID,
+      "productQuantity": productQuantity,
+      "categoryID": categoryID,
+      "date": date,
+      'productName': productName,
+      'productCategory': productCategory,
+      'realPrice': realPrice,
+      'newPrice': newPrice,
+      'productReference': productReference,
+      'stockAlert': stockAlert,
+    };
+  }
+
+  final TextEditingController cartController = TextEditingController(text: "0");
 
   void dispose() {
     cartController.dispose();
@@ -62,32 +108,32 @@ class Product {
 
 class ProductDataSource extends DataTableSource {
   ProductDataSource.empty(this.context) {
-    products = <Product>[];
+    products = <VendorProduct>[];
   }
 
   ProductDataSource(this.context, this.products, [sortedByNames = true, this.hasRowTaps = true, this.hasRowHeightOverrides = true, this.hasZebraStripes = true]) {
     if (sortedByNames) {
-      sort((Product p) => p.name, true);
+      sort((VendorProduct p) => p.productName, true);
     }
   }
 
   final BuildContext context;
-  late List<Product> products;
+  late List<VendorProduct> products;
   bool hasRowTaps = true;
   bool hasRowHeightOverrides = true;
   bool hasZebraStripes = true;
 
   @override
   void dispose() {
-    for (final Product product in products) {
+    for (final VendorProduct product in products) {
       product.dispose();
     }
     super.dispose();
   }
 
-  void sort<T>(Comparable<T> Function(Product p) getField, bool ascending) {
+  void sort<T>(Comparable<T> Function(VendorProduct p) getField, bool ascending) {
     products.sort(
-      (Product a, Product b) {
+      (VendorProduct a, VendorProduct b) {
         final Comparable<T> aValue = getField(a);
         final Comparable<T> bValue = getField(b);
         return ascending ? Comparable.compare(aValue, bValue) : Comparable.compare(bValue, aValue);
@@ -99,7 +145,7 @@ class ProductDataSource extends DataTableSource {
   void updateSelectedProducts(RestorableProductSelections selectedRows) {
     _selectedCount = 0;
     for (int index = 0; index < products.length; index += 1) {
-      Product product = products[index];
+      VendorProduct product = products[index];
       if (selectedRows.isSelected(index)) {
         product.selected = true;
         _selectedCount += 1;
@@ -114,7 +160,7 @@ class ProductDataSource extends DataTableSource {
   DataRow2 getRow(int index, [Color? color]) {
     assert(index >= 0);
     if (index >= products.length) throw 'index > _products.length';
-    final Product product = products[index];
+    final VendorProduct product = products[index];
     return DataRow2.byIndex(
       index: index,
       selected: product.selected,
@@ -127,12 +173,12 @@ class ProductDataSource extends DataTableSource {
           notifyListeners();
         }
       },
-      onTap: hasRowTaps ? () => _showSnackbar(context, 'Tapped on row ${product.name}') : null,
+      onTap: hasRowTaps ? () => _showSnackbar(context, 'Tapped on row ${product.productName}') : null,
       cells: <DataCell>[
-        DataCell(Text(product.name)),
-        DataCell(Text(product.category)),
+        DataCell(Text(product.productName)),
+        DataCell(Text(product.productCategory)),
         !product.selected
-            ? DataCell(Text(product.quantity.toString()))
+            ? DataCell(Text(product.productQuantity.toString()))
             : DataCell(
                 Row(
                   mainAxisSize: MainAxisSize.min,
@@ -172,7 +218,7 @@ class ProductDataSource extends DataTableSource {
                 ),
               ),
         DataCell(Text(formatDate(product.date, const <String>[yyyy, " ", MM, " ", dd]))),
-        DataCell(Text(product.reference)),
+        DataCell(Text(product.productReference)),
         DataCell(Text(product.newPrice.toStringAsFixed(2))),
       ],
     );
@@ -188,7 +234,7 @@ class ProductDataSource extends DataTableSource {
   int get selectedRowCount => _selectedCount;
 
   void selectAll(bool? checked) {
-    for (final Product product in products) {
+    for (final VendorProduct product in products) {
       product.selected = checked ?? false;
     }
     _selectedCount = (checked ?? false) ? products.length : 0;
