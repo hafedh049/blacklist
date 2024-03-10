@@ -42,7 +42,7 @@ class _PerWeekState extends State<PerWeek> {
   Widget leftTitles(double value, TitleMeta meta) {
     final TextStyle style = GoogleFonts.itim(color: whiteColor, fontWeight: FontWeight.bold, fontSize: 14);
     String text = "";
-    if (value % 10 == 0) {
+    if (value % 50 == 0) {
       text = value.toStringAsFixed(0);
     } else {
       return Container();
@@ -75,7 +75,6 @@ class _PerWeekState extends State<PerWeek> {
                     builder: (BuildContext context, void Function(void Function()) _) {
                       return BarChart(
                         BarChartData(
-                          maxY: 30,
                           titlesData: FlTitlesData(
                             show: true,
                             rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),

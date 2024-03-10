@@ -1,3 +1,4 @@
+import 'package:blacklist/utils/callbacks.dart';
 import 'package:blacklist/utils/helpers/errored.dart';
 import 'package:blacklist/utils/helpers/loading.dart';
 import 'package:blacklist/utils/shared.dart';
@@ -22,7 +23,7 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
   final RestorableInt _rowsPerPage = RestorableInt(PaginatedDataTable.defaultRowsPerPage + 10);
   late ProductDataSource _productsDataSource;
   bool _initialized = false;
-  final List<String> _columns = const <String>["Name", "Category", "Quantity", "Date", "Reference", "New Price"];
+  final List<String> _columns = const <String>["Name", "Category", "Quantity", "Date", "Reference", "Price"];
   final GlobalKey<State> _pagerKey = GlobalKey<State>();
   final GlobalKey<State> _searchKey = GlobalKey<State>();
   final TextEditingController _searchController = TextEditingController();
@@ -106,9 +107,21 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
                       backgroundColor: purpleColor,
                       transitionType: TransitionType.TOP_TO_BOTTOM,
                       textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                      onPress: () {
+                      onPress: () async {
+                        showToast("PLEASE WAIT", purpleColor);
+                        final DateTime now = DateTime.now();
                         for (VendorProduct product in _productsDataSource.products) {
                           if (product.selected) {
+                            final QuerySnapshot<Map<String, dynamic>> query = await FirebaseFirestore.instance.collection("products").where("productReference", isEqualTo: product.productReference).limit(1).get();
+                            for (int index = 0; index < int.parse(product.cartController.text); index += 1) {
+                              await query.docs.first.reference.update(<String, dynamic>{"date": now, "productQuantity": product.productQuantity - (index + 1)});
+                              await FirebaseFirestore.instance.collection("sells").add(
+                                    product.toJson()
+                                      ..putIfAbsent("timestamp", () => now)
+                                      ..putIfAbsent("clientID", () => "ANONYMOUS"),
+                                  );
+                              showToast("UPDATED SUCCESSFULLY", purpleColor);
+                            }
                             product.productQuantity -= int.parse(product.cartController.text);
                             product.cartController.text = "0";
                             product.selected = false;
@@ -116,6 +129,9 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
                         }
                         _productSelections.setProductSelections(_productsDataSource.products);
                         _productsDataSource.updateSelectedProducts(_productSelections);
+                        // ignore: use_build_context_synchronously
+                        _productsDataSource = ProductDataSource(context, _productsDataSource.products);
+                        showToast("UPDATED COMPLETED", purpleColor);
                       },
                     ),
                   ],

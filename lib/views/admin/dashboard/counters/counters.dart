@@ -47,20 +47,19 @@ class _CountersState extends State<Counters> {
             .map(
               (QueryDocumentSnapshot<Map<String, dynamic>> e) => <String, dynamic>{
                 "timestamp": e.get("timestamp"),
-                "quantity": e.get("quantity"),
-                "price": e.get("price"),
+                "price": e.get("newPrice") - e.get("realPrice"),
               },
             )
             .toList();
         for (final Map<String, dynamic> item in data) {
           if ((item["timestamp"].toDate() as DateTime).day == DateTime.now().day) {
-            _sells["day"]!["amount"] = _sells["day"]!["amount"]! + item["quantity"] * item["price"];
+            _sells["day"]!["amount"] = _sells["day"]!["amount"]! + item["price"];
           }
           if ((item["timestamp"].toDate() as DateTime).month == DateTime.now().month) {
-            _sells["month"]!["amount"] = _sells["month"]!["amount"]! + item["quantity"] * item["price"];
+            _sells["month"]!["amount"] = _sells["month"]!["amount"]! + item["price"];
           }
           if ((item["timestamp"].toDate() as DateTime).year == DateTime.now().year) {
-            _sells["year"]!["amount"] = _sells["year"]!["amount"]! + item["quantity"] * item["price"];
+            _sells["year"]!["amount"] = _sells["year"]!["amount"]! + item["price"];
           }
         }
         setState(() {});

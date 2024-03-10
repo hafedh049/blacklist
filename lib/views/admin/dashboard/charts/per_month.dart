@@ -1,5 +1,4 @@
 import 'package:blacklist/models/selled_product.dart';
-import 'package:blacklist/utils/callbacks.dart';
 import 'package:blacklist/utils/helpers/errored.dart';
 import 'package:blacklist/utils/helpers/loading.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -58,8 +57,7 @@ class _PerMonthState extends State<PerMonth> {
   }
 
   Widget _bottomTitles(double value, TitleMeta meta) {
-    showToast(value.toString(), redColor);
-    final Widget text = Text(_months.keys.elementAt(value.toInt() - 1).toString(), style: GoogleFonts.itim(color: whiteColor, fontWeight: FontWeight.bold, fontSize: 14));
+    final Widget text = value.toInt() % 2 == 0 ? Text(value.toInt().toString(), style: GoogleFonts.itim(color: whiteColor, fontWeight: FontWeight.bold, fontSize: 14)) : Container();
     return SideTitleWidget(axisSide: meta.axisSide, space: 16, child: text);
   }
 
@@ -67,7 +65,7 @@ class _PerMonthState extends State<PerMonth> {
   Widget build(BuildContext context) {
     return Container(
       height: 400,
-      width: 400,
+      width: 600,
       padding: const EdgeInsets.all(16),
       decoration: const BoxDecoration(color: darkColor),
       child: FutureBuilder<bool>(
@@ -80,7 +78,6 @@ class _PerMonthState extends State<PerMonth> {
                     builder: (BuildContext context, void Function(void Function()) _) {
                       return BarChart(
                         BarChartData(
-                          maxY: 100,
                           titlesData: FlTitlesData(
                             show: true,
                             rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
