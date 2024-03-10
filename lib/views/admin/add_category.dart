@@ -33,7 +33,7 @@ class _AddCategoryState extends State<AddCategory> {
     return AnimatedButton(
       width: 80,
       height: 30,
-      text: 'ADD',
+      text: 'AJOUTER',
       selectedTextColor: whiteColor,
       animatedOn: AnimatedOn.onHover,
       animationDuration: 500.ms,
@@ -52,7 +52,7 @@ class _AddCategoryState extends State<AddCategory> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  Text("Category Name", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
+                  Text("Categorie", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
                   const SizedBox(height: 10),
                   Container(
                     color: darkColor,
@@ -71,7 +71,7 @@ class _AddCategoryState extends State<AddCategory> {
                             contentPadding: const EdgeInsets.all(20),
                             focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
                             border: InputBorder.none,
-                            hintText: "Choose a category name",
+                            hintText: "Nom du catégorie",
                             hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
                             suffixIcon: _categoryName.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
                           ),
@@ -87,7 +87,7 @@ class _AddCategoryState extends State<AddCategory> {
                       AnimatedButton(
                         width: 80,
                         height: 30,
-                        text: 'ADD',
+                        text: 'AJOUTER',
                         selectedTextColor: whiteColor,
                         animatedOn: AnimatedOn.onHover,
                         animationDuration: 500.ms,
@@ -109,13 +109,13 @@ class _AddCategoryState extends State<AddCategory> {
 
                             await FirebaseFirestore.instance.collection("categories").add(categoryItem);
 
-                            showToast("New category has been added", greenColor);
+                            showToast("Nouvelle catégorie a été ajoutée", greenColor);
                             widget.categories.add(CategoryModel.fromJson(categoryItem));
                             // ignore: use_build_context_synchronously
                             Navigator.pop(context);
                             widget.setS(() {});
                           } else {
-                            showToast("Please enter a category name", redColor);
+                            showToast("Entrer le nom du categorie", redColor);
                           }
                         },
                       ),
@@ -123,7 +123,7 @@ class _AddCategoryState extends State<AddCategory> {
                       AnimatedButton(
                         width: 80,
                         height: 30,
-                        text: 'CANCEL',
+                        text: 'ANNULER',
                         selectedTextColor: whiteColor,
                         animatedOn: AnimatedOn.onHover,
                         animationDuration: 500.ms,

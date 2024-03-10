@@ -4,7 +4,6 @@ import 'package:blacklist/views/admin/edit_product.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:data_table_2/data_table_2.dart';
@@ -139,12 +138,12 @@ class ProductDataSource extends DataTableSource {
                               Navigator.pop(context);
                               showToast("Product has been deleted", greenColor);
                             },
-                            child: Text("CONFIRM", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
+                            child: Text("CONFIRMER", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
                           ),
                           const Spacer(),
                           TextButton(
                             onPressed: () => Navigator.pop(context),
-                            child: Text("CANCEL", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
+                            child: Text("ANNULER", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
                           ),
                         ],
                       ),
@@ -179,7 +178,3 @@ class ProductDataSource extends DataTableSource {
 }
 
 int _selectedCount = 0;
-
-_showSnackbar(BuildContext context, String text, [Color? color]) {
-  ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: color, duration: 1.seconds, content: Text(text)));
-}

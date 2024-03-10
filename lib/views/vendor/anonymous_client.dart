@@ -19,7 +19,7 @@ class _AnonymousClientState extends State<AnonymousClient> {
   void initState() {
     _items = <Map<String, dynamic>>[
       <String, dynamic>{
-        "title": "Anonymous",
+        "title": "Anonyme",
         "callback": () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => VendorTable(storeID: widget.storeID))),
       },
       <String, dynamic>{

@@ -9,7 +9,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:comment_tree/comment_tree.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_animated_button/flutter_animated_button.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -97,7 +96,7 @@ class _AfterQRScanState extends State<AfterQRScan> {
                           AnimatedButton(
                             width: 100,
                             height: 30,
-                            text: 'CART 🛒',
+                            text: 'PANIER 🛒',
                             selectedTextColor: whiteColor,
                             animatedOn: AnimatedOn.onHover,
                             animationDuration: 500.ms,
@@ -112,7 +111,7 @@ class _AfterQRScanState extends State<AfterQRScan> {
                           AnimatedButton(
                             width: 100,
                             height: 30,
-                            text: 'GIFT 🎁',
+                            text: 'CADEAU 🎁',
                             selectedTextColor: whiteColor,
                             animatedOn: AnimatedOn.onHover,
                             animationDuration: 500.ms,
@@ -127,7 +126,7 @@ class _AfterQRScanState extends State<AfterQRScan> {
                           AnimatedButton(
                             width: 100,
                             height: 30,
-                            text: 'HISTORY 📚',
+                            text: 'HISTORIQUE 📚',
                             selectedTextColor: whiteColor,
                             animatedOn: AnimatedOn.onHover,
                             animationDuration: 500.ms,
@@ -147,7 +146,7 @@ class _AfterQRScanState extends State<AfterQRScan> {
                       ? Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(color: purpleColor, borderRadius: BorderRadius.circular(5)),
-                          child: Text("NO SELLS YET", style: GoogleFonts.itim(fontSize: 16, color: whiteColor, fontWeight: FontWeight.w500)),
+                          child: Text("PAS DE VENTE", style: GoogleFonts.itim(fontSize: 16, color: whiteColor, fontWeight: FontWeight.w500)),
                         )
                       : SingleChildScrollView(
                           child: CommentTreeWidget<String, MapEntry<String, int>>(
@@ -180,7 +179,7 @@ class _AfterQRScanState extends State<AfterQRScan> {
                                   Container(
                                     padding: const EdgeInsets.all(4),
                                     decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: value.value != 1 && value.value % 8 == 1 ? greenColor : redColor),
-                                    child: Text(value.value != 1 && value.value % 8 == 1 ? "GIFT" : "NO GIFT", style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
+                                    child: Text(value.value != 1 && value.value % 8 == 1 ? "CADEAU" : "PAS DE CADEAU", style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
                                   ),
                                 ],
                               ),

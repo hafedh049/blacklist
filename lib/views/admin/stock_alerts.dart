@@ -63,7 +63,7 @@ class _StockAlertsState extends State<StockAlerts> {
                                           Container(
                                             padding: const EdgeInsets.all(4),
                                             decoration: BoxDecoration(color: purpleColor, borderRadius: BorderRadius.circular(5)),
-                                            child: Text("PRODUCT NAME", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
+                                            child: Text("NOM PRODUIT", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
                                           ),
                                           const SizedBox(width: 10),
                                           Text(_alerts[index].productName.toUpperCase(), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
@@ -76,7 +76,7 @@ class _StockAlertsState extends State<StockAlerts> {
                                           Container(
                                             padding: const EdgeInsets.all(4),
                                             decoration: BoxDecoration(color: purpleColor, borderRadius: BorderRadius.circular(5)),
-                                            child: Text("CATEGORY NAME", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
+                                            child: Text("NOM CATEGORIE", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
                                           ),
                                           const SizedBox(width: 10),
                                           Text(_alerts[index].productCategory.toUpperCase(), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
@@ -102,7 +102,7 @@ class _StockAlertsState extends State<StockAlerts> {
                                           Container(
                                             padding: const EdgeInsets.all(4),
                                             decoration: BoxDecoration(color: purpleColor, borderRadius: BorderRadius.circular(5)),
-                                            child: Text("PRODUCT QUANTITY", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
+                                            child: Text("QUANTITE", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
                                           ),
                                           const SizedBox(width: 10),
                                           Text(_alerts[index].productQuantity.toString(), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),

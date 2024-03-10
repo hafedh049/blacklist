@@ -46,11 +46,11 @@ class _EditProductState extends State<EditProduct> {
   }
 
   late final Map<String, Map<String, dynamic>> _productTemplate = <String, Map<String, dynamic>>{
-    "Product Name": <String, dynamic>{
+    "Nom Produit": <String, dynamic>{
       "controller": _productNameController,
       "type": "text",
       "required": true,
-      "hint": "Choose Name",
+      "hint": "Choisir Nom",
     },
     "Date": <String, dynamic>{
       "controller": _productDateController,
@@ -64,19 +64,19 @@ class _EditProductState extends State<EditProduct> {
       "required": false,
       "hint": "",
     },
-    "Base Price": <String, dynamic>{
+    "Coût": <String, dynamic>{
       "controller": _productOldPriceController,
       "type": "double",
       "required": true,
       "hint": "0.00 DT",
     },
-    "New Price": <String, dynamic>{
+    "Prix": <String, dynamic>{
       "controller": _productNewPriceController,
       "type": "double",
       "required": true,
       "hint": "0.00 DT",
     },
-    "Quantity": <String, dynamic>{
+    "Quantité": <String, dynamic>{
       "controller": _productQuantityController,
       "type": "number",
       "required": true,
@@ -114,7 +114,7 @@ class _EditProductState extends State<EditProduct> {
             children: <Widget>[
               Row(
                 children: <Widget>[
-                  Text("EDIT PRODUCT", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
+                  Text("EDITER PRODUIT", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
                   const Spacer(),
                 ],
               ),
@@ -180,7 +180,7 @@ class _EditProductState extends State<EditProduct> {
               AnimatedButton(
                 width: 150,
                 height: 40,
-                text: 'UPDATE',
+                text: 'METTRE A JOUR',
                 selectedTextColor: darkColor,
                 animatedOn: AnimatedOn.onHover,
                 animationDuration: 500.ms,

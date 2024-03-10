@@ -57,7 +57,7 @@ class _StoresListState extends State<StoresList> {
                 AnimatedButton(
                   width: 100,
                   height: 35,
-                  text: 'ADD STORE',
+                  text: 'AJOUTER STORE',
                   selectedTextColor: darkColor,
                   animatedOn: AnimatedOn.onHover,
                   animationDuration: 500.ms,
@@ -72,7 +72,7 @@ class _StoresListState extends State<StoresList> {
                 AnimatedButton(
                   width: 100,
                   height: 35,
-                  text: 'SIGN-OUT',
+                  text: 'QUITTER',
                   selectedTextColor: darkColor,
                   animatedOn: AnimatedOn.onHover,
                   animationDuration: 500.ms,
@@ -105,7 +105,7 @@ class _StoresListState extends State<StoresList> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
                                   LottieBuilder.asset("assets/lotties/empty.json"),
-                                  Text("No Stores Yet.", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
+                                  Text("Pas de stores.", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
                                 ],
                               )
                             : SingleChildScrollView(
@@ -143,7 +143,7 @@ class _StoresListState extends State<StoresList> {
                                                   const SizedBox(height: 10),
                                                   Row(
                                                     children: <Widget>[
-                                                      Text("Vendor", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
+                                                      Text("Vendeur", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
                                                       const SizedBox(width: 10),
                                                       Text(item.storeVendorName, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greenColor)),
                                                     ],
@@ -151,7 +151,7 @@ class _StoresListState extends State<StoresList> {
                                                   const SizedBox(height: 10),
                                                   Row(
                                                     children: <Widget>[
-                                                      Text("Total Products", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
+                                                      Text("Total Produits", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
                                                       const SizedBox(width: 10),
                                                       Text(item.storeTotalProducts.toString(), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: redColor)),
                                                     ],
@@ -159,24 +159,24 @@ class _StoresListState extends State<StoresList> {
                                                   const SizedBox(height: 10),
                                                   Row(
                                                     children: <Widget>[
-                                                      Text("State", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
+                                                      Text("Etat", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
                                                       const SizedBox(width: 10),
                                                       Container(
-                                                        decoration: BoxDecoration(color: item.storeState.toUpperCase() == "OPEN" ? greenColor : redColor, borderRadius: BorderRadius.circular(5)),
+                                                        decoration: BoxDecoration(color: item.storeState.toUpperCase() == "OUVERT" ? greenColor : redColor, borderRadius: BorderRadius.circular(5)),
                                                         padding: const EdgeInsets.all(4),
                                                         child: Text(item.storeState.toUpperCase(), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
                                                       ),
                                                     ],
                                                   ),
                                                   const SizedBox(height: 20),
-                                                  Text("Vendor Acess", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
+                                                  Text("Accés", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
                                                   const SizedBox(height: 10),
                                                   Row(
                                                     children: <Widget>[
                                                       AnimatedButton(
                                                         width: 100,
                                                         height: 40,
-                                                        text: 'OPEN',
+                                                        text: 'OUVRIR',
                                                         selectedTextColor: darkColor,
                                                         animatedOn: AnimatedOn.onHover,
                                                         animationDuration: 500.ms,
@@ -186,10 +186,10 @@ class _StoresListState extends State<StoresList> {
                                                         transitionType: TransitionType.TOP_TO_BOTTOM,
                                                         textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
                                                         onPress: () async {
-                                                          if (item.storeState != "open") {
-                                                            await _refs[item.storeID]!.update(<String, dynamic>{"storeState": "open"});
+                                                          if (item.storeState != "ouvert") {
+                                                            await _refs[item.storeID]!.update(<String, dynamic>{"storeState": "ouvert"});
                                                             showToast("Store opened", greenColor);
-                                                            _storesKey.currentState!.setState(() => item.storeState = "open");
+                                                            _storesKey.currentState!.setState(() => item.storeState = "ouvert");
                                                           } else {
                                                             showToast("Store is already open", redColor);
                                                           }
@@ -199,7 +199,7 @@ class _StoresListState extends State<StoresList> {
                                                       AnimatedButton(
                                                         width: 100,
                                                         height: 40,
-                                                        text: 'CLOSE',
+                                                        text: 'FERMER',
                                                         selectedTextColor: darkColor,
                                                         animatedOn: AnimatedOn.onHover,
                                                         animationDuration: 500.ms,
@@ -209,10 +209,10 @@ class _StoresListState extends State<StoresList> {
                                                         transitionType: TransitionType.TOP_TO_BOTTOM,
                                                         textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
                                                         onPress: () async {
-                                                          if (item.storeState != "closed") {
-                                                            await _refs[item.storeID]!.update(<String, dynamic>{"storeState": "closed"});
+                                                          if (item.storeState != "fermé") {
+                                                            await _refs[item.storeID]!.update(<String, dynamic>{"storeState": "fermé"});
                                                             showToast("Store closed", greenColor);
-                                                            _storesKey.currentState!.setState(() => item.storeState = "closed");
+                                                            _storesKey.currentState!.setState(() => item.storeState = "fermé");
                                                           } else {
                                                             showToast("Store is already closed", redColor);
                                                           }

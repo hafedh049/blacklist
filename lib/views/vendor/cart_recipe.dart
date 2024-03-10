@@ -19,11 +19,11 @@ class _CartRecepieState extends State<CartRecepie> {
   void initState() {
     _items = <Map<String, dynamic>>[
       <String, dynamic>{
-        "title": "Cart",
+        "title": "Panier",
         "callback": () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => AnonymousClient(storeID: widget.storeID))),
       },
       <String, dynamic>{
-        "title": "Recepie",
+        "title": "Recette",
         "callback": () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const Recepies())),
       },
     ];
@@ -42,7 +42,7 @@ class _CartRecepieState extends State<CartRecepie> {
           children: <Widget>[
             Row(
               children: <Widget>[
-                Text("Home", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
+                Text("ACCEUIL", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
                 const Spacer(),
               ],
             ),

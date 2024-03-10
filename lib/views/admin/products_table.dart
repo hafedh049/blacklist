@@ -30,7 +30,7 @@ class ProductTableState extends State<ProductTable> with RestorationMixin {
   final RestorableIntN _sortColumnIndex = RestorableIntN(null);
   late ProductDataSource _productsDataSource;
   bool _initialized = false;
-  final List<String> _columns = const <String>["Name", "Real Price", "New Price", "Quantity", "Stock Alert", "Reference", "Date", "Actions"];
+  final List<String> _columns = const <String>["Nom", "Coût", "Prix", "Quantité", "Stock Alert", "Reference", "Date", "Actions"];
   final GlobalKey<State> _pagerKey = GlobalKey<State>();
   final GlobalKey<State> _searchKey = GlobalKey<State>();
   final GlobalKey<State> _futureKey = GlobalKey<State>();
@@ -122,12 +122,12 @@ class ProductTableState extends State<ProductTable> with RestorationMixin {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    Text("Products", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
+                    Text("Produits", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
                     const SizedBox(height: 10),
                     AnimatedButton(
                       width: 150,
                       height: 40,
-                      text: 'ADD',
+                      text: 'AJOUTER',
                       selectedTextColor: darkColor,
                       animatedOn: AnimatedOn.onHover,
                       animationDuration: 500.ms,
@@ -177,7 +177,7 @@ class ProductTableState extends State<ProductTable> with RestorationMixin {
                   decoration: InputDecoration(
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: purpleColor)),
                     contentPadding: const EdgeInsets.all(16),
-                    hintText: "Search Products",
+                    hintText: "Recherche",
                     hintStyle: GoogleFonts.itim(fontSize: 16, color: whiteColor, fontWeight: FontWeight.w500),
                     prefixIcon: const Icon(Icons.search, color: purpleColor, size: 25),
                     suffixIcon: IconButton(onPressed: () => _searchController.clear(), icon: const Icon(FontAwesome.x_solid, size: 18, color: purpleColor)),

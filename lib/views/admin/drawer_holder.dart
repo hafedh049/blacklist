@@ -17,8 +17,8 @@ class DrawerHolder extends StatefulWidget {
 class _DrawerHolderState extends State<DrawerHolder> {
   late final List<Map<String, dynamic>> _screens = <Map<String, dynamic>>[
     <String, dynamic>{"screen": Dashboard(storeID: widget.storeID), "title": "Dashboard"},
-    <String, dynamic>{"screen": CategoryList(storeID: widget.storeID), "title": "Categories List"},
-    <String, dynamic>{"screen": StockAlerts(storeID: widget.storeID), "title": "Stock Alerts"},
+    <String, dynamic>{"screen": CategoryList(storeID: widget.storeID), "title": "List Categories"},
+    <String, dynamic>{"screen": StockAlerts(storeID: widget.storeID), "title": "Alerts Stock"},
     <String, dynamic>{"screen": ClientsList(storeID: widget.storeID), "title": "Clients"},
   ];
   @override

@@ -81,7 +81,7 @@ class _ClientsListState extends State<ClientsList> {
                                               Container(
                                                 padding: const EdgeInsets.all(4),
                                                 decoration: BoxDecoration(color: purpleColor, borderRadius: BorderRadius.circular(5)),
-                                                child: Text("CLIENT NAME", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
+                                                child: Text("NOM CLIENT", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
                                               ),
                                               const SizedBox(width: 10),
                                               Text(_clients[index].clientName.toUpperCase(), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
@@ -94,7 +94,7 @@ class _ClientsListState extends State<ClientsList> {
                                               Container(
                                                 padding: const EdgeInsets.all(4),
                                                 decoration: BoxDecoration(color: purpleColor, borderRadius: BorderRadius.circular(5)),
-                                                child: Text("CLIENT ID", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
+                                                child: Text("ID CLIENT", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
                                               ),
                                               const SizedBox(width: 10),
                                               Text(_clients[index].clientCIN.toUpperCase(), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
@@ -107,7 +107,7 @@ class _ClientsListState extends State<ClientsList> {
                                               Container(
                                                 padding: const EdgeInsets.all(4),
                                                 decoration: BoxDecoration(color: purpleColor, borderRadius: BorderRadius.circular(5)),
-                                                child: Text("CLIENT BIRTHDATE".toUpperCase(), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
+                                                child: Text("D.D.N CLIENT".toUpperCase(), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
                                               ),
                                               const SizedBox(width: 10),
                                               Expanded(child: Text(formatDate(_clients[index].clientBirthdate, const <String>[DD, " / ", MM, " / ", yyyy]).toUpperCase(), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor))),
@@ -120,7 +120,7 @@ class _ClientsListState extends State<ClientsList> {
                                               Container(
                                                 padding: const EdgeInsets.all(4),
                                                 decoration: BoxDecoration(color: purpleColor, borderRadius: BorderRadius.circular(5)),
-                                                child: Text("CLIENT PHONE", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
+                                                child: Text("TELEPHONE", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
                                               ),
                                               const SizedBox(width: 10),
                                               Text(_clients[index].clientPhone, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
@@ -133,14 +133,15 @@ class _ClientsListState extends State<ClientsList> {
                                               Container(
                                                 padding: const EdgeInsets.all(4),
                                                 decoration: BoxDecoration(color: purpleColor, borderRadius: BorderRadius.circular(5)),
-                                                child: Text("TOTAL PRODUCTS", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
+                                                child: Text("TOTAL PRODUITS", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
                                               ),
                                               const SizedBox(width: 10),
                                               FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                                                  future: FirebaseFirestore.instance.collection("sells").where("clientID", isEqualTo: _clients[index].clientCIN).get(),
-                                                  builder: (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
-                                                    return Text(snapshot.hasData ? snapshot.data!.docs.length.toString() : "Wait ...", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor));
-                                                  }),
+                                                future: FirebaseFirestore.instance.collection("sells").where("clientID", isEqualTo: _clients[index].clientCIN).get(),
+                                                builder: (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+                                                  return Text(snapshot.hasData ? snapshot.data!.docs.length.toString() : "Attend ...", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor));
+                                                },
+                                              ),
                                             ],
                                           ),
                                           const SizedBox(height: 10),

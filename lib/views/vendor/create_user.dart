@@ -28,32 +28,32 @@ class _CreateUserState extends State<CreateUser> {
   final TextEditingController _phoneController = TextEditingController();
 
   late final Map<String, Map<String, dynamic>> _productTemplate = <String, Map<String, dynamic>>{
-    "Full Name": <String, dynamic>{
+    "Nom": <String, dynamic>{
       "controller": _usernameController,
       "type": "text",
       "required": true,
-      "hint": "Enter the client name",
+      "hint": "Enter le nom du client",
       "key": GlobalKey<State>(),
     },
-    "Birth Date": <String, dynamic>{
+    "Date De Naissance": <String, dynamic>{
       "controller": _birthDateController,
       "type": "date",
       "required": true,
-      "hint": "Prompt the birthdate : ${formatDate(DateTime.now(), const <String>[yy, '-', mm, '-', d]).toUpperCase()}",
+      "hint": "Entrer le D.D.N : ${formatDate(DateTime.now(), const <String>[d, '-', mm, '-', yyyy]).toUpperCase()}",
       "key": GlobalKey<State>(),
     },
     "CIN": <String, dynamic>{
       "controller": _cinController,
       "type": "number",
       "required": true,
-      "hint": "CIN is required : ${List<String>.generate(8, (int index) => Random().nextInt(10).toString()).join()}",
+      "hint": "CIN est obigatoire : ${List<String>.generate(8, (int index) => Random().nextInt(10).toString()).join()}",
       "key": GlobalKey<State>(),
     },
-    "Phone Number": <String, dynamic>{
+    "Téléphone": <String, dynamic>{
       "controller": _phoneController,
       "type": "phone",
       "required": true,
-      "hint": "Phone number is required : (+216) ${List<String>.generate(2, (int index) => Random().nextInt(10).toString()).join()} ${List<String>.generate(3, (int index) => Random().nextInt(10).toString()).join()} ${List<String>.generate(3, (int index) => Random().nextInt(10).toString()).join()}",
+      "hint": "Champ obligatoire : (+216) ${List<String>.generate(2, (int index) => Random().nextInt(10).toString()).join()} ${List<String>.generate(3, (int index) => Random().nextInt(10).toString()).join()} ${List<String>.generate(3, (int index) => Random().nextInt(10).toString()).join()}",
       "key": GlobalKey<State>(),
     },
   };

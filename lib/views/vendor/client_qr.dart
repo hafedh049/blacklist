@@ -29,18 +29,18 @@ class _ClientState extends State<Client> {
   final List<String> _names = names;
 
   late final Map<String, Map<String, dynamic>> _productTemplate = <String, Map<String, dynamic>>{
-    "Full Name": <String, dynamic>{
+    "NOM": <String, dynamic>{
       "controller": _usernameController,
       "type": "text",
       "required": true,
-      "hint": "Enter the client name",
+      "hint": "Enter le nom du client",
       "key": GlobalKey<State>(),
     },
     "CIN": <String, dynamic>{
       "controller": _cinController,
       "type": "number",
       "required": true,
-      "hint": "CIN is required : ${List<String>.generate(8, (int index) => Random().nextInt(10).toString()).join()}",
+      "hint": "CIN est obligatoire : ${List<String>.generate(8, (int index) => Random().nextInt(10).toString()).join()}",
       "key": GlobalKey<State>(),
     },
   };
@@ -163,7 +163,7 @@ class _ClientState extends State<Client> {
                             AnimatedButton(
                               width: 150,
                               height: 40,
-                              text: 'NEXT',
+                              text: 'SUIVANT',
                               selectedTextColor: darkColor,
                               animatedOn: AnimatedOn.onHover,
                               animationDuration: 500.ms,

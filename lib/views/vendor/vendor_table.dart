@@ -25,7 +25,7 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
   final RestorableInt _rowsPerPage = RestorableInt(PaginatedDataTable.defaultRowsPerPage + 10);
   late ProductDataSource _productsDataSource;
   bool _initialized = false;
-  final List<String> _columns = const <String>["Name", "Quantity", "Date", "Reference", "Price"];
+  final List<String> _columns = const <String>["Nom", "Quantité", "Date", "Reference", "Prix"];
   final GlobalKey<State> _pagerKey = GlobalKey<State>();
   final GlobalKey<State> _searchKey = GlobalKey<State>();
   final TextEditingController _searchController = TextEditingController();
@@ -103,12 +103,12 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    Text("Products", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
+                    Text("Produits", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
                     const SizedBox(height: 10),
                     AnimatedButton(
                       width: 150,
                       height: 40,
-                      text: 'UPDATE',
+                      text: 'METTRE A JOUR',
                       selectedTextColor: darkColor,
                       animatedOn: AnimatedOn.onHover,
                       animationDuration: 500.ms,
@@ -172,7 +172,7 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
                   decoration: InputDecoration(
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: purpleColor)),
                     contentPadding: const EdgeInsets.all(16),
-                    hintText: "Search Products",
+                    hintText: "Recherche",
                     hintStyle: GoogleFonts.itim(fontSize: 16, color: whiteColor, fontWeight: FontWeight.w500),
                     prefixIcon: const Icon(Icons.search, color: purpleColor, size: 25),
                     suffixIcon: IconButton(

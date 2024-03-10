@@ -73,9 +73,9 @@ class _QRViewState extends State<QRView> {
                       padding: const EdgeInsets.all(16),
                       child: Row(
                         children: <Widget>[
-                          TextButton(onPressed: controller.takePictureAndDecode, child: Text(isLoading ? "Wait" : 'Snapshot')),
+                          TextButton(onPressed: controller.takePictureAndDecode, child: Text(isLoading ? "Attend" : 'Capturer')),
                           const Spacer(),
-                          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+                          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Quitter')),
                         ],
                       ),
                     ),
@@ -133,7 +133,7 @@ class _QRViewState extends State<QRView> {
                 ),
               ),
               const SizedBox(height: 20),
-              Text("Scan QR", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
+              Text("Scanner QR", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
             ],
           ),
         ),

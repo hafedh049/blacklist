@@ -36,7 +36,7 @@ class _ClientsProductsState extends State<ClientsProducts> {
                   future: FirebaseFirestore.instance.collection("sells").where("clientID", isEqualTo: widget.clientID).get(),
                   builder: (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
                     snapshot.data!.docs.map((QueryDocumentSnapshot<Map<String, dynamic>> e) => SelledProductModel.fromJson(e.data())).toList().forEach(
-                      (element) {
+                      (SelledProductModel element) {
                         if (_data.containsKey(element.productReference)) {
                           _data[element.productReference] = <String, dynamic>{
                             "quantity": 1,
@@ -81,7 +81,7 @@ class _ClientsProductsState extends State<ClientsProducts> {
                                 Container(
                                   padding: const EdgeInsets.all(4),
                                   decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: purpleColor),
-                                  child: Text("Product Name", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: whiteColor)),
+                                  child: Text("Nom Produit", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: whiteColor)),
                                 ),
                                 const SizedBox(width: 10),
                                 Text(data[index]["product_name"], style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: whiteColor)),
@@ -94,7 +94,7 @@ class _ClientsProductsState extends State<ClientsProducts> {
                                 Container(
                                   padding: const EdgeInsets.all(4),
                                   decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: purpleColor),
-                                  child: Text("Category", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: whiteColor)),
+                                  child: Text("Categorie", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: whiteColor)),
                                 ),
                                 const SizedBox(width: 10),
                                 Text(data[index]["product_category"], style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: whiteColor)),
@@ -107,7 +107,7 @@ class _ClientsProductsState extends State<ClientsProducts> {
                                 Container(
                                   padding: const EdgeInsets.all(4),
                                   decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: purpleColor),
-                                  child: Text("Quantity", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: whiteColor)),
+                                  child: Text("Quantité", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: whiteColor)),
                                 ),
                                 const SizedBox(width: 10),
                                 Text(data[index]["product_quantity"], style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: whiteColor)),
@@ -120,7 +120,7 @@ class _ClientsProductsState extends State<ClientsProducts> {
                                 Container(
                                   padding: const EdgeInsets.all(4),
                                   decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: purpleColor),
-                                  child: Text("Total Price", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: whiteColor)),
+                                  child: Text("Total", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: whiteColor)),
                                 ),
                                 const SizedBox(width: 10),
                                 Text((data[index]["price"] * data[index]["quantity"]).toStringAsFixed(2), style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: whiteColor)),

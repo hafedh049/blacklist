@@ -31,17 +31,17 @@ class _AddProductState extends State<AddProduct> {
   final TextEditingController _productStockAlertController = TextEditingController();
 
   late final Map<String, Map<String, dynamic>> _productTemplate = <String, Map<String, dynamic>>{
-    "Product Name": <String, dynamic>{
+    "Nom de Produit": <String, dynamic>{
       "controller": _productNameController,
       "type": "text",
       "required": true,
-      "hint": "Choose Name",
+      "hint": "Choisir un nom",
     },
     "Date": <String, dynamic>{
       "controller": _productDateController,
       "type": "date",
       "required": false,
-      "hint": formatDate(DateTime.now(), const <String>[yy, '-', M, '-', d, " ", HH, ':', nn, ':', ss]).toUpperCase(),
+      "hint": formatDate(DateTime.now(), const <String>[dd, '-', M, '-', yyyy, " ", HH, ':', nn, ':', ss]).toUpperCase(),
     },
     "Reference": <String, dynamic>{
       "controller": _productReferenceController,
@@ -49,19 +49,19 @@ class _AddProductState extends State<AddProduct> {
       "required": false,
       "hint": "",
     },
-    "Base Price": <String, dynamic>{
+    "Coût": <String, dynamic>{
       "controller": _productOldPriceController,
       "type": "double",
       "required": true,
       "hint": "0.00 DT",
     },
-    "New Price": <String, dynamic>{
+    "Prix": <String, dynamic>{
       "controller": _productNewPriceController,
       "type": "double",
       "required": true,
       "hint": "0.00 DT",
     },
-    "Quantity": <String, dynamic>{
+    "Quantité": <String, dynamic>{
       "controller": _productQuantityController,
       "type": "number",
       "required": true,
@@ -99,7 +99,7 @@ class _AddProductState extends State<AddProduct> {
             children: <Widget>[
               Row(
                 children: <Widget>[
-                  Text("ADD PRODUCT", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
+                  Text("AJOUTER PRODUIT", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
                   const Spacer(),
                 ],
               ),
@@ -165,7 +165,7 @@ class _AddProductState extends State<AddProduct> {
               AnimatedButton(
                 width: 150,
                 height: 40,
-                text: 'SUBMIT',
+                text: 'CONFIRMER',
                 selectedTextColor: darkColor,
                 animatedOn: AnimatedOn.onHover,
                 animationDuration: 500.ms,

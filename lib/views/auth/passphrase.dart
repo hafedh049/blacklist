@@ -108,7 +108,7 @@ class _PassphraseState extends State<Passphrase> {
                               Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
-                                  Text("AS VENDOR", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
+                                  Text("VENDEUR", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
                                   const SizedBox(width: 10),
                                   Radio(
                                     groupValue: _isVendor,
@@ -123,7 +123,7 @@ class _PassphraseState extends State<Passphrase> {
                               Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
-                                  Text("AS ADMIN", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
+                                  Text("ADMIN", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
                                   const SizedBox(width: 10),
                                   Radio(
                                     groupValue: _isVendor,
@@ -187,7 +187,7 @@ class _PassphraseState extends State<Passphrase> {
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
-                          Flexible(child: Text("Password", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor))),
+                          Flexible(child: Text("Mot de passe", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor))),
                           const SizedBox(width: 5),
                           Text("*", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: redColor)),
                         ],
@@ -229,7 +229,7 @@ class _PassphraseState extends State<Passphrase> {
                                 child: AnimatedButton(
                                   width: 150,
                                   height: 40,
-                                  text: _submitButtonState ? "WAIT..." : 'CONTINUE',
+                                  text: _submitButtonState ? "ATTEND..." : 'CONTINUER',
                                   selectedTextColor: darkColor,
                                   animatedOn: AnimatedOn.onHover,
                                   animationDuration: 500.ms,

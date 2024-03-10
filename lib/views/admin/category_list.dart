@@ -51,7 +51,7 @@ class _CategoryListState extends State<CategoryList> {
             const SizedBox(height: 30),
             Row(
               children: <Widget>[
-                Text("CATEGORIES LIST", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
+                Text("LISTE DU CATEGORIES", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
                 const Spacer(),
                 StatefulBuilder(
                   builder: (BuildContext context, void Function(void Function()) _) {
@@ -60,9 +60,9 @@ class _CategoryListState extends State<CategoryList> {
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
                               AnimatedButton(
-                                width: 150,
+                                width: 200,
                                 height: 30,
-                                text: _categories.map((CategoryModel e) => e.categoryState).toList().every((bool element) => element == true) ? "UNSELECT ALL" : 'SELECT ALL',
+                                text: _categories.map((CategoryModel e) => e.categoryState).toList().every((bool element) => element == true) ? "DESELECTIONNER TOUS" : 'SELECTIONNER TOUS',
                                 selectedTextColor: whiteColor,
                                 animatedOn: AnimatedOn.onHover,
                                 animationDuration: 500.ms,
@@ -89,7 +89,7 @@ class _CategoryListState extends State<CategoryList> {
                               AnimatedButton(
                                 width: 80,
                                 height: 30,
-                                text: 'APPLY',
+                                text: 'CONFIRMER',
                                 selectedTextColor: whiteColor,
                                 animatedOn: AnimatedOn.onHover,
                                 animationDuration: 500.ms,
@@ -123,7 +123,7 @@ class _CategoryListState extends State<CategoryList> {
                               AnimatedButton(
                                 width: 80,
                                 height: 30,
-                                text: 'DELETE',
+                                text: 'SUPPRIMER',
                                 selectedTextColor: whiteColor,
                                 animatedOn: AnimatedOn.onHover,
                                 animationDuration: 500.ms,
@@ -182,7 +182,7 @@ class _CategoryListState extends State<CategoryList> {
                                                     children: <Widget>[
                                                       Row(
                                                         children: <Widget>[
-                                                          Text("Category", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
+                                                          Text("Categorie", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
                                                           const SizedBox(width: 10),
                                                           Text(item.categoryName, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: blueColor)),
                                                         ],
@@ -190,7 +190,7 @@ class _CategoryListState extends State<CategoryList> {
                                                       const SizedBox(height: 10),
                                                       Row(
                                                         children: <Widget>[
-                                                          Text("Total Articles", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
+                                                          Text("Total D'articles", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
                                                           const SizedBox(width: 10),
                                                           Text(item.categoryArticlesCount.toString(), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greenColor)),
                                                         ],
@@ -198,7 +198,7 @@ class _CategoryListState extends State<CategoryList> {
                                                       const SizedBox(height: 10),
                                                       Row(
                                                         children: <Widget>[
-                                                          Text("Total Products", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
+                                                          Text("Total produits", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
                                                           const SizedBox(width: 10),
                                                           Text(item.categoryProductsCount.toString(), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
                                                         ],
@@ -224,7 +224,7 @@ class _CategoryListState extends State<CategoryList> {
                                                                     crossAxisAlignment: CrossAxisAlignment.start,
                                                                     mainAxisSize: MainAxisSize.min,
                                                                     children: <Widget>[
-                                                                      Text("Gift Vault", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
+                                                                      Text("Cadeau", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
                                                                       const SizedBox(height: 10),
                                                                       Container(
                                                                         color: darkColor,
@@ -247,7 +247,7 @@ class _CategoryListState extends State<CategoryList> {
                                                                                 contentPadding: const EdgeInsets.all(20),
                                                                                 focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
                                                                                 border: InputBorder.none,
-                                                                                hintText: "Enter the gift vault",
+                                                                                hintText: "Seille cadeau",
                                                                                 hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
                                                                                 suffixIcon: giftVault.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
                                                                               ),
@@ -263,7 +263,7 @@ class _CategoryListState extends State<CategoryList> {
                                                                           AnimatedButton(
                                                                             width: 80,
                                                                             height: 30,
-                                                                            text: 'CONFIRM',
+                                                                            text: 'CONFIRMER',
                                                                             selectedTextColor: whiteColor,
                                                                             animatedOn: AnimatedOn.onHover,
                                                                             animationDuration: 500.ms,
@@ -280,7 +280,7 @@ class _CategoryListState extends State<CategoryList> {
                                                                           AnimatedButton(
                                                                             width: 80,
                                                                             height: 30,
-                                                                            text: 'CANCEL',
+                                                                            text: 'ANNULER',
                                                                             selectedTextColor: whiteColor,
                                                                             animatedOn: AnimatedOn.onHover,
                                                                             animationDuration: 500.ms,

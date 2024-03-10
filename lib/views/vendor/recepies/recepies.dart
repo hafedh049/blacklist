@@ -45,7 +45,7 @@ class _RecepiesState extends State<Recepies> {
           children: <Widget>[
             Row(
               children: <Widget>[
-                Text("RECIPIES", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
+                Text("RECETTES", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
                 const Spacer(),
               ],
             ),

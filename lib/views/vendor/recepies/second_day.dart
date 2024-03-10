@@ -127,7 +127,7 @@ class _SecondDayState extends State<SecondDay> {
                               Container(
                                 padding: const EdgeInsets.all(4),
                                 decoration: BoxDecoration(color: blueColor, borderRadius: BorderRadius.circular(5)),
-                                child: Text("CATEGORY", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
+                                child: Text("CATEGORIE", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
                               ),
                               const SizedBox(width: 10),
                               Text(_recepies[index]["productCategory"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
@@ -140,7 +140,7 @@ class _SecondDayState extends State<SecondDay> {
                               Container(
                                 padding: const EdgeInsets.all(4),
                                 decoration: BoxDecoration(color: blueColor, borderRadius: BorderRadius.circular(5)),
-                                child: Text("PRODUCT NAME", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
+                                child: Text("NOM PRODUIT", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
                               ),
                               const SizedBox(width: 10),
                               Text(_recepies[index]["productName"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
@@ -153,7 +153,7 @@ class _SecondDayState extends State<SecondDay> {
                               Container(
                                 padding: const EdgeInsets.all(4),
                                 decoration: BoxDecoration(color: blueColor, borderRadius: BorderRadius.circular(5)),
-                                child: Text("PRICE", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
+                                child: Text("PRIX", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
                               ),
                               const SizedBox(width: 10),
                               Text(_recepies[index]["productPrice"].toStringAsFixed(2), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
