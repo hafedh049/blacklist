@@ -49,7 +49,7 @@ class _PerYearState extends State<PerYear> {
     } else {
       return Container();
     }
-    return SideTitleWidget(axisSide: meta.axisSide, space: 0, child: Text(text, style: style));
+    return SideTitleWidget(axisSide: meta.axisSide, space: 16, child: Text(text, style: style));
   }
 
   Widget _bottomTitleWidgets(double value, TitleMeta meta) {
@@ -57,7 +57,7 @@ class _PerYearState extends State<PerYear> {
 
     Widget text;
 
-    text = Text(value.toInt() % 2 == 0 ? _months[value.toInt()]! : "", style: style);
+    text = value.toInt() % 2 == 0 ? Text(_months[value.toInt()]!, style: style) : Container();
 
     return SideTitleWidget(axisSide: meta.axisSide, space: 0, child: text);
   }
@@ -73,7 +73,7 @@ class _PerYearState extends State<PerYear> {
         future: _load(),
         builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
           if (snapshot.hasData) {
-            return !_mappedData.values.every((double element) => element == 0.0)
+            return _mappedData.values.every((double element) => element == 0.0)
                 ? Center(child: Text("NOT YET.", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: whiteColor)))
                 : StatefulBuilder(
                     builder: (BuildContext context, void Function(void Function()) _) {
@@ -95,11 +95,10 @@ class _PerYearState extends State<PerYear> {
                             leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: true, interval: 1, getTitlesWidget: _leftTitleWidgets)),
                           ),
                           borderData: FlBorderData(show: false),
-                          maxY: 10,
                           lineBarsData: <LineChartBarData>[
                             LineChartBarData(
                               spots: _mappedData.entries.map((MapEntry<int, double> e) => FlSpot(e.key.toDouble(), e.value)).toList(),
-                              isCurved: true,
+                              isCurved: false,
                               gradient: LinearGradient(colors: <Color>[whiteColor.withOpacity(.3), purpleColor.withOpacity(.6)]),
                               barWidth: 5,
                               isStrokeCapRound: true,

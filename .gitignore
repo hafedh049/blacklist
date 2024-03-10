@@ -12,6 +12,7 @@ pubspec.lock
 doc/api/
 windows/
 web/
+android/
 auto_commit.py
 test.py
 lib/utils/callbacks.dart

@@ -4,9 +4,10 @@ class ClientModel {
   String clientCIN;
   DateTime clientBirthdate;
   String clientPhone;
+  String clientQrCode;
 
-  // Constructor
   ClientModel({
+    required this.clientQrCode,
     required this.storesID,
     required this.clientName,
     required this.clientCIN,
@@ -14,9 +15,9 @@ class ClientModel {
     required this.clientPhone,
   });
 
-  // Method to deserialize JSON
   factory ClientModel.fromJson(Map<String, dynamic> json) {
     return ClientModel(
+      clientQrCode: json['clientQrCode'],
       storesID: List<String>.from(json['storesID']),
       clientName: json['clientName'],
       clientCIN: json['clientCIN'],
@@ -25,9 +26,9 @@ class ClientModel {
     );
   }
 
-  // Method to serialize to JSON
   Map<String, dynamic> toJson() {
-    return {
+    return <String, dynamic>{
+      'clientQrCode': clientQrCode,
       'storesID': storesID,
       'clientName': clientName,
       'clientCIN': clientCIN,

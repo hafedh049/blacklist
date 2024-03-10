@@ -38,7 +38,7 @@ class _CartRecepieState extends State<CartRecepie> {
         padding: const EdgeInsets.all(24),
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Row(
               children: <Widget>[
@@ -47,33 +47,35 @@ class _CartRecepieState extends State<CartRecepie> {
               ],
             ),
             Container(width: MediaQuery.sizeOf(context).width, height: .3, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),
-            Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  for (final Map<String, dynamic> item in _items) ...<Widget>[
-                    InkWell(
-                      onTap: item["callback"],
-                      hoverColor: transparentColor,
-                      splashColor: transparentColor,
-                      highlightColor: transparentColor,
-                      child: AnimatedLoadingBorder(
-                        borderWidth: 4,
-                        borderColor: purpleColor,
-                        child: Container(
-                          width: 200,
-                          height: 150,
-                          padding: const EdgeInsets.all(24),
-                          decoration: const BoxDecoration(color: darkColor),
-                          alignment: Alignment.center,
-                          child: Text(item["title"], style: GoogleFonts.itim(fontSize: 35, fontWeight: FontWeight.w500, color: whiteColor)),
+            Expanded(
+              child: Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    for (final Map<String, dynamic> item in _items) ...<Widget>[
+                      InkWell(
+                        onTap: item["callback"],
+                        hoverColor: transparentColor,
+                        splashColor: transparentColor,
+                        highlightColor: transparentColor,
+                        child: AnimatedLoadingBorder(
+                          borderWidth: 4,
+                          borderColor: purpleColor,
+                          child: Container(
+                            width: 200,
+                            height: 150,
+                            padding: const EdgeInsets.all(24),
+                            decoration: const BoxDecoration(color: darkColor),
+                            alignment: Alignment.center,
+                            child: Text(item["title"], style: GoogleFonts.itim(fontSize: 35, fontWeight: FontWeight.w500, color: whiteColor)),
+                          ),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 20),
+                      const SizedBox(height: 20),
+                    ],
                   ],
-                ],
+                ),
               ),
             )
           ],

@@ -173,7 +173,6 @@ class ProductDataSource extends DataTableSource {
           notifyListeners();
         }
       },
-      onTap: hasRowTaps ? () => _showSnackbar(context, 'Tapped on row ${product.productName}') : null,
       cells: <DataCell>[
         DataCell(Text(product.productName)),
         DataCell(Text(product.productCategory)),
