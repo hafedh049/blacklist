@@ -3,11 +3,14 @@ import 'dart:math';
 
 import 'package:animated_loading_border/animated_loading_border.dart';
 import 'package:blacklist/utils/callbacks.dart';
+import 'package:blacklist/views/vendor/create_user.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
+import 'package:qr_code_dart_scan/qr_code_dart_scan.dart';
 
 import '../../utils/shared.dart';
 import 'after_qr_scan.dart';
@@ -44,12 +47,57 @@ class _QRViewState extends State<QRView> {
       hoverColor: transparentColor,
       highlightColor: transparentColor,
       splashColor: transparentColor,
-      onTap: () {
+      onTap: () async {
         if (kIsWeb) {
           showToast("THIS FEATURE IS AVAILABLE ONLY ON ANDROID", redColor);
         } else {
-          //SCAN THE QR
-          Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => AfterQRScan(storeID: widget.storeID)));
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) => QRCodeDartScanView(
+                scanInvertedQRCode: true,
+                typeScan: TypeScan.takePicture,
+                takePictureButtonBuilder: (BuildContext context, QRCodeDartScanController controller, bool isLoading) {
+                  return Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      height: 80,
+                      decoration: const BoxDecoration(
+                        color: darkColor,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(15),
+                          topRight: Radius.circular(15),
+                        ),
+                      ),
+                      padding: const EdgeInsets.all(16),
+                      child: Row(
+                        children: <Widget>[
+                          TextButton(onPressed: controller.takePictureAndDecode, child: Text(isLoading ? "Wait" : 'Snapshot')),
+                          const Spacer(),
+                          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+                resolutionPreset: QRCodeDartScanResolutionPreset.medium,
+                formats: const <BarcodeFormat>[BarcodeFormat.qrCode],
+                onCapture: (Result result) async {
+                  await FirebaseFirestore.instance.collection('clients').where("clientQrCode", isEqualTo: result.text).limit(1).get().then(
+                    (QuerySnapshot<Map<String, dynamic>> value) {
+                      if (value.docs.isNotEmpty) {
+                        showToast("USER EXISTS", greenColor);
+                        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => AfterQRScan(storeID: widget.storeID, qrCode: result.text)));
+                      } else {
+                        showToast("NO USER WITH THIS QR CODE", redColor);
+                        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => CreateUser(storeID: widget.storeID, qrCode: result.text)));
+                      }
+                    },
+                  );
+                },
+              ),
+            ),
+          ); //AfterQRScan(storeID: widget.storeID)
         }
       },
       child: AnimatedLoadingBorder(

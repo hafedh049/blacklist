@@ -101,22 +101,18 @@ class _PassphraseState extends State<Passphrase> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
+                      Text("WELCOME", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
+                      const SizedBox(height: 10),
                       Row(
+                        mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
-                          Text("WELCOME", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
-                          const Spacer(),
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              Text("AS VENDOR", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
-                              const SizedBox(width: 10),
-                              StatefulBuilder(
-                                builder: (BuildContext context, void Function(void Function()) _) {
-                                  return Checkbox(value: _isVendor, onChanged: (bool? value) => _(() => _isVendor = value!));
-                                },
-                              )
-                            ],
-                          ),
+                          Text("AS VENDOR", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
+                          const SizedBox(width: 10),
+                          StatefulBuilder(
+                            builder: (BuildContext context, void Function(void Function()) _) {
+                              return Checkbox(value: _isVendor, onChanged: (bool? value) => _(() => _isVendor = value!));
+                            },
+                          )
                         ],
                       ),
                       Container(width: MediaQuery.sizeOf(context).width, height: .3, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),

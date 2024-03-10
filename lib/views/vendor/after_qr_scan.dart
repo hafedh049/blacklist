@@ -11,8 +11,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
 
 class AfterQRScan extends StatefulWidget {
-  const AfterQRScan({super.key, required this.storeID});
+  const AfterQRScan({super.key, required this.storeID, required this.qrCode});
   final String storeID;
+  final String qrCode;
   @override
   State<AfterQRScan> createState() => _AfterQRScanState();
 }
