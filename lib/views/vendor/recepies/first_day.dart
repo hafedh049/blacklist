@@ -5,6 +5,7 @@ import 'package:blacklist/utils/helpers/loading.dart';
 import 'package:blacklist/utils/shared.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class FirstDay extends StatefulWidget {
@@ -26,17 +27,29 @@ class _FirstDayState extends State<FirstDay> {
 
     for (final QueryDocumentSnapshot<Map<String, dynamic>> item in data.docs) {
       final SelledProductModel product = SelledProductModel.fromJson(item.data());
-      final QuerySnapshot<Map<String, dynamic>> clientQuery = await FirebaseFirestore.instance.collection("clients").where("clientCIN", isEqualTo: product.clientID).limit(1).get();
-      final ClientModel client = ClientModel.fromJson(clientQuery.docs.first.data());
-      firstDayData.add(
-        <String, dynamic>{
-          "clientName": client.clientName,
-          "clientCIN": client.clientCIN,
-          "productName": product.productName,
-          "productCategory": product.productCategory,
-          "productPrice": product.newPrice,
-        },
-      );
+      if (product.clientID == "ANONYMOUS") {
+        firstDayData.add(
+          <String, dynamic>{
+            "clientName": "ANONYMOUS",
+            "clientCIN": "ANONYMOUS",
+            "productName": product.productName,
+            "productCategory": product.productCategory,
+            "productPrice": product.newPrice,
+          },
+        );
+      } else {
+        final QuerySnapshot<Map<String, dynamic>> clientQuery = await FirebaseFirestore.instance.collection("clients").where("clientCIN", isEqualTo: product.clientID).limit(1).get();
+        final ClientModel client = ClientModel.fromJson(clientQuery.docs.first.data());
+        firstDayData.add(
+          <String, dynamic>{
+            "clientName": client.clientName,
+            "clientCIN": client.clientCIN,
+            "productName": product.productName,
+            "productCategory": product.productCategory,
+            "productPrice": product.newPrice,
+          },
+        );
+      }
     }
 
     return firstDayData;
@@ -68,6 +81,7 @@ class _FirstDayState extends State<FirstDay> {
               builder: (BuildContext context, AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
                 if (snapshot.hasData) {
                   _recepies = snapshot.data!;
+                  Future.delayed(100.ms, () => _totalKey.currentState!.setState(() {}));
                   return ListView.separated(
                     itemBuilder: (BuildContext context, int index) => Container(
                       padding: const EdgeInsets.all(24),
@@ -81,7 +95,7 @@ class _FirstDayState extends State<FirstDay> {
                             children: <Widget>[
                               Container(
                                 padding: const EdgeInsets.all(4),
-                                decoration: BoxDecoration(color: _recepies[index]["clientName"] == "Anonymous" ? redColor : greenColor, borderRadius: BorderRadius.circular(5)),
+                                decoration: BoxDecoration(color: _recepies[index]["clientName"] == "ANONYMOUS" ? redColor : greenColor, borderRadius: BorderRadius.circular(5)),
                                 child: Text("Client", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
                               ),
                               const SizedBox(width: 10),
@@ -138,7 +152,7 @@ class _FirstDayState extends State<FirstDay> {
                                 child: Text("CIN", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
                               ),
                               const SizedBox(width: 10),
-                              Text(_recepies[index]["productPrice"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
+                              Text(_recepies[index]["productPrice"].toStringAsFixed(2), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
                             ],
                           ),
                         ],

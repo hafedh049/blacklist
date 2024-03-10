@@ -1,31 +1,51 @@
-import 'dart:math';
-
+import 'package:blacklist/models/client_model.dart';
+import 'package:blacklist/models/selled_product.dart';
+import 'package:blacklist/utils/helpers/errored.dart';
+import 'package:blacklist/utils/helpers/loading.dart';
 import 'package:blacklist/utils/shared.dart';
 import 'package:blacklist/views/vendor/products_history.dart';
 import 'package:blacklist/views/vendor/vendor_table.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:comment_tree/comment_tree.dart';
+import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_animated_button/flutter_animated_button.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
 
 class AfterQRScan extends StatefulWidget {
-  const AfterQRScan({super.key, required this.storeID, required this.qrCode});
+  const AfterQRScan({super.key, required this.storeID, required this.client});
   final String storeID;
-  final String qrCode;
+  final ClientModel client;
   @override
   State<AfterQRScan> createState() => _AfterQRScanState();
 }
 
 class _AfterQRScanState extends State<AfterQRScan> {
-  final List<Map<String, dynamic>> _categories = <Map<String, dynamic>>[
-    for (int index = 0; index < 10; index += 1)
-      <String, dynamic>{
-        "category": "Category ${index + 1}",
-        "total_buys": Random().nextInt(1000),
-      },
-  ];
+  List<SelledProductModel> _products = <SelledProductModel>[];
+  final Map<String, int> _categories = <String, int>{};
+
+  Future<Map<String, int>> _loadCategories() async {
+    final QuerySnapshot<Map<String, dynamic>> querySnap = await FirebaseFirestore.instance.collection("sells").where("clientID", isEqualTo: widget.client.clientCIN).get();
+    _products = querySnap.docs
+        .where(
+          (QueryDocumentSnapshot<Map<String, dynamic>> element) => element.get("storesID").contains(widget.storeID),
+        )
+        .map(
+          (QueryDocumentSnapshot<Map<String, dynamic>> e) => SelledProductModel.fromJson(e.data()),
+        )
+        .toList();
+    for (final SelledProductModel product in _products) {
+      if (_categories.containsKey(product.productCategory)) {
+        _categories[product.productCategory] = _categories[product.productCategory]! + 1;
+      } else {
+        _categories[product.productCategory] = 0;
+      }
+    }
+    return _categories;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,128 +53,145 @@ class _AfterQRScanState extends State<AfterQRScan> {
       backgroundColor: scaffoldColor,
       body: Padding(
         padding: const EdgeInsets.all(24),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Row(
+        child: FutureBuilder<Map<String, int>>(
+          future: _loadCategories(),
+          builder: (BuildContext context, AsyncSnapshot<Map<String, int>> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Loading();
+            } else if (snapshot.hasError) {
+              return Errored(error: snapshot.error.toString());
+            } else {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  Row(
                     children: <Widget>[
-                      Container(
-                        padding: const EdgeInsets.all(5),
-                        decoration: BoxDecoration(color: purpleColor, borderRadius: BorderRadius.circular(5)),
-                        child: Text("Foulen Fouleni", style: GoogleFonts.itim(fontSize: 16, color: whiteColor, fontWeight: FontWeight.w500)),
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(color: purpleColor, borderRadius: BorderRadius.circular(5)),
+                            child: Text(widget.client.clientName, style: GoogleFonts.itim(fontSize: 16, color: whiteColor, fontWeight: FontWeight.w500)),
+                          ),
+                          const SizedBox(height: 10),
+                          Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(color: purpleColor, borderRadius: BorderRadius.circular(5)),
+                            child: Text(widget.client.clientCIN, style: GoogleFonts.itim(fontSize: 16, color: whiteColor, fontWeight: FontWeight.w500)),
+                          ),
+                          const SizedBox(height: 10),
+                          Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(color: purpleColor, borderRadius: BorderRadius.circular(5)),
+                            child: Text(formatDate(widget.client.clientBirthdate, const <String>[dd, "/", mm, "/", yyyy]), style: GoogleFonts.itim(fontSize: 16, color: whiteColor, fontWeight: FontWeight.w500)),
+                          ),
+                        ],
                       ),
-                      const SizedBox(height: 10),
-                      Container(
-                        padding: const EdgeInsets.all(5),
-                        decoration: BoxDecoration(color: purpleColor, borderRadius: BorderRadius.circular(5)),
-                        child: Text("11643672", style: GoogleFonts.itim(fontSize: 16, color: whiteColor, fontWeight: FontWeight.w500)),
-                      ),
-                      const SizedBox(height: 10),
-                      Container(
-                        padding: const EdgeInsets.all(5),
-                        decoration: BoxDecoration(color: purpleColor, borderRadius: BorderRadius.circular(5)),
-                        child: Text("23/60/2001", style: GoogleFonts.itim(fontSize: 16, color: whiteColor, fontWeight: FontWeight.w500)),
+                      const Spacer(),
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          AnimatedButton(
+                            width: 100,
+                            height: 30,
+                            text: 'CART 🛒',
+                            selectedTextColor: whiteColor,
+                            animatedOn: AnimatedOn.onHover,
+                            animationDuration: 500.ms,
+                            isReverse: true,
+                            selectedBackgroundColor: darkColor,
+                            backgroundColor: greenColor,
+                            transitionType: TransitionType.TOP_TO_BOTTOM,
+                            textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                            onPress: () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => VendorTable(storeID: widget.storeID))),
+                          ),
+                          const SizedBox(height: 10),
+                          AnimatedButton(
+                            width: 100,
+                            height: 30,
+                            text: 'GIFT 🎁',
+                            selectedTextColor: whiteColor,
+                            animatedOn: AnimatedOn.onHover,
+                            animationDuration: 500.ms,
+                            isReverse: true,
+                            selectedBackgroundColor: darkColor,
+                            backgroundColor: greenColor,
+                            transitionType: TransitionType.TOP_TO_BOTTOM,
+                            textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                            onPress: () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => VendorTable(storeID: widget.storeID))),
+                          ),
+                          const SizedBox(height: 10),
+                          AnimatedButton(
+                            width: 100,
+                            height: 30,
+                            text: 'HISTORY 📚',
+                            selectedTextColor: whiteColor,
+                            animatedOn: AnimatedOn.onHover,
+                            animationDuration: 500.ms,
+                            isReverse: true,
+                            selectedBackgroundColor: darkColor,
+                            backgroundColor: greenColor,
+                            transitionType: TransitionType.TOP_TO_BOTTOM,
+                            textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                            onPress: () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => ProductsHistory(products: _products))),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                  const Spacer(),
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      AnimatedButton(
-                        width: 100,
-                        height: 30,
-                        text: 'CART 🛒',
-                        selectedTextColor: whiteColor,
-                        animatedOn: AnimatedOn.onHover,
-                        animationDuration: 500.ms,
-                        isReverse: true,
-                        selectedBackgroundColor: darkColor,
-                        backgroundColor: greenColor,
-                        transitionType: TransitionType.TOP_TO_BOTTOM,
-                        textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                        onPress: () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => VendorTable(storeID: widget.storeID))),
-                      ),
-                      const SizedBox(height: 10),
-                      AnimatedButton(
-                        width: 100,
-                        height: 30,
-                        text: 'GIFT 🎁',
-                        selectedTextColor: whiteColor,
-                        animatedOn: AnimatedOn.onHover,
-                        animationDuration: 500.ms,
-                        isReverse: true,
-                        selectedBackgroundColor: darkColor,
-                        backgroundColor: greenColor,
-                        transitionType: TransitionType.TOP_TO_BOTTOM,
-                        textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                        onPress: () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => VendorTable(storeID: widget.storeID))),
-                      ),
-                      const SizedBox(height: 10),
-                      AnimatedButton(
-                        width: 100,
-                        height: 30,
-                        text: 'HISTORY 📚',
-                        selectedTextColor: whiteColor,
-                        animatedOn: AnimatedOn.onHover,
-                        animationDuration: 500.ms,
-                        isReverse: true,
-                        selectedBackgroundColor: darkColor,
-                        backgroundColor: greenColor,
-                        transitionType: TransitionType.TOP_TO_BOTTOM,
-                        textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                        onPress: () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const ProductsHistory())),
-                      ),
-                    ],
-                  ),
+                  const SizedBox(height: 20),
+                  _categories.isEmpty
+                      ? Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(color: purpleColor, borderRadius: BorderRadius.circular(5)),
+                          child: Text("NOT SELLS YET", style: GoogleFonts.itim(fontSize: 16, color: whiteColor, fontWeight: FontWeight.w500)),
+                        )
+                      : SingleChildScrollView(
+                          child: CommentTreeWidget<String, MapEntry<String, int>>(
+                            "Categories",
+                            _categories.entries.toList(),
+                            avatarRoot: (BuildContext context, String _) => const PreferredSize(preferredSize: Size.fromRadius(15), child: Icon(FontAwesome.c_solid, size: 25, color: purpleColor)),
+                            contentRoot: (BuildContext context, String value) => Container(
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: darkColor),
+                              child: Text(value, style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
+                            ),
+                            avatarChild: (BuildContext context, MapEntry<String, int> value) => PreferredSize(
+                              preferredSize: const Size.fromRadius(15),
+                              child: CircleAvatar(
+                                backgroundColor: purpleColor,
+                                child: Text((_categories.keys.toList().indexOf(value.key)).toString(), style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
+                              ),
+                            ),
+                            contentChild: (BuildContext context, MapEntry<String, int> value) => Container(
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: darkColor),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Text(value.key, style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
+                                  const SizedBox(height: 10),
+                                  Text(value.value.toString(), style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
+                                  const SizedBox(height: 10),
+                                  Container(
+                                    padding: const EdgeInsets.all(4),
+                                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: value.value != 1 && value.value % 8 == 1 ? greenColor : redColor),
+                                    child: Text(value.value != 1 && value.value % 8 == 1 ? "GIFT" : "NO GIFT", style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            treeThemeData: const TreeThemeData(lineColor: purpleColor, lineWidth: 2),
+                          ),
+                        ),
                 ],
-              ),
-              const SizedBox(height: 20),
-              CommentTreeWidget<String, Map<String, dynamic>>(
-                "Categories",
-                _categories,
-                avatarRoot: (BuildContext context, String _) => const PreferredSize(preferredSize: Size.fromRadius(15), child: Icon(FontAwesome.c_solid, size: 25, color: purpleColor)),
-                contentRoot: (BuildContext context, String value) => Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: darkColor),
-                  child: Text(value, style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
-                ),
-                avatarChild: (BuildContext context, Map<String, dynamic> value) => PreferredSize(
-                  preferredSize: const Size.fromRadius(15),
-                  child: CircleAvatar(
-                    backgroundColor: purpleColor,
-                    child: Text((_categories.indexOf(value) + 1).toString(), style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
-                  ),
-                ),
-                contentChild: (BuildContext context, Map<String, dynamic> value) => Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: darkColor),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Text(value["category"], style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
-                      const SizedBox(height: 10),
-                      Text(value["total_buys"].toString(), style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
-                      const SizedBox(height: 10),
-                      Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: value["total_buys"] != 1 && value["total_buys"] % 8 == 1 ? greenColor : redColor),
-                        child: Text(value["total_buys"] != 1 && value["total_buys"] % 8 == 1 ? "GIFT" : "NO GIFT", style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
-                      ),
-                    ],
-                  ),
-                ),
-                treeThemeData: const TreeThemeData(lineColor: purpleColor, lineWidth: 2),
-              ),
-            ],
-          ),
+              );
+            }
+          },
         ),
       ),
     );

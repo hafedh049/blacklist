@@ -1,13 +1,14 @@
 import 'dart:math';
 
+import 'package:blacklist/models/selled_product.dart';
 import 'package:blacklist/utils/shared.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ProductsHistory extends StatefulWidget {
-  const ProductsHistory({super.key});
-
+  const ProductsHistory({super.key, required this.products});
+  final List<SelledProductModel> products;
   @override
   State<ProductsHistory> createState() => _ProductsHistoryState();
 }

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:animated_loading_border/animated_loading_border.dart';
+import 'package:blacklist/models/client_model.dart';
 import 'package:blacklist/utils/callbacks.dart';
 import 'package:blacklist/views/vendor/create_user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -87,7 +88,7 @@ class _QRViewState extends State<QRView> {
                     (QuerySnapshot<Map<String, dynamic>> value) {
                       if (value.docs.isNotEmpty) {
                         showToast("USER EXISTS", greenColor);
-                        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => AfterQRScan(storeID: widget.storeID, qrCode: result.text)));
+                        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => AfterQRScan(storeID: widget.storeID, client: ClientModel.fromJson(value.docs.first.data()))));
                       } else {
                         showToast("NO USER WITH THIS QR CODE", redColor);
                         Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => CreateUser(storeID: widget.storeID, qrCode: result.text)));

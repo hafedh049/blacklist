@@ -1,6 +1,7 @@
 import 'package:blacklist/utils/shared.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../models/client_model.dart';
@@ -31,17 +32,29 @@ class _SecondDayState extends State<SecondDay> {
       ),
     )) {
       final SelledProductModel product = SelledProductModel.fromJson(item.data());
-      final QuerySnapshot<Map<String, dynamic>> clientQuery = await FirebaseFirestore.instance.collection("clients").where("clientCIN", isEqualTo: product.clientID).limit(1).get();
-      final ClientModel client = ClientModel.fromJson(clientQuery.docs.first.data());
-      firstDayData.add(
-        <String, dynamic>{
-          "clientName": client.clientName,
-          "clientCIN": client.clientCIN,
-          "productName": product.productName,
-          "productCategory": product.productCategory,
-          "productPrice": product.newPrice,
-        },
-      );
+      if (product.clientID == "ANONYMOUS") {
+        firstDayData.add(
+          <String, dynamic>{
+            "clientName": "ANONYMOUS",
+            "clientCIN": "ANONYMOUS",
+            "productName": product.productName,
+            "productCategory": product.productCategory,
+            "productPrice": product.newPrice,
+          },
+        );
+      } else {
+        final QuerySnapshot<Map<String, dynamic>> clientQuery = await FirebaseFirestore.instance.collection("clients").where("clientCIN", isEqualTo: product.clientID).limit(1).get();
+        final ClientModel client = ClientModel.fromJson(clientQuery.docs.first.data());
+        firstDayData.add(
+          <String, dynamic>{
+            "clientName": client.clientName,
+            "clientCIN": client.clientCIN,
+            "productName": product.productName,
+            "productCategory": product.productCategory,
+            "productPrice": product.newPrice,
+          },
+        );
+      }
     }
 
     return firstDayData;
@@ -73,6 +86,7 @@ class _SecondDayState extends State<SecondDay> {
               builder: (BuildContext context, AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
                 if (snapshot.hasData) {
                   _recepies = snapshot.data!;
+                  Future.delayed(100.ms, () => _totalKey.currentState!.setState(() {}));
                   return ListView.separated(
                     itemBuilder: (BuildContext context, int index) => Container(
                       padding: const EdgeInsets.all(24),

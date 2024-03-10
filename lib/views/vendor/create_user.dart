@@ -39,7 +39,7 @@ class _CreateUserState extends State<CreateUser> {
       "controller": _birthDateController,
       "type": "date",
       "required": true,
-      "hint": "Prompt the birthdate : ${formatDate(DateTime.now(), const <String>[yy, '-', M, '-', d]).toUpperCase()}",
+      "hint": "Prompt the birthdate : ${formatDate(DateTime.now(), const <String>[yy, '-', mm, '-', d]).toUpperCase()}",
       "key": GlobalKey<State>(),
     },
     "CIN": <String, dynamic>{
@@ -165,11 +165,11 @@ class _CreateUserState extends State<CreateUser> {
                               onPress: () async {
                                 if (_usernameController.text.trim().isEmpty) {
                                   showToast("Username is required", redColor);
-                                } else if (!_birthDateController.text.contains(r'(\(\+216 ?\)|\d\d ?\d\d\d ?\d\d\d)')) {
+                                } else if (!_birthDateController.text.contains(RegExp(r'\d{4}\-\d{2}\-\d{2}'))) {
                                   showToast("Birthdate is wrong or missing", redColor);
-                                } else if (_cinController.text.trim().isEmpty) {
+                                } else if (!_cinController.text.contains(RegExp(r'\d{8}'))) {
                                   showToast("CIN is missing", redColor);
-                                } else if (_phoneController.text.trim().isEmpty) {
+                                } else if (!_phoneController.text.contains(RegExp(r'(\(\+216 ?\)|\d\d ?\d\d\d ?\d\d\d)'))) {
                                   showToast("Phone is required", redColor);
                                 } else {
                                   await FirebaseFirestore.instance.collection("clients").add(
@@ -182,6 +182,9 @@ class _CreateUserState extends State<CreateUser> {
                                       'clientPhone': _phoneController.text,
                                     },
                                   );
+                                  showToast("Client created successfully", greenColor);
+                                  // ignore: use_build_context_synchronously
+                                  Navigator.pop(context);
                                   // ignore: use_build_context_synchronously
                                   Navigator.pop(context);
                                 }
