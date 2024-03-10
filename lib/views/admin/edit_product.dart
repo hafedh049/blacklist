@@ -208,7 +208,7 @@ class _EditProductState extends State<EditProduct> {
                         'productName': _productNameController.text.trim(),
                         'realPrice': double.parse(_productOldPriceController.text),
                         'newPrice': double.parse(_productNewPriceController.text),
-                        'stockAlert': double.parse(_productStockAlertController.text),
+                        'stockAlert': int.parse(_productStockAlertController.text),
                       },
                     );
                     showToast("Product added successfully", greenColor);

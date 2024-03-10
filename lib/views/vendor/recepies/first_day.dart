@@ -108,7 +108,7 @@ class _FirstDayState extends State<FirstDay> {
                             children: <Widget>[
                               Container(
                                 padding: const EdgeInsets.all(4),
-                                decoration: BoxDecoration(color: greenColor, borderRadius: BorderRadius.circular(5)),
+                                decoration: BoxDecoration(color: blueColor, borderRadius: BorderRadius.circular(5)),
                                 child: Text("CIN", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
                               ),
                               const SizedBox(width: 10),
@@ -116,14 +116,13 @@ class _FirstDayState extends State<FirstDay> {
                             ],
                           ),
                           const SizedBox(height: 10),
-                          const SizedBox(height: 10),
                           Row(
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
                               Container(
                                 padding: const EdgeInsets.all(4),
-                                decoration: BoxDecoration(color: greenColor, borderRadius: BorderRadius.circular(5)),
-                                child: Text("CIN", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
+                                decoration: BoxDecoration(color: blueColor, borderRadius: BorderRadius.circular(5)),
+                                child: Text("CATEGORY", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
                               ),
                               const SizedBox(width: 10),
                               Text(_recepies[index]["productCategory"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
@@ -135,8 +134,8 @@ class _FirstDayState extends State<FirstDay> {
                             children: <Widget>[
                               Container(
                                 padding: const EdgeInsets.all(4),
-                                decoration: BoxDecoration(color: greenColor, borderRadius: BorderRadius.circular(5)),
-                                child: Text("CIN", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
+                                decoration: BoxDecoration(color: blueColor, borderRadius: BorderRadius.circular(5)),
+                                child: Text("PRODUCT NAME", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
                               ),
                               const SizedBox(width: 10),
                               Text(_recepies[index]["productName"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
@@ -148,8 +147,8 @@ class _FirstDayState extends State<FirstDay> {
                             children: <Widget>[
                               Container(
                                 padding: const EdgeInsets.all(4),
-                                decoration: BoxDecoration(color: greenColor, borderRadius: BorderRadius.circular(5)),
-                                child: Text("CIN", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
+                                decoration: BoxDecoration(color: blueColor, borderRadius: BorderRadius.circular(5)),
+                                child: Text("PRICE", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
                               ),
                               const SizedBox(width: 10),
                               Text(_recepies[index]["productPrice"].toStringAsFixed(2), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),

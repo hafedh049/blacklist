@@ -196,7 +196,7 @@ class _AddProductState extends State<AddProduct> {
                         'realPrice': double.parse(_productOldPriceController.text),
                         'newPrice': double.parse(_productNewPriceController.text),
                         'productReference': _productReferenceController.text,
-                        'stockAlert': double.parse(_productStockAlertController.text),
+                        'stockAlert': int.parse(_productStockAlertController.text),
                         "storeID": widget.storeID,
                       },
                     );

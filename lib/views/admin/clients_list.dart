@@ -110,7 +110,7 @@ class _ClientsListState extends State<ClientsList> {
                                                 child: Text("CLIENT BIRTHDATE".toUpperCase(), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
                                               ),
                                               const SizedBox(width: 10),
-                                              Text(formatDate(_clients[index].clientBirthdate, const <String>[DD, " / ", MM, " / ", yyyy]).toUpperCase(), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
+                                              Expanded(child: Text(formatDate(_clients[index].clientBirthdate, const <String>[DD, " / ", MM, " / ", yyyy]).toUpperCase(), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor))),
                                             ],
                                           ),
                                           const SizedBox(height: 10),

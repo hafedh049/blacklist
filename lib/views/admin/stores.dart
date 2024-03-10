@@ -5,7 +5,7 @@ import 'package:blacklist/utils/helpers/change_vendor_password.dart';
 import 'package:blacklist/utils/helpers/errored.dart';
 import 'package:blacklist/utils/helpers/loading.dart';
 import 'package:blacklist/utils/shared.dart';
-import 'package:blacklist/views/admin/holder.dart';
+import 'package:blacklist/views/admin/drawer_holder.dart';
 import 'package:blacklist/views/auth/passphrase.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -85,7 +85,7 @@ class _StoresListState extends State<StoresList> {
                     await FirebaseAuth.instance.signOut();
                     showToast("Bye Bye", redColor);
                     // ignore: use_build_context_synchronously
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => const Passphrase()));
+                    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const Passphrase()));
                   },
                 ),
               ],
@@ -121,7 +121,7 @@ class _StoresListState extends State<StoresList> {
                                         splashColor: transparentColor,
                                         hoverColor: transparentColor,
                                         highlightColor: transparentColor,
-                                        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Holder(storeID: item.storeID))),
+                                        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => DrawerHolder(storeID: item.storeID))),
                                         child: Container(
                                           width: 300,
                                           padding: const EdgeInsets.all(16),
@@ -223,7 +223,7 @@ class _StoresListState extends State<StoresList> {
                                                 ],
                                               ),
                                               IconButton(
-                                                onPressed: () => showModalBottomSheet(context: context, builder: (BuildContext context) => ChangeVendorPassword(storeID: item.storeID)),
+                                                onPressed: () => showDialog(context: context, builder: (BuildContext context) => AlertDialog(content: ChangeVendorPassword(storeID: item.storeID))),
                                                 icon: const Icon(FontAwesome.user_secret_solid, size: 25, color: purpleColor),
                                               ),
                                             ],

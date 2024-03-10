@@ -21,7 +21,6 @@ class AddStore extends StatefulWidget {
 class _AddStoreState extends State<AddStore> {
   final TextEditingController _storeNameController = TextEditingController();
   final TextEditingController _vendorNameController = TextEditingController();
-  final TextEditingController _vendorEmailController = TextEditingController();
   final TextEditingController _vendorPasswordController = TextEditingController();
 
   bool _vendorPasswordState = false;
@@ -31,8 +30,6 @@ class _AddStoreState extends State<AddStore> {
       showToast("Enter a valid store name", redColor);
     } else if (_vendorNameController.text.trim().isEmpty) {
       showToast("Enter a valid vendor name", redColor);
-    } else if (_vendorEmailController.text.trim().isEmpty) {
-      showToast("Enter a valid vendor e-mail", redColor);
     } else if (_vendorPasswordController.text.trim().isEmpty) {
       showToast("Enter a valid vendor password", redColor);
     } else {
@@ -43,7 +40,6 @@ class _AddStoreState extends State<AddStore> {
         'storeName': _storeNameController.text.trim(),
         'storeState': "open",
         'storeVendorName': _vendorNameController.text.trim(),
-        'storeVendorEmail': _vendorEmailController.text.trim(),
         'storeVendorPassword': _vendorPasswordController.text.trim(),
         "storeTotalProducts": 0,
       };
@@ -60,7 +56,6 @@ class _AddStoreState extends State<AddStore> {
 
   @override
   void dispose() {
-    _vendorEmailController.dispose();
     _vendorPasswordController.dispose();
     _storeNameController.dispose();
     _vendorNameController.dispose();
@@ -114,29 +109,6 @@ class _AddStoreState extends State<AddStore> {
                     hintText: 'VENDOR NAME',
                     hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
                     prefixIcon: _vendorNameController.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
-                  ),
-                  cursorColor: purpleColor,
-                );
-              },
-            ),
-          ),
-          const SizedBox(height: 20),
-          Container(
-            color: darkColor,
-            child: StatefulBuilder(
-              builder: (BuildContext context, void Function(void Function()) _) {
-                return TextField(
-                  onChanged: (String value) => value.trim().length <= 1 ? _(() {}) : null,
-                  controller: _vendorEmailController,
-                  onSubmitted: (String value) => _createStore(),
-                  style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                  decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.all(20),
-                    focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
-                    border: InputBorder.none,
-                    hintText: 'VENDOR E-MAIL',
-                    hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                    prefixIcon: _vendorEmailController.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
                   ),
                   cursorColor: purpleColor,
                 );

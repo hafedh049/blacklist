@@ -30,7 +30,7 @@ class ProductTableState extends State<ProductTable> with RestorationMixin {
   final RestorableIntN _sortColumnIndex = RestorableIntN(null);
   late ProductDataSource _productsDataSource;
   bool _initialized = false;
-  final List<String> _columns = const <String>["Date", "Reference", "Name", "Category", "Real Price", "New Price", "Quantity", "Stock Alert", "Actions"];
+  final List<String> _columns = const <String>["Name", "Real Price", "New Price", "Quantity", "Stock Alert", "Reference", "Date", "Actions"];
   final GlobalKey<State> _pagerKey = GlobalKey<State>();
   final GlobalKey<State> _searchKey = GlobalKey<State>();
   final GlobalKey<State> _futureKey = GlobalKey<State>();

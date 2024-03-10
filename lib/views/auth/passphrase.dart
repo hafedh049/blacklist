@@ -26,6 +26,7 @@ class _PassphraseState extends State<Passphrase> {
   bool _passwordState = false;
 
   final GlobalKey<State> _cardKey = GlobalKey<State>();
+  final GlobalKey<State> _pragmaKey = GlobalKey<State>();
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -35,7 +36,7 @@ class _PassphraseState extends State<Passphrase> {
   Future<void> _signIn() async {
     if (_passwordController.text.trim().isEmpty) {
       showToast("Please enter the password", redColor);
-    } else if (_emailController.text.trim().isEmpty) {
+    } else if (!_isVendor && _emailController.text.trim().isEmpty) {
       showToast("Please enter the e-mail", redColor);
     } else {
       _cardKey.currentState!.setState(() => _submitButtonState = true);
@@ -48,20 +49,15 @@ class _PassphraseState extends State<Passphrase> {
             Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => const StoresList()));
           }
         } else {
-          await FirebaseFirestore.instance.collection("stores").where("storeVendorEmail", isEqualTo: _emailController.text).limit(1).get().then(
+          await FirebaseFirestore.instance.collection("stores").where("storeVendorPassword", isEqualTo: _passwordController.text).limit(1).get().then(
             (QuerySnapshot<Map<String, dynamic>> value) {
               if (value.docs.isNotEmpty) {
-                if (value.docs[0]["storeVendorPassword"] == _passwordController.text) {
-                  _cardKey.currentState!.setState(() => _submitButtonState = false);
-                  showToast("Welcome VENDOR", greenColor);
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => CartRecepie(storeID: value.docs[0]["storeID"])));
-                } else {
-                  _cardKey.currentState!.setState(() => _submitButtonState = false);
-                  showToast("Invalid password", redColor);
-                }
+                _cardKey.currentState!.setState(() => _submitButtonState = false);
+                showToast("Welcome VENDOR", greenColor);
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => CartRecepie(storeID: value.docs[0]["storeID"])));
               } else {
                 _cardKey.currentState!.setState(() => _submitButtonState = false);
-                showToast("Invalid E-mail", redColor);
+                showToast("Invalid Password", redColor);
               }
             },
           );
@@ -103,51 +99,91 @@ class _PassphraseState extends State<Passphrase> {
                     children: <Widget>[
                       Text("WELCOME", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
                       const SizedBox(height: 10),
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Text("AS VENDOR", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
-                          const SizedBox(width: 10),
-                          StatefulBuilder(
-                            builder: (BuildContext context, void Function(void Function()) _) {
-                              return Checkbox(value: _isVendor, onChanged: (bool? value) => _(() => _isVendor = value!));
-                            },
-                          )
-                        ],
+                      StatefulBuilder(
+                        builder: (BuildContext context, void Function(void Function()) _) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Text("AS VENDOR", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
+                                  const SizedBox(width: 10),
+                                  Radio(
+                                    groupValue: _isVendor,
+                                    value: true,
+                                    onChanged: (bool? value) {
+                                      _(() => _isVendor = value!);
+                                      _pragmaKey.currentState!.setState(() {});
+                                    },
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Text("AS ADMIN", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
+                                  const SizedBox(width: 10),
+                                  Radio(
+                                    groupValue: _isVendor,
+                                    value: false,
+                                    onChanged: (bool? value) {
+                                      _(() => _isVendor = value!);
+                                      _pragmaKey.currentState!.setState(() {});
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ],
+                          );
+                        },
                       ),
                       Container(width: MediaQuery.sizeOf(context).width, height: .3, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Flexible(child: Text("E-mail", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor))),
-                          const SizedBox(width: 5),
-                          Text("*", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: redColor)),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-                      Container(
-                        decoration: BoxDecoration(color: scaffoldColor, borderRadius: BorderRadius.circular(3)),
-                        child: StatefulBuilder(
+                      StatefulBuilder(
+                          key: _pragmaKey,
                           builder: (BuildContext context, void Function(void Function()) _) {
-                            return TextField(
-                              onSubmitted: (String value) => _signIn(),
-                              onChanged: (String value) => value.trim().length <= 1 ? _(() {}) : null,
-                              controller: _emailController,
-                              style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                              decoration: InputDecoration(
-                                contentPadding: const EdgeInsets.all(20),
-                                focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
-                                border: InputBorder.none,
-                                hintText: 'abcd@xyz.tn',
-                                hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                                prefixIcon: _emailController.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
-                              ),
-                              cursorColor: purpleColor,
-                            );
-                          },
-                        ),
-                      ),
-                      const SizedBox(height: 20),
+                            return _isVendor
+                                ? const SizedBox()
+                                : Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: <Widget>[
+                                          Flexible(child: Text("E-mail", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor))),
+                                          const SizedBox(width: 5),
+                                          Text("*", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: redColor)),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 20),
+                                      Container(
+                                        decoration: BoxDecoration(color: scaffoldColor, borderRadius: BorderRadius.circular(3)),
+                                        child: StatefulBuilder(
+                                          builder: (BuildContext context, void Function(void Function()) _) {
+                                            return TextField(
+                                              onSubmitted: (String value) => _signIn(),
+                                              onChanged: (String value) => value.trim().length <= 1 ? _(() {}) : null,
+                                              controller: _emailController,
+                                              style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                                              decoration: InputDecoration(
+                                                contentPadding: const EdgeInsets.all(20),
+                                                focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
+                                                border: InputBorder.none,
+                                                hintText: 'abcd@xyz.tn',
+                                                hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                                                prefixIcon: _emailController.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
+                                              ),
+                                              cursorColor: purpleColor,
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                      const SizedBox(height: 20),
+                                    ],
+                                  );
+                          }),
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[

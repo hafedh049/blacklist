@@ -3,7 +3,6 @@ class StoreModel {
   String storeName;
   String storeState;
   String storeVendorName;
-  String storeVendorEmail;
   String storeVendorPassword;
   int storeTotalProducts;
 
@@ -13,7 +12,6 @@ class StoreModel {
     required this.storeName,
     required this.storeState,
     required this.storeVendorName,
-    required this.storeVendorEmail,
     required this.storeVendorPassword,
   });
 
@@ -24,7 +22,6 @@ class StoreModel {
       storeName: json['storeName'],
       storeState: json['storeState'],
       storeVendorName: json['storeVendorName'],
-      storeVendorEmail: json['storeVendorEmail'],
       storeVendorPassword: json['storeVendorPassword'],
     );
   }
@@ -36,7 +33,6 @@ class StoreModel {
       'storeName': storeName,
       'storeState': storeState,
       'storeVendorName': storeVendorName,
-      'storeVendorEmail': storeVendorEmail,
       'storeVendorPassword': storeVendorPassword,
     };
   }

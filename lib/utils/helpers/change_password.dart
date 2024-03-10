@@ -17,7 +17,6 @@ class ChangePassword extends StatefulWidget {
 
 class _ChangePasswordState extends State<ChangePassword> {
   final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _oldPasswordController = TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
 
@@ -27,14 +26,11 @@ class _ChangePasswordState extends State<ChangePassword> {
   Future<void> _update() async {
     if (_nameController.text.trim().isEmpty) {
       showToast("Enter a valid vendor name", redColor);
-    } else if (_emailController.text.trim().isEmpty) {
-      showToast("Enter a valid vendor email", redColor);
     } else if (_newPasswordController.text.trim().isEmpty) {
       showToast("Enter a valid vendor password", redColor);
     } else {
       final Map<String, dynamic> vendorItem = <String, dynamic>{
         "storeVendorName": _nameController.text.trim(),
-        "storeVendorEmail": _emailController.text.trim(),
         "storeVendorPassword": _newPasswordController.text.trim(),
       };
       await FirebaseFirestore.instance.collection('stores').doc(widget.senderID).update(vendorItem);
@@ -50,7 +46,6 @@ class _ChangePasswordState extends State<ChangePassword> {
       (DocumentSnapshot snapshot) {
         if (snapshot.exists) {
           _nameController.text = snapshot.get("storeVendorName");
-          _emailController.text = snapshot.get("storeVendorEmail");
           _oldPasswordController.text = snapshot.get("storeVendorPassword");
         }
       },
@@ -61,7 +56,6 @@ class _ChangePasswordState extends State<ChangePassword> {
   @override
   void dispose() {
     _nameController.dispose();
-    _emailController.dispose();
     _newPasswordController.dispose();
     _oldPasswordController.dispose();
     super.dispose();
@@ -102,28 +96,7 @@ class _ChangePasswordState extends State<ChangePassword> {
             child: StatefulBuilder(
               builder: (BuildContext context, void Function(void Function()) _) {
                 return TextField(
-                  onChanged: (String value) => value.trim().length <= 1 ? _(() {}) : null,
-                  controller: _emailController,
-                  style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                  decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.all(20),
-                    focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
-                    border: InputBorder.none,
-                    hintText: 'VENDOR E-MAIL',
-                    hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                    prefixIcon: _emailController.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
-                  ),
-                  cursorColor: purpleColor,
-                );
-              },
-            ),
-          ),
-          const SizedBox(height: 20),
-          Container(
-            color: darkColor,
-            child: StatefulBuilder(
-              builder: (BuildContext context, void Function(void Function()) _) {
-                return TextField(
+                  readOnly: true,
                   obscureText: !_oldPasswordState,
                   onChanged: (String value) => value.trim().length <= 1 ? _(() {}) : null,
                   controller: _oldPasswordController,

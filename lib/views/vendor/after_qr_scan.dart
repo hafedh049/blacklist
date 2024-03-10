@@ -103,10 +103,10 @@ class _AfterQRScanState extends State<AfterQRScan> {
                             animationDuration: 500.ms,
                             isReverse: true,
                             selectedBackgroundColor: darkColor,
-                            backgroundColor: greenColor,
+                            backgroundColor: purpleColor,
                             transitionType: TransitionType.TOP_TO_BOTTOM,
                             textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                            onPress: () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => VendorTable(storeID: widget.storeID))),
+                            onPress: () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => VendorTable(clientID: widget.client.clientCIN, storeID: widget.storeID))),
                           ),
                           const SizedBox(height: 10),
                           AnimatedButton(
@@ -118,10 +118,10 @@ class _AfterQRScanState extends State<AfterQRScan> {
                             animationDuration: 500.ms,
                             isReverse: true,
                             selectedBackgroundColor: darkColor,
-                            backgroundColor: greenColor,
+                            backgroundColor: purpleColor,
                             transitionType: TransitionType.TOP_TO_BOTTOM,
                             textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                            onPress: () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => VendorTable(storeID: widget.storeID))),
+                            onPress: () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => VendorTable(clientID: widget.client.clientCIN, storeID: widget.storeID, gift: true))),
                           ),
                           const SizedBox(height: 10),
                           AnimatedButton(
@@ -133,7 +133,7 @@ class _AfterQRScanState extends State<AfterQRScan> {
                             animationDuration: 500.ms,
                             isReverse: true,
                             selectedBackgroundColor: darkColor,
-                            backgroundColor: greenColor,
+                            backgroundColor: purpleColor,
                             transitionType: TransitionType.TOP_TO_BOTTOM,
                             textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
                             onPress: () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => ProductsHistory(products: _products))),
@@ -147,7 +147,7 @@ class _AfterQRScanState extends State<AfterQRScan> {
                       ? Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(color: purpleColor, borderRadius: BorderRadius.circular(5)),
-                          child: Text("NOT SELLS YET", style: GoogleFonts.itim(fontSize: 16, color: whiteColor, fontWeight: FontWeight.w500)),
+                          child: Text("NO SELLS YET", style: GoogleFonts.itim(fontSize: 16, color: whiteColor, fontWeight: FontWeight.w500)),
                         )
                       : SingleChildScrollView(
                           child: CommentTreeWidget<String, MapEntry<String, int>>(

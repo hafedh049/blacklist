@@ -43,99 +43,101 @@ class _AddCategoryState extends State<AddCategory> {
       transitionType: TransitionType.TOP_TO_BOTTOM,
       textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
       onPress: () {
-        showModalBottomSheet<void>(
+        showDialog<void>(
           context: context,
-          builder: (BuildContext context) => Container(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Text("Category Name", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
-                const SizedBox(height: 10),
-                Container(
-                  color: darkColor,
-                  child: StatefulBuilder(
-                    builder: (BuildContext context, void Function(void Function()) _) {
-                      return TextField(
-                        onChanged: (String value) {
-                          if (value.trim().length <= 1) {
-                            _(() {});
-                          }
-                        },
-                        autofocus: true,
-                        controller: _categoryName,
-                        style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                        decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.all(20),
-                          focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
-                          border: InputBorder.none,
-                          hintText: "Choose a category name",
-                          hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                          suffixIcon: _categoryName.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
-                        ),
-                        cursorColor: purpleColor,
-                      );
-                    },
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  children: <Widget>[
-                    const Spacer(),
-                    AnimatedButton(
-                      width: 80,
-                      height: 30,
-                      text: 'ADD',
-                      selectedTextColor: whiteColor,
-                      animatedOn: AnimatedOn.onHover,
-                      animationDuration: 500.ms,
-                      isReverse: true,
-                      selectedBackgroundColor: darkColor,
-                      backgroundColor: greenColor,
-                      transitionType: TransitionType.TOP_TO_BOTTOM,
-                      textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                      onPress: () async {
-                        if (_categoryName.text.trim().isNotEmpty) {
-                          final Map<String, dynamic> categoryItem = <String, dynamic>{
-                            'categoryID': const UuidV8().generate(),
-                            'categoryName': _categoryName.text.trim(),
-                            'categoryArticlesCount': 0,
-                            'categoryProductsCount': 0,
-                            'categoryState': false,
-                            'storeID': widget.storeID,
-                          };
-
-                          await FirebaseFirestore.instance.collection("categories").add(categoryItem);
-
-                          showToast("New category has been added", greenColor);
-                          widget.categories.add(CategoryModel.fromJson(categoryItem));
-                          // ignore: use_build_context_synchronously
-                          Navigator.pop(context);
-                          widget.setS(() {});
-                        } else {
-                          showToast("Please enter a category name", redColor);
-                        }
+          builder: (BuildContext context) => AlertDialog(
+            content: Container(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Text("Category Name", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
+                  const SizedBox(height: 10),
+                  Container(
+                    color: darkColor,
+                    child: StatefulBuilder(
+                      builder: (BuildContext context, void Function(void Function()) _) {
+                        return TextField(
+                          onChanged: (String value) {
+                            if (value.trim().length <= 1) {
+                              _(() {});
+                            }
+                          },
+                          autofocus: true,
+                          controller: _categoryName,
+                          style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                          decoration: InputDecoration(
+                            contentPadding: const EdgeInsets.all(20),
+                            focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
+                            border: InputBorder.none,
+                            hintText: "Choose a category name",
+                            hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                            suffixIcon: _categoryName.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
+                          ),
+                          cursorColor: purpleColor,
+                        );
                       },
                     ),
-                    const SizedBox(width: 20),
-                    AnimatedButton(
-                      width: 80,
-                      height: 30,
-                      text: 'CANCEL',
-                      selectedTextColor: whiteColor,
-                      animatedOn: AnimatedOn.onHover,
-                      animationDuration: 500.ms,
-                      isReverse: true,
-                      selectedBackgroundColor: darkColor,
-                      backgroundColor: greyColor,
-                      transitionType: TransitionType.TOP_TO_BOTTOM,
-                      textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                      onPress: () => Navigator.pop(context),
-                    ),
-                  ],
-                ),
-              ],
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    children: <Widget>[
+                      const Spacer(),
+                      AnimatedButton(
+                        width: 80,
+                        height: 30,
+                        text: 'ADD',
+                        selectedTextColor: whiteColor,
+                        animatedOn: AnimatedOn.onHover,
+                        animationDuration: 500.ms,
+                        isReverse: true,
+                        selectedBackgroundColor: darkColor,
+                        backgroundColor: greenColor,
+                        transitionType: TransitionType.TOP_TO_BOTTOM,
+                        textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                        onPress: () async {
+                          if (_categoryName.text.trim().isNotEmpty) {
+                            final Map<String, dynamic> categoryItem = <String, dynamic>{
+                              'categoryID': const UuidV8().generate(),
+                              'categoryName': _categoryName.text.trim(),
+                              'categoryArticlesCount': 0,
+                              'categoryProductsCount': 0,
+                              'categoryState': false,
+                              'storeID': widget.storeID,
+                            };
+
+                            await FirebaseFirestore.instance.collection("categories").add(categoryItem);
+
+                            showToast("New category has been added", greenColor);
+                            widget.categories.add(CategoryModel.fromJson(categoryItem));
+                            // ignore: use_build_context_synchronously
+                            Navigator.pop(context);
+                            widget.setS(() {});
+                          } else {
+                            showToast("Please enter a category name", redColor);
+                          }
+                        },
+                      ),
+                      const SizedBox(width: 20),
+                      AnimatedButton(
+                        width: 80,
+                        height: 30,
+                        text: 'CANCEL',
+                        selectedTextColor: whiteColor,
+                        animatedOn: AnimatedOn.onHover,
+                        animationDuration: 500.ms,
+                        isReverse: true,
+                        selectedBackgroundColor: darkColor,
+                        backgroundColor: greyColor,
+                        transitionType: TransitionType.TOP_TO_BOTTOM,
+                        textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                        onPress: () => Navigator.pop(context),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         );

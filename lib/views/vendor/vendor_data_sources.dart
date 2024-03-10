@@ -175,7 +175,6 @@ class ProductDataSource extends DataTableSource {
       },
       cells: <DataCell>[
         DataCell(Text(product.productName)),
-        DataCell(Text(product.productCategory)),
         !product.selected
             ? DataCell(Text(product.productQuantity.toString()))
             : DataCell(

@@ -106,16 +106,14 @@ class ProductDataSource extends DataTableSource {
           notifyListeners();
         }
       },
-      onTap: hasRowTaps ? () => _showSnackbar(context, 'Tapped on row ${product.productName}') : null,
       cells: <DataCell>[
-        DataCell(Text(formatDate(product.date, <String>[yyyy, " ", MM, " ", dd]))),
-        DataCell(Text(product.productReference)),
         DataCell(Text(product.productName)),
-        DataCell(Text(product.productCategory)),
         DataCell(Text(product.realPrice.toStringAsFixed(2))),
         DataCell(Text(product.newPrice.toStringAsFixed(2))),
         DataCell(Text(product.productQuantity.toString())),
         DataCell(Text(product.stockAlert.toString())),
+        DataCell(Text(product.productReference)),
+        DataCell(Text(formatDate(product.date, <String>[yyyy, " ", MM, " ", dd]))),
         DataCell(
           Row(
             mainAxisSize: MainAxisSize.min,

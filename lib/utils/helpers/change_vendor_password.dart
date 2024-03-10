@@ -16,7 +16,7 @@ class ChangeVendorPassword extends StatefulWidget {
 }
 
 class _ChangeVendorPasswordState extends State<ChangeVendorPassword> {
-  void _changePassword() => showModalBottomSheet(context: context, builder: (BuildContext context) => ChangePassword(senderID: widget.storeID));
+  void _changePassword() => showDialog(context: context, builder: (BuildContext context) => AlertDialog(content: ChangePassword(senderID: widget.storeID)));
 
   final String _adminPassphrase = "admin";
 

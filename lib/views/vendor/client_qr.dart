@@ -1,10 +1,12 @@
 import 'dart:math';
 
 import 'package:animated_loading_border/animated_loading_border.dart';
+import 'package:blacklist/models/client_model.dart';
+import 'package:blacklist/utils/callbacks.dart';
 import 'package:blacklist/utils/shared.dart';
+import 'package:blacklist/views/vendor/after_qr_scan.dart';
 import 'package:blacklist/views/vendor/qr_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -22,7 +24,6 @@ class Client extends StatefulWidget {
 
 class _ClientState extends State<Client> {
   final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _birthDateController = TextEditingController();
   final TextEditingController _cinController = TextEditingController();
 
   final List<String> _names = names;
@@ -33,13 +34,6 @@ class _ClientState extends State<Client> {
       "type": "text",
       "required": true,
       "hint": "Enter the client name",
-      "key": GlobalKey<State>(),
-    },
-    "Birth Date": <String, dynamic>{
-      "controller": _birthDateController,
-      "type": "date",
-      "required": true,
-      "hint": "Prompt the birthdate : ${formatDate(DateTime.now(), const <String>[yy, '-', M, '-', d]).toUpperCase()}",
       "key": GlobalKey<State>(),
     },
     "CIN": <String, dynamic>{
@@ -64,7 +58,6 @@ class _ClientState extends State<Client> {
   @override
   void dispose() {
     _usernameController.dispose();
-    _birthDateController.dispose();
     _cinController.dispose();
     super.dispose();
   }
@@ -179,7 +172,33 @@ class _ClientState extends State<Client> {
                               backgroundColor: purpleColor,
                               transitionType: TransitionType.TOP_TO_BOTTOM,
                               textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                              onPress: () {},
+                              onPress: () async {
+                                if (_usernameController.text.trim().isNotEmpty) {
+                                  await FirebaseFirestore.instance.collection("clients").where("clientName", isEqualTo: _usernameController.text.trim()).limit(1).get().then(
+                                    (QuerySnapshot<Map<String, dynamic>> value) {
+                                      if (value.docs.isNotEmpty) {
+                                        showToast("CLIENT FOUND", purpleColor);
+                                        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => AfterQRScan(storeID: widget.storeID, client: ClientModel.fromJson(value.docs.first.data()))));
+                                      } else {
+                                        showToast("NO SUCH CLIENT WITH THAT NAME", purpleColor);
+                                      }
+                                    },
+                                  );
+                                } else if (_cinController.text.trim().isNotEmpty) {
+                                  await FirebaseFirestore.instance.collection("clients").where("clientCIN", isEqualTo: _cinController.text.trim()).limit(1).get().then(
+                                    (QuerySnapshot<Map<String, dynamic>> value) {
+                                      if (value.docs.isNotEmpty) {
+                                        showToast("CLIENT FOUND", purpleColor);
+                                        Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => AfterQRScan(storeID: widget.storeID, client: ClientModel.fromJson(value.docs.first.data()))));
+                                      } else {
+                                        showToast("NO SUCH CLIENT WITH THAT NAME", purpleColor);
+                                      }
+                                    },
+                                  );
+                                } else {
+                                  showToast("ENTER EITHER NAME OR CIN", purpleColor);
+                                }
+                              },
                             ),
                           ],
                         ),

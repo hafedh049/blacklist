@@ -11,8 +11,10 @@ import 'package:icons_plus/icons_plus.dart';
 import '/views/vendor/vendor_data_sources.dart';
 
 class VendorTable extends StatefulWidget {
-  const VendorTable({super.key, required this.storeID});
+  const VendorTable({super.key, required this.storeID, this.gift = false, this.clientID = "ANONYMOUS"});
   final String storeID;
+  final bool gift;
+  final String clientID;
   @override
   State<VendorTable> createState() => VendorTableState();
 }
@@ -23,7 +25,7 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
   final RestorableInt _rowsPerPage = RestorableInt(PaginatedDataTable.defaultRowsPerPage + 10);
   late ProductDataSource _productsDataSource;
   bool _initialized = false;
-  final List<String> _columns = const <String>["Name", "Category", "Quantity", "Date", "Reference", "Price"];
+  final List<String> _columns = const <String>["Name", "Quantity", "Date", "Reference", "Price"];
   final GlobalKey<State> _pagerKey = GlobalKey<State>();
   final GlobalKey<State> _searchKey = GlobalKey<State>();
   final TextEditingController _searchController = TextEditingController();
@@ -76,7 +78,15 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
 
   Future<List<VendorProduct>> _load() async {
     final QuerySnapshot<Map<String, dynamic>> query = await FirebaseFirestore.instance.collection("products").where("storeID", isEqualTo: widget.storeID).get();
-    return query.docs.map((e) => VendorProduct.fromJson(e.data())).toList();
+    return query.docs.map(
+      (QueryDocumentSnapshot<Map<String, dynamic>> e) {
+        VendorProduct vp = VendorProduct.fromJson(e.data());
+        if (widget.gift) {
+          vp.newPrice = 0;
+        }
+        return vp;
+      },
+    ).toList();
   }
 
   @override
@@ -118,7 +128,7 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
                               await FirebaseFirestore.instance.collection("sells").add(
                                     product.toJson()
                                       ..putIfAbsent("timestamp", () => now)
-                                      ..putIfAbsent("clientID", () => "ANONYMOUS"),
+                                      ..putIfAbsent("clientID", () => widget.clientID),
                                   );
                               showToast("UPDATED SUCCESSFULLY", purpleColor);
                             }
