@@ -77,6 +77,14 @@ class _CreateUserState extends State<CreateUser> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
+                IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(FontAwesome.chevron_left_solid, size: 25, color: purpleColor),
+                ),
+                const SizedBox(height: 10),
                 AnimatedLoadingBorder(
                   borderWidth: 4,
                   borderColor: purpleColor,

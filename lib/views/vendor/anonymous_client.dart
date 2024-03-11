@@ -4,6 +4,7 @@ import 'package:blacklist/views/vendor/client_qr.dart';
 import 'package:blacklist/views/vendor/vendor_table.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:icons_plus/icons_plus.dart';
 
 class AnonymousClient extends StatefulWidget {
   const AnonymousClient({super.key, required this.storeID});
@@ -34,37 +35,45 @@ class _AnonymousClientState extends State<AnonymousClient> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: scaffoldColor,
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              for (final Map<String, dynamic> item in _items) ...<Widget>[
-                InkWell(
-                  onTap: item["callback"],
-                  hoverColor: transparentColor,
-                  splashColor: transparentColor,
-                  highlightColor: transparentColor,
-                  child: AnimatedLoadingBorder(
-                    borderWidth: 4,
-                    borderColor: purpleColor,
-                    child: Container(
-                      width: 300,
-                      height: 150,
-                      padding: const EdgeInsets.all(24),
-                      decoration: const BoxDecoration(color: darkColor),
-                      alignment: Alignment.center,
-                      child: Text(item["title"], style: GoogleFonts.itim(fontSize: 35, fontWeight: FontWeight.w500, color: whiteColor)),
-                    ),
-                  ),
+      body: Column(
+        children: <Widget>[
+          IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(FontAwesome.chevron_left_solid, size: 25, color: purpleColor)),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    for (final Map<String, dynamic> item in _items) ...<Widget>[
+                      InkWell(
+                        onTap: item["callback"],
+                        hoverColor: transparentColor,
+                        splashColor: transparentColor,
+                        highlightColor: transparentColor,
+                        child: AnimatedLoadingBorder(
+                          borderWidth: 4,
+                          borderColor: purpleColor,
+                          child: Container(
+                            width: 300,
+                            height: 150,
+                            padding: const EdgeInsets.all(24),
+                            decoration: const BoxDecoration(color: darkColor),
+                            alignment: Alignment.center,
+                            child: Text(item["title"], style: GoogleFonts.itim(fontSize: 35, fontWeight: FontWeight.w500, color: whiteColor)),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                    ],
+                  ],
                 ),
-                const SizedBox(height: 20),
-              ],
-            ],
+              ),
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

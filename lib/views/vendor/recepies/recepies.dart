@@ -5,6 +5,7 @@ import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:icons_plus/icons_plus.dart';
 
 class Recepies extends StatefulWidget {
   const Recepies({super.key});
@@ -45,6 +46,8 @@ class _RecepiesState extends State<Recepies> {
           children: <Widget>[
             Row(
               children: <Widget>[
+                IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(FontAwesome.chevron_left_solid, size: 25, color: purpleColor)),
+                const SizedBox(width: 10),
                 Text("RECETTES", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
                 const Spacer(),
               ],

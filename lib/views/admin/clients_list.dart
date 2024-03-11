@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:icons_plus/icons_plus.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 
@@ -31,6 +32,8 @@ class _ClientsListState extends State<ClientsList> {
           children: <Widget>[
             Row(
               children: <Widget>[
+                IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(FontAwesome.chevron_left_solid, size: 25, color: purpleColor)),
+                const SizedBox(width: 10),
                 Text("Clients", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
                 const Spacer(),
               ],

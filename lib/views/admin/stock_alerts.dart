@@ -4,6 +4,7 @@ import 'package:blacklist/utils/helpers/loading.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:icons_plus/icons_plus.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../utils/shared.dart';
@@ -28,6 +29,8 @@ class _StockAlertsState extends State<StockAlerts> {
           children: <Widget>[
             Row(
               children: <Widget>[
+                IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(FontAwesome.chevron_left_solid, size: 25, color: purpleColor)),
+                const SizedBox(width: 10),
                 Text("Stock Alerts", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
                 const Spacer(),
               ],

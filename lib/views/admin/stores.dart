@@ -57,7 +57,7 @@ class _StoresListState extends State<StoresList> {
                 AnimatedButton(
                   width: 100,
                   height: 35,
-                  text: 'AJOUTER STORE',
+                  text: 'AJOUTER',
                   selectedTextColor: darkColor,
                   animatedOn: AnimatedOn.onHover,
                   animationDuration: 500.ms,

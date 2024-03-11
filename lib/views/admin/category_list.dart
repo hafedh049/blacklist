@@ -51,7 +51,13 @@ class _CategoryListState extends State<CategoryList> {
             const SizedBox(height: 30),
             Row(
               children: <Widget>[
-                Text("LISTE DU CATEGORIES", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
+                Row(
+                  children: <Widget>[
+                    IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(FontAwesome.chevron_left_solid, size: 25, color: purpleColor)),
+                    const SizedBox(width: 10),
+                    Text("LISTE DU CATEGORIES", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
+                  ],
+                ),
                 const Spacer(),
                 StatefulBuilder(
                   builder: (BuildContext context, void Function(void Function()) _) {
@@ -193,7 +199,7 @@ class _CategoryListState extends State<CategoryList> {
                                                           Text("Total D'articles", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
                                                           const SizedBox(width: 10),
                                                           StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                                                            stream: FirebaseFirestore.instance.collection("categories").where("categoryID", isEqualTo: item.storeID).limit(1).snapshots(),
+                                                            stream: FirebaseFirestore.instance.collection("categories").where("categoryID", isEqualTo: item.categoryID).limit(1).snapshots(),
                                                             builder: (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
                                                               if (snapshot.hasData) {
                                                                 final int categoryArticlesCount = snapshot.data!.docs[0]["categoryArticlesCount"];
@@ -211,7 +217,7 @@ class _CategoryListState extends State<CategoryList> {
                                                           Text("Total produits", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
                                                           const SizedBox(width: 10),
                                                           StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                                                            stream: FirebaseFirestore.instance.collection("categories").where("categoryID", isEqualTo: item.storeID).limit(1).snapshots(),
+                                                            stream: FirebaseFirestore.instance.collection("categories").where("categoryID", isEqualTo: item.categoryID).limit(1).snapshots(),
                                                             builder: (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
                                                               if (snapshot.hasData) {
                                                                 final int categoryProductsCount = snapshot.data!.docs[0]["categoryProductsCount"];

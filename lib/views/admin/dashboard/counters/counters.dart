@@ -22,19 +22,19 @@ class _CountersState extends State<Counters> {
     "day": <String, dynamic>{
       "icon": FontAwesome.wallet_solid,
       "title": "SALES PER DAY",
-      "amount": 00.00,
+      "amount": 0.00,
       "callback": (BuildContext context) => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const DayCounter())),
     },
     "month": <String, dynamic>{
       "icon": FontAwesome.circle_dollar_to_slot_solid,
       "title": "SALES PER MONTH",
-      "amount": 00.00,
+      "amount": 0.00,
       "callback": (BuildContext context) => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const MonthCounter())),
     },
     "year": <String, dynamic>{
       "icon": FontAwesome.google_wallet_brand,
       "title": "SALES PER YEAR",
-      "amount": 00.00,
+      "amount": 0.00,
       "callback": (BuildContext context) => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const YearCounter())),
     },
   };
@@ -43,14 +43,15 @@ class _CountersState extends State<Counters> {
   void initState() {
     FirebaseFirestore.instance.collection("sells").get().then(
       (QuerySnapshot<Map<String, dynamic>> value) {
-        final List<Map<String, dynamic>> data = value.docs
-            .map(
-              (QueryDocumentSnapshot<Map<String, dynamic>> e) => <String, dynamic>{
-                "timestamp": e.get("timestamp"),
-                "price": e.get("newPrice") - e.get("realPrice"),
-              },
-            )
-            .toList();
+        final List<Map<String, dynamic>> data = value.docs.map(
+          (QueryDocumentSnapshot<Map<String, dynamic>> e) {
+            print(e.get("newPrice") - e.get("realPrice"));
+            return <String, dynamic>{
+              "timestamp": e.get("timestamp"),
+              "price": e.get("newPrice") - e.get("realPrice"),
+            };
+          },
+        ).toList();
         for (final Map<String, dynamic> item in data) {
           if ((item["timestamp"].toDate() as DateTime).day == DateTime.now().day) {
             _sells["day"]!["amount"] = _sells["day"]!["amount"]! + item["price"];

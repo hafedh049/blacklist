@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:icons_plus/icons_plus.dart';
 
 import '../../utils/shared.dart';
 import 'category_list.dart';
@@ -24,24 +25,33 @@ class _DrawerHolderState extends State<DrawerHolder> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.all(24),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            for (final Map<String, dynamic> item in _screens)
-              InkWell(
-                hoverColor: transparentColor,
-                splashColor: transparentColor,
-                highlightColor: transparentColor,
-                onTap: () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => item["screen"])),
-                child: Container(
-                  margin: const EdgeInsets.symmetric(vertical: 10),
-                  padding: const EdgeInsets.all(24),
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: purpleColor),
-                  child: Text(item["title"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.bold, color: whiteColor)),
-                ),
+            IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(FontAwesome.chevron_left_solid, size: 25, color: purpleColor)),
+            Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  for (final Map<String, dynamic> item in _screens)
+                    InkWell(
+                      hoverColor: transparentColor,
+                      splashColor: transparentColor,
+                      highlightColor: transparentColor,
+                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => item["screen"])),
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(vertical: 10),
+                        padding: const EdgeInsets.all(24),
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: purpleColor),
+                        child: Text(item["title"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.bold, color: whiteColor)),
+                      ),
+                    ),
+                ],
               ),
+            ),
           ],
         ),
       ),

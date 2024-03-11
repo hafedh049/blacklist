@@ -103,7 +103,16 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    Text("Produits", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
+                    Row(
+                      children: <Widget>[
+                        IconButton(
+                          onPressed: () => Navigator.pop(context),
+                          icon: const Icon(FontAwesome.chevron_left_solid, size: 25, color: purpleColor),
+                        ),
+                        const SizedBox(width: 10),
+                        Text("Produits", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
+                      ],
+                    ),
                     const SizedBox(height: 10),
                     AnimatedButton(
                       width: 200,

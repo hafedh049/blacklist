@@ -5,6 +5,7 @@ import 'package:blacklist/utils/shared.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:icons_plus/icons_plus.dart';
 
 class ProductsHistory extends StatefulWidget {
   const ProductsHistory({super.key, required this.products});
@@ -46,6 +47,11 @@ class _ProductsHistoryState extends State<ProductsHistory> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
+                    IconButton(
+                      onPressed: () => Navigator.pop(context),
+                      icon: const Icon(FontAwesome.chevron_left_solid, size: 25, color: purpleColor),
+                    ),
+                    const SizedBox(height: 10),
                     Wrap(
                       alignment: WrapAlignment.start,
                       crossAxisAlignment: WrapCrossAlignment.start,

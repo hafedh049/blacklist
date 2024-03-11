@@ -2,6 +2,7 @@ import 'package:blacklist/utils/shared.dart';
 import 'package:blacklist/views/admin/dashboard/charts/per_week.dart';
 import 'package:blacklist/views/admin/dashboard/counters/counters.dart';
 import 'package:flutter/material.dart';
+import 'package:icons_plus/icons_plus.dart';
 
 import 'charts/per_month.dart';
 import 'charts/per_year.dart';
@@ -22,7 +23,9 @@ class _DashboardState extends State<Dashboard> {
         padding: const EdgeInsets.all(24),
         child: SingleChildScrollView(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
+              IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(FontAwesome.chevron_left_solid, size: 25, color: purpleColor)),
               const SizedBox(height: 30),
               const Counters(),
               Wrap(

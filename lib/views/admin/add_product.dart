@@ -99,6 +99,8 @@ class _AddProductState extends State<AddProduct> {
             children: <Widget>[
               Row(
                 children: <Widget>[
+                  IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(FontAwesome.chevron_left_solid, size: 25, color: purpleColor)),
+                  const SizedBox(width: 10),
                   Text("AJOUTER PRODUIT", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
                   const Spacer(),
                 ],

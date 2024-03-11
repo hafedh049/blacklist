@@ -73,6 +73,8 @@ class _ClientState extends State<Client> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
+                IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(FontAwesome.chevron_left_solid, size: 25, color: purpleColor)),
+                const SizedBox(height: 10),
                 QRView(storeID: widget.storeID),
                 const SizedBox(height: 20),
                 AnimatedLoadingBorder(

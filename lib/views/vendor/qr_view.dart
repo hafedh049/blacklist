@@ -10,6 +10,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:icons_plus/icons_plus.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 import 'package:qr_code_dart_scan/qr_code_dart_scan.dart';
 
@@ -114,6 +115,11 @@ class _QRViewState extends State<QRView> {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              IconButton(
+                onPressed: () => Navigator.pop(context),
+                icon: const Icon(FontAwesome.chevron_left_solid, size: 25, color: purpleColor),
+              ),
+              const SizedBox(height: 10),
               Expanded(
                 child: StatefulBuilder(
                   key: _qrKey,
