@@ -3,6 +3,7 @@ import 'package:blacklist/utils/shared.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:icons_plus/icons_plus.dart';
 import 'package:lottie/lottie.dart';
 
 class DayCounter extends StatefulWidget {
@@ -22,9 +23,15 @@ class _DayCounterState extends State<DayCounter> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Text(
-              '${formatDate(DateTime.now(), const <String>[dd, '/', mm, '/', yyyy, " (00:00 AM)"])} - ${formatDate(DateTime.now(), const <String>[dd, '/', mm, '/', yyyy, " (23:59 PM)"])}',
-              style: GoogleFonts.itim(fontSize: 25, fontWeight: FontWeight.w500, color: purpleColor),
+            Row(
+              children: <Widget>[
+                IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(FontAwesome.chevron_left_solid, size: 25, color: purpleColor)),
+                const SizedBox(width: 10),
+                Text(
+                  '${formatDate(DateTime.now(), const <String>[dd, '/', mm, '/', yyyy, " (00:00 AM)"])} - ${formatDate(DateTime.now(), const <String>[dd, '/', mm, '/', yyyy, " (23:59 PM)"])}',
+                  style: GoogleFonts.itim(fontSize: 25, fontWeight: FontWeight.w500, color: purpleColor),
+                ),
+              ],
             ),
             const SizedBox(height: 20),
             Expanded(
