@@ -87,7 +87,7 @@ class _CategoryListState extends State<CategoryList> {
                               ),
                               const SizedBox(height: 20),
                               AnimatedButton(
-                                width: 80,
+                                width: 100,
                                 height: 30,
                                 text: 'CONFIRMER',
                                 selectedTextColor: whiteColor,
@@ -121,7 +121,7 @@ class _CategoryListState extends State<CategoryList> {
                               AddCategory(categories: _categories, setS: setState, storeID: widget.storeID),
                               const SizedBox(height: 20),
                               AnimatedButton(
-                                width: 80,
+                                width: 100,
                                 height: 30,
                                 text: 'SUPPRIMER',
                                 selectedTextColor: whiteColor,
@@ -192,7 +192,17 @@ class _CategoryListState extends State<CategoryList> {
                                                         children: <Widget>[
                                                           Text("Total D'articles", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
                                                           const SizedBox(width: 10),
-                                                          Text(item.categoryArticlesCount.toString(), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greenColor)),
+                                                          StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                                                            stream: FirebaseFirestore.instance.collection("categories").where("categoryID", isEqualTo: item.storeID).limit(1).snapshots(),
+                                                            builder: (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+                                                              if (snapshot.hasData) {
+                                                                final int categoryArticlesCount = snapshot.data!.docs[0]["categoryArticlesCount"];
+                                                                return Text(categoryArticlesCount.toString(), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: redColor));
+                                                              } else {
+                                                                return Text("Attend", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: redColor));
+                                                              }
+                                                            },
+                                                          ),
                                                         ],
                                                       ),
                                                       const SizedBox(height: 10),
@@ -200,7 +210,17 @@ class _CategoryListState extends State<CategoryList> {
                                                         children: <Widget>[
                                                           Text("Total produits", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
                                                           const SizedBox(width: 10),
-                                                          Text(item.categoryProductsCount.toString(), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: purpleColor)),
+                                                          StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                                                            stream: FirebaseFirestore.instance.collection("categories").where("categoryID", isEqualTo: item.storeID).limit(1).snapshots(),
+                                                            builder: (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+                                                              if (snapshot.hasData) {
+                                                                final int categoryProductsCount = snapshot.data!.docs[0]["categoryProductsCount"];
+                                                                return Text(categoryProductsCount.toString(), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: redColor));
+                                                              } else {
+                                                                return Text("Attend", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: redColor));
+                                                              }
+                                                            },
+                                                          ),
                                                         ],
                                                       ),
                                                     ],

@@ -106,9 +106,9 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
                     Text("Produits", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
                     const SizedBox(height: 10),
                     AnimatedButton(
-                      width: 150,
+                      width: 200,
                       height: 40,
-                      text: 'METTRE A JOUR',
+                      text: 'Ajouter Aux Panier',
                       selectedTextColor: darkColor,
                       animatedOn: AnimatedOn.onHover,
                       animationDuration: 500.ms,

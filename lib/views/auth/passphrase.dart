@@ -54,7 +54,11 @@ class _PassphraseState extends State<Passphrase> {
               if (value.docs.isNotEmpty) {
                 _cardKey.currentState!.setState(() => _submitButtonState = false);
                 showToast("Welcome VENDOR", greenColor);
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => CartRecepie(storeID: value.docs[0]["storeID"])));
+                if (value.docs.first.get("storeState") != "fermé") {
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => CartRecepie(storeID: value.docs[0]["storeID"])));
+                } else {
+                  showToast("Store est fermé", redColor);
+                }
               } else {
                 _cardKey.currentState!.setState(() => _submitButtonState = false);
                 showToast("Invalid Password", redColor);

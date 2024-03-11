@@ -11,8 +11,9 @@ import '../../utils/callbacks.dart';
 import '../../utils/shared.dart';
 
 class EditProduct extends StatefulWidget {
-  const EditProduct({super.key, required this.productID});
+  const EditProduct({super.key, required this.productID, required this.categoryID});
   final String productID;
+  final String categoryID;
   @override
   State<EditProduct> createState() => _EditProductState();
 }
@@ -199,7 +200,7 @@ class _EditProductState extends State<EditProduct> {
                   } else if (_productQuantityController.text.trim().isEmpty) {
                     showToast("Please fill the product quantity field", redColor);
                   } else if (_productStockAlertController.text.trim().isEmpty) {
-                    showToast("Please fill the product quantity field", redColor);
+                    showToast("Please fill the product stock alert field", redColor);
                   } else {
                     await _docRef!.update(
                       <String, dynamic>{
@@ -209,6 +210,11 @@ class _EditProductState extends State<EditProduct> {
                         'realPrice': double.parse(_productOldPriceController.text),
                         'newPrice': double.parse(_productNewPriceController.text),
                         'stockAlert': int.parse(_productStockAlertController.text),
+                      },
+                    );
+                    await FirebaseFirestore.instance.collection("categories").where("categoryID", isEqualTo: widget.categoryID).limit(1).get().then(
+                      (QuerySnapshot<Map<String, dynamic>> value) async {
+                        await value.docs.first.reference.update(<String, dynamic>{"categoryProductsCount": value.docs.first.get("categoryProductsCount") + int.parse(_productQuantityController.text)});
                       },
                     );
                     showToast("Product added successfully", greenColor);

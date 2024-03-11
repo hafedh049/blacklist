@@ -200,6 +200,21 @@ class _AddProductState extends State<AddProduct> {
                         "storeID": widget.storeID,
                       },
                     );
+                    await FirebaseFirestore.instance.collection("stores").where("storeID", isEqualTo: widget.storeID).limit(1).get().then(
+                      (QuerySnapshot<Map<String, dynamic>> value) async {
+                        await value.docs.first.reference.update(<String, dynamic>{"storeTotalProducts": value.docs.first.get("storeTotalProducts") + 1});
+                      },
+                    );
+                    await FirebaseFirestore.instance.collection("categories").where("categoryID", isEqualTo: widget.categoryID).limit(1).get().then(
+                      (QuerySnapshot<Map<String, dynamic>> value) async {
+                        await value.docs.first.reference.update(<String, dynamic>{"categoryArticlesCount": value.docs.first.get("categoryArticlesCount") + 1});
+                      },
+                    );
+                    await FirebaseFirestore.instance.collection("categories").where("categoryID", isEqualTo: widget.categoryID).limit(1).get().then(
+                      (QuerySnapshot<Map<String, dynamic>> value) async {
+                        await value.docs.first.reference.update(<String, dynamic>{"categoryProductsCount": value.docs.first.get("categoryProductsCount") + int.parse(_productQuantityController.text)});
+                      },
+                    );
                     showToast("Product added successfully", greenColor);
                     // ignore: use_build_context_synchronously
                     Navigator.pop(context);

@@ -153,7 +153,17 @@ class _StoresListState extends State<StoresList> {
                                                     children: <Widget>[
                                                       Text("Total Produits", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
                                                       const SizedBox(width: 10),
-                                                      Text(item.storeTotalProducts.toString(), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: redColor)),
+                                                      StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                                                        stream: FirebaseFirestore.instance.collection("stores").where("storeID", isEqualTo: item.storeID).limit(1).snapshots(),
+                                                        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+                                                          if (snapshot.hasData) {
+                                                            final int totalProducts = snapshot.data!.docs[0]["storeTotalProducts"];
+                                                            return Text(totalProducts.toString(), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: redColor));
+                                                          } else {
+                                                            return Text("Attend", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: redColor));
+                                                          }
+                                                        },
+                                                      ),
                                                     ],
                                                   ),
                                                   const SizedBox(height: 10),
@@ -187,7 +197,7 @@ class _StoresListState extends State<StoresList> {
                                                         textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
                                                         onPress: () async {
                                                           if (item.storeState != "ouvert") {
-                                                            await _refs[item.storeID]!.update(<String, dynamic>{"storeState": "ouvert"});
+                                                            await _refs[item.storeID]!.update(const <String, dynamic>{"storeState": "ouvert"});
                                                             showToast("Store opened", greenColor);
                                                             _storesKey.currentState!.setState(() => item.storeState = "ouvert");
                                                           } else {
@@ -210,7 +220,7 @@ class _StoresListState extends State<StoresList> {
                                                         textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
                                                         onPress: () async {
                                                           if (item.storeState != "fermé") {
-                                                            await _refs[item.storeID]!.update(<String, dynamic>{"storeState": "fermé"});
+                                                            await _refs[item.storeID]!.update(const <String, dynamic>{"storeState": "fermé"});
                                                             showToast("Store closed", greenColor);
                                                             _storesKey.currentState!.setState(() => item.storeState = "fermé");
                                                           } else {
