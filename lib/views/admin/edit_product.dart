@@ -1,3 +1,4 @@
+import 'package:blacklist/models/product_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
@@ -11,9 +12,9 @@ import '../../utils/callbacks.dart';
 import '../../utils/shared.dart';
 
 class EditProduct extends StatefulWidget {
-  const EditProduct({super.key, required this.productID, required this.categoryID});
-  final String productID;
-  final String categoryID;
+  const EditProduct({super.key, required this.product});
+  final ProductModel product;
+
   @override
   State<EditProduct> createState() => _EditProductState();
 }
@@ -27,22 +28,15 @@ class _EditProductState extends State<EditProduct> {
   final TextEditingController _productQuantityController = TextEditingController();
   final TextEditingController _productStockAlertController = TextEditingController();
 
-  DocumentReference? _docRef;
   @override
   void initState() {
-    FirebaseFirestore.instance.collection("products").where("productReference", isEqualTo: widget.productID).get().then(
-      (QuerySnapshot querySnapshot) {
-        final QueryDocumentSnapshot query = querySnapshot.docs.first;
-        _docRef = query.reference;
-        _productNameController.text = query.get("productName");
-        _productDateController.text = formatDate(query.get("date").toDate(), const <String>[yy, '-', M, '-', d, " ", HH, ':', nn, ':', ss]).toUpperCase();
-        _productNewPriceController.text = query.get("newPrice").toString();
-        _productOldPriceController.text = query.get("realPrice").toString();
-        _productQuantityController.text = query.get("productQuantity").toString();
-        _productReferenceController.text = query.get("productReference");
-        _productStockAlertController.text = query.get("stockAlert").toString();
-      },
-    );
+    _productNameController.text = widget.product.productName;
+    _productDateController.text = formatDate(widget.product.date, const <String>[yy, '-', M, '-', d, " ", HH, ':', nn, ':', ss]).toUpperCase();
+    _productNewPriceController.text = widget.product.newPrice.toString();
+    _productOldPriceController.text = widget.product.realPrice.toString();
+    _productQuantityController.text = widget.product.productQuantity.toString();
+    _productReferenceController.text = widget.product.productReference;
+    _productStockAlertController.text = widget.product.stockAlert.toString();
     super.initState();
   }
 
@@ -204,21 +198,33 @@ class _EditProductState extends State<EditProduct> {
                   } else if (_productStockAlertController.text.trim().isEmpty) {
                     showToast("Please fill the product stock alert field", redColor);
                   } else {
-                    await _docRef!.update(
-                      <String, dynamic>{
-                        "productQuantity": int.parse(_productQuantityController.text),
-                        "date": DateTime.now(),
-                        'productName': _productNameController.text.trim(),
-                        'realPrice': double.parse(_productOldPriceController.text),
-                        'newPrice': double.parse(_productNewPriceController.text),
-                        'stockAlert': int.parse(_productStockAlertController.text),
-                      },
-                    );
-                    await FirebaseFirestore.instance.collection("categories").where("categoryID", isEqualTo: widget.categoryID).limit(1).get().then(
+                    await FirebaseFirestore.instance.collection("products").where("productReference", isEqualTo: widget.product.productReference).limit(1).get().then(
                       (QuerySnapshot<Map<String, dynamic>> value) async {
-                        await value.docs.first.reference.update(<String, dynamic>{"categoryProductsCount": value.docs.first.get("categoryProductsCount") + int.parse(_productQuantityController.text)});
+                        await value.docs.first.reference.update(
+                          <String, dynamic>{
+                            "productQuantity": int.parse(_productQuantityController.text),
+                            "date": DateTime.now(),
+                            'productName': _productNameController.text.trim(),
+                            'realPrice': double.parse(_productOldPriceController.text),
+                            'newPrice': double.parse(_productNewPriceController.text),
+                            'stockAlert': int.parse(_productStockAlertController.text),
+                          },
+                        );
                       },
                     );
+
+                    await FirebaseFirestore.instance.collection("categories").where("categoryID", isEqualTo: widget.product.categoryID).limit(1).get().then(
+                      (QuerySnapshot<Map<String, dynamic>> value) async {
+                        await value.docs.first.reference.update(<String, dynamic>{"categoryProductsCount": value.docs.first.get("categoryProductsCount") - widget.product.productQuantity + int.parse(_productQuantityController.text)});
+                      },
+                    );
+
+                    await FirebaseFirestore.instance.collection("stores").where("storeID", isEqualTo: widget.product.storeID).limit(1).get().then(
+                      (QuerySnapshot<Map<String, dynamic>> value) async {
+                        await value.docs.first.reference.update(<String, dynamic>{"storeTotalProducts": value.docs.first.get("storeTotalProducts") - widget.product.productQuantity + int.parse(_productQuantityController.text)});
+                      },
+                    );
+
                     showToast("Product added successfully", greenColor);
                     // ignore: use_build_context_synchronously
                     Navigator.pop(context);

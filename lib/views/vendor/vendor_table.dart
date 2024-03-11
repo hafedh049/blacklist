@@ -198,15 +198,22 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
                                         final DateTime now = DateTime.now();
                                         for (VendorProduct product in _productsDataSource.products) {
                                           if (product.selected) {
-                                            final QuerySnapshot<Map<String, dynamic>> query = await FirebaseFirestore.instance.collection("products").where("productReference", isEqualTo: product.productReference).limit(1).get();
+                                            QuerySnapshot<Map<String, dynamic>> query = await FirebaseFirestore.instance.collection("products").where("productReference", isEqualTo: product.productReference).limit(1).get();
                                             await query.docs.first.reference.update(<String, dynamic>{"date": now, "productQuantity": product.productQuantity - int.parse(product.cartController.text)});
-                                            for (int index = 0; index < int.parse(product.cartController.text); index += 1) {
-                                              await FirebaseFirestore.instance.collection("sells").add(
-                                                    product.toJson()
-                                                      ..putIfAbsent("timestamp", () => now)
-                                                      ..putIfAbsent("clientID", () => widget.clientID),
-                                                  );
-                                            }
+                                            query = await FirebaseFirestore.instance.collection("categories").where("categoryID", isEqualTo: product.categoryID).limit(1).get();
+                                            await query.docs.first.reference.update(<String, dynamic>{"categoryProductsCount": query.docs.first.get("categoryProductsCount") - int.parse(product.cartController.text)});
+                                            query = await FirebaseFirestore.instance.collection("stores").where("storeID", isEqualTo: product.storeID).limit(1).get();
+                                            await query.docs.first.reference.update(<String, dynamic>{"storeTotalProducts": query.docs.first.get("storeTotalProducts") - int.parse(product.cartController.text)});
+                                            await Future.wait(
+                                              List<Future>.generate(
+                                                int.parse(product.cartController.text),
+                                                (int _) => FirebaseFirestore.instance.collection("sells").add(
+                                                      product.toJson()
+                                                        ..putIfAbsent("timestamp", () => now)
+                                                        ..putIfAbsent("clientID", () => widget.clientID),
+                                                    ),
+                                              ),
+                                            );
                                             product.productQuantity -= int.parse(product.cartController.text);
                                             product.cartController.text = "0";
                                             product.selected = false;

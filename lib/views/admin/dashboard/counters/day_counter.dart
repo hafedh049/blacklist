@@ -10,8 +10,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 
 class DayCounter extends StatefulWidget {
-  const DayCounter({super.key});
-
+  const DayCounter({super.key, required this.data});
+  final List<SelledProductModel> data;
   @override
   State<DayCounter> createState() => _DayCounterState();
 }
@@ -19,7 +19,7 @@ class DayCounter extends StatefulWidget {
 class _DayCounterState extends State<DayCounter> {
   List<SelledProductModel> _data = <SelledProductModel>[];
   Future<bool> _load() async {
-    await FirebaseFirestore.instance.collection("sells").where("timestamp", isGreaterThanOrEqualTo: DateTime.now().subtract(2.days)).get().then(
+    await FirebaseFirestore.instance.collection("sells").where("timestamp", isGreaterThanOrEqualTo: DateTime.now().subtract(1.days)).get().then(
       (QuerySnapshot<Map<String, dynamic>> value) {
         _data = value.docs.map((QueryDocumentSnapshot<Map<String, dynamic>> e) => SelledProductModel.fromJson(e.data())).toList();
       },

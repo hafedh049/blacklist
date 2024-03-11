@@ -7,8 +7,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 
 class MonthCounter extends StatefulWidget {
-  const MonthCounter({super.key});
-
+  const MonthCounter({super.key, required this.data});
+  final List<SelledProductModel> data;
   @override
   State<MonthCounter> createState() => _MonthCounterState();
 }

@@ -118,7 +118,7 @@ class ProductDataSource extends DataTableSource {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               IconButton(
-                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => EditProduct(categoryID: product.categoryID, productID: product.productReference))),
+                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => EditProduct(product: product))),
                 icon: const Icon(FontAwesome.pen_solid, color: purpleColor, size: 15),
               ),
               IconButton(

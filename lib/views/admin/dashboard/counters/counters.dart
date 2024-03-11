@@ -1,4 +1,5 @@
 import 'package:animated_flip_counter/animated_flip_counter.dart';
+import 'package:blacklist/models/selled_product.dart';
 import 'package:blacklist/views/admin/dashboard/counters/day_counter.dart';
 import 'package:blacklist/views/admin/dashboard/counters/month_counter.dart';
 import 'package:blacklist/views/admin/dashboard/counters/year_counter.dart';
@@ -21,21 +22,21 @@ class _CountersState extends State<Counters> {
   final Map<String, Map<String, dynamic>> _sells = <String, Map<String, dynamic>>{
     "day": <String, dynamic>{
       "icon": FontAwesome.wallet_solid,
-      "title": "SALES PER DAY",
+      "title": "VENTE PAR JOUR",
       "amount": 0.00,
-      "callback": (BuildContext context) => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const DayCounter())),
+      "sells": <SelledProductModel>[],
     },
     "month": <String, dynamic>{
       "icon": FontAwesome.circle_dollar_to_slot_solid,
-      "title": "SALES PER MONTH",
+      "title": "VENTE PAR MOIS",
       "amount": 0.00,
-      "callback": (BuildContext context) => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const MonthCounter())),
+      "sells": <SelledProductModel>[],
     },
     "year": <String, dynamic>{
       "icon": FontAwesome.google_wallet_brand,
-      "title": "SALES PER YEAR",
+      "title": "VENTE PAR ANNEE",
       "amount": 0.00,
-      "callback": (BuildContext context) => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const YearCounter())),
+      "sells": <SelledProductModel>[],
     },
   };
 
@@ -45,7 +46,15 @@ class _CountersState extends State<Counters> {
       (QuerySnapshot<Map<String, dynamic>> value) {
         final List<Map<String, dynamic>> data = value.docs.map(
           (QueryDocumentSnapshot<Map<String, dynamic>> e) {
-            print(e.get("newPrice") - e.get("realPrice"));
+            if ((e.get("timestamp").toDate() as DateTime).day == DateTime.now().day) {
+              _sells["day"]!["sells"].add(SelledProductModel.fromJson(e.data()));
+            }
+            if ((e.get("timestamp").toDate() as DateTime).month == DateTime.now().month) {
+              _sells["month"]!["sells"].add(SelledProductModel.fromJson(e.data()));
+            }
+            if ((e.get("timestamp").toDate() as DateTime).year == DateTime.now().year) {
+              _sells["year"]!["sells"].add(SelledProductModel.fromJson(e.data()));
+            }
             return <String, dynamic>{
               "timestamp": e.get("timestamp"),
               "price": e.get("newPrice") - e.get("realPrice"),
@@ -85,7 +94,16 @@ class _CountersState extends State<Counters> {
               splashColor: transparentColor,
               highlightColor: transparentColor,
               hoverColor: transparentColor,
-              onTap: () => item["callback"](context),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => item["title"].contains("VENTE PAR JOUR")
+                      ? DayCounter(data: item["sells"])
+                      : item["title"].contains("VENTE PAR MOIS")
+                          ? MonthCounter(data: item["sells"])
+                          : YearCounter(data: item["sells"]),
+                ),
+              ),
               child: Stack(
                 alignment: Alignment.centerLeft,
                 children: <Widget>[
