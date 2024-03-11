@@ -207,7 +207,9 @@ class ProductDataSource extends DataTableSource {
                     ),
                     IconButton(
                       onPressed: () {
-                        product.cartController.text = (int.parse(product.cartController.text) + 1).toString();
+                        if (int.parse(product.cartController.text) < product.productQuantity) {
+                          product.cartController.text = (int.parse(product.cartController.text) + 1).toString();
+                        }
                       },
                       icon: const Icon(FontAwesome.circle_plus_solid, size: 20, color: whiteColor),
                     ),

@@ -31,25 +31,27 @@ class _DrawerHolderState extends State<DrawerHolder> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(FontAwesome.chevron_left_solid, size: 25, color: purpleColor)),
-            Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  for (final Map<String, dynamic> item in _screens)
-                    InkWell(
-                      hoverColor: transparentColor,
-                      splashColor: transparentColor,
-                      highlightColor: transparentColor,
-                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => item["screen"])),
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(vertical: 10),
-                        padding: const EdgeInsets.all(24),
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: purpleColor),
-                        child: Text(item["title"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.bold, color: whiteColor)),
+            Expanded(
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    for (final Map<String, dynamic> item in _screens)
+                      InkWell(
+                        hoverColor: transparentColor,
+                        splashColor: transparentColor,
+                        highlightColor: transparentColor,
+                        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => item["screen"])),
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(vertical: 10),
+                          padding: const EdgeInsets.all(24),
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: purpleColor),
+                          child: Text(item["title"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.bold, color: whiteColor)),
+                        ),
                       ),
-                    ),
-                ],
+                  ],
+                ),
               ),
             ),
           ],

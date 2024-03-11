@@ -127,31 +127,122 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
                       transitionType: TransitionType.TOP_TO_BOTTOM,
                       textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
                       onPress: () async {
-                        showToast("PLEASE WAIT", purpleColor);
-                        final DateTime now = DateTime.now();
-                        for (VendorProduct product in _productsDataSource.products) {
-                          if (product.selected) {
-                            final QuerySnapshot<Map<String, dynamic>> query = await FirebaseFirestore.instance.collection("products").where("productReference", isEqualTo: product.productReference).limit(1).get();
-                            await query.docs.first.reference.update(<String, dynamic>{"date": now, "productQuantity": product.productQuantity - int.parse(product.cartController.text)});
-                            for (int index = 0; index < int.parse(product.cartController.text); index += 1) {
-                              await FirebaseFirestore.instance.collection("sells").add(
-                                    product.toJson()
-                                      ..putIfAbsent("timestamp", () => now)
-                                      ..putIfAbsent("clientID", () => widget.clientID),
-                                  );
-                              showToast("UPDATED SUCCESSFULLY", purpleColor);
-                            }
-                            product.productQuantity -= int.parse(product.cartController.text);
-                            product.cartController.text = "0";
-                            product.selected = false;
-                          }
-                        }
-                        // ignore: use_build_context_synchronously
-                        _pagerKey.currentState!.setState(() {
-                          _productsDataSource = ProductDataSource(context, _productsDataSource.products);
-                          _productsDataSource.updateSelectedProducts(_productSelections);
-                        });
-                        showToast("UPDATED COMPLETED", purpleColor);
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) => AlertDialog(
+                            content: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Expanded(
+                                  child: SingleChildScrollView(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        for (VendorProduct product in _productsDataSource.products.where((VendorProduct element) => element.selected)) ...<Widget>[
+                                          Container(
+                                            padding: const EdgeInsets.all(8),
+                                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: scaffoldColor),
+                                            child: Column(
+                                              children: <Widget>[
+                                                Row(
+                                                  children: <Widget>[
+                                                    Container(
+                                                      padding: const EdgeInsets.all(8),
+                                                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: purpleColor),
+                                                      child: Text("PRODUIT", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
+                                                    ),
+                                                    const SizedBox(width: 10),
+                                                    Text(product.productName.toUpperCase(), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor))
+                                                  ],
+                                                ),
+                                                const SizedBox(height: 20),
+                                                Row(
+                                                  children: <Widget>[
+                                                    Container(
+                                                      padding: const EdgeInsets.all(8),
+                                                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: purpleColor),
+                                                      child: Text("TOTAL", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
+                                                    ),
+                                                    const SizedBox(width: 10),
+                                                    Text(product.cartController.text, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor))
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          const SizedBox(height: 10),
+                                        ],
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Row(
+                                  children: <Widget>[
+                                    AnimatedButton(
+                                      width: 150,
+                                      height: 40,
+                                      text: 'CONFIRMER',
+                                      selectedTextColor: darkColor,
+                                      animatedOn: AnimatedOn.onHover,
+                                      animationDuration: 500.ms,
+                                      isReverse: true,
+                                      selectedBackgroundColor: purpleColor,
+                                      backgroundColor: purpleColor,
+                                      transitionType: TransitionType.TOP_TO_BOTTOM,
+                                      textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                                      onPress: () async {
+                                        Navigator.pop(context);
+                                        showToast("Attend", purpleColor);
+                                        final DateTime now = DateTime.now();
+                                        for (VendorProduct product in _productsDataSource.products) {
+                                          if (product.selected) {
+                                            final QuerySnapshot<Map<String, dynamic>> query = await FirebaseFirestore.instance.collection("products").where("productReference", isEqualTo: product.productReference).limit(1).get();
+                                            await query.docs.first.reference.update(<String, dynamic>{"date": now, "productQuantity": product.productQuantity - int.parse(product.cartController.text)});
+                                            for (int index = 0; index < int.parse(product.cartController.text); index += 1) {
+                                              await FirebaseFirestore.instance.collection("sells").add(
+                                                    product.toJson()
+                                                      ..putIfAbsent("timestamp", () => now)
+                                                      ..putIfAbsent("clientID", () => widget.clientID),
+                                                  );
+                                            }
+                                            product.productQuantity -= int.parse(product.cartController.text);
+                                            product.cartController.text = "0";
+                                            product.selected = false;
+                                          }
+                                        }
+                                        // ignore: use_build_context_synchronously
+                                        _pagerKey.currentState!.setState(
+                                          () {
+                                            _productsDataSource = ProductDataSource(context, _productsDataSource.products);
+                                            _productsDataSource.updateSelectedProducts(_productSelections);
+                                          },
+                                        );
+                                        showToast("Ajout a été effectué", purpleColor);
+                                      },
+                                    ),
+                                    const SizedBox(width: 20),
+                                    AnimatedButton(
+                                      width: 150,
+                                      height: 40,
+                                      text: 'ANNULER',
+                                      selectedTextColor: darkColor,
+                                      animatedOn: AnimatedOn.onHover,
+                                      animationDuration: 500.ms,
+                                      isReverse: true,
+                                      selectedBackgroundColor: greyColor,
+                                      backgroundColor: greyColor,
+                                      transitionType: TransitionType.TOP_TO_BOTTOM,
+                                      textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                                      onPress: () => Navigator.pop(context),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
                       },
                     ),
                   ],
