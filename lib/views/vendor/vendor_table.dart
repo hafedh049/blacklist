@@ -163,7 +163,7 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
                                                     Container(
                                                       padding: const EdgeInsets.all(8),
                                                       decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: purpleColor),
-                                                      child: Text("TOTAL", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
+                                                      child: Text("QUANTITE", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
                                                     ),
                                                     const SizedBox(width: 10),
                                                     Text(product.cartController.text, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor))
@@ -178,6 +178,12 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
                                     ),
                                   ),
                                 ),
+                                Container(
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: redColor),
+                                  child: Text("TOTAL (${_productsDataSource.products.where((VendorProduct element) => element.selected).map((VendorProduct e) => e.newPrice * int.parse(e.cartController.text)).reduce((double value, double element) => element).toStringAsFixed(2)})", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
+                                ),
+                                const SizedBox(height: 10),
                                 Row(
                                   children: <Widget>[
                                     AnimatedButton(

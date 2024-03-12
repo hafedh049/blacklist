@@ -174,11 +174,11 @@ class _SecondDayState extends State<SecondDay> {
             ),
             Container(
               padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(color: purpleColor, borderRadius: BorderRadius.circular(5)),
+              decoration: BoxDecoration(color: redColor, borderRadius: BorderRadius.circular(5)),
               child: StatefulBuilder(
                 key: _totalKey,
                 builder: (BuildContext context, void Function(void Function()) _) {
-                  return Text(_sum().toString(), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor));
+                  return Text("RECETTE : ${_sum().toStringAsFixed(2)}", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor));
                 },
               ),
             ),

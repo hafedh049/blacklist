@@ -1,9 +1,9 @@
 import 'package:animated_flip_counter/animated_flip_counter.dart';
-import 'package:blacklist/models/selled_product.dart';
 import 'package:blacklist/views/admin/dashboard/counters/day_counter.dart';
 import 'package:blacklist/views/admin/dashboard/counters/month_counter.dart';
 import 'package:blacklist/views/admin/dashboard/counters/year_counter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -19,24 +19,26 @@ class Counters extends StatefulWidget {
 }
 
 class _CountersState extends State<Counters> {
+  final Map<String, Map<String, dynamic>> _history = <String, Map<String, dynamic>>{
+    "days": <String, dynamic>{},
+    "months": <String, dynamic>{},
+    "years": <String, dynamic>{},
+  };
   final Map<String, Map<String, dynamic>> _sells = <String, Map<String, dynamic>>{
     "day": <String, dynamic>{
       "icon": FontAwesome.wallet_solid,
       "title": "VENTE PAR JOUR",
       "amount": 0.00,
-      "sells": <SelledProductModel>[],
     },
     "month": <String, dynamic>{
       "icon": FontAwesome.circle_dollar_to_slot_solid,
       "title": "VENTE PAR MOIS",
       "amount": 0.00,
-      "sells": <SelledProductModel>[],
     },
     "year": <String, dynamic>{
       "icon": FontAwesome.google_wallet_brand,
       "title": "VENTE PAR ANNEE",
       "amount": 0.00,
-      "sells": <SelledProductModel>[],
     },
   };
 
@@ -46,22 +48,36 @@ class _CountersState extends State<Counters> {
       (QuerySnapshot<Map<String, dynamic>> value) {
         final List<Map<String, dynamic>> data = value.docs.map(
           (QueryDocumentSnapshot<Map<String, dynamic>> e) {
-            if ((e.get("timestamp").toDate() as DateTime).day == DateTime.now().day) {
-              _sells["day"]!["sells"].add(SelledProductModel.fromJson(e.data()));
-            }
-            if ((e.get("timestamp").toDate() as DateTime).month == DateTime.now().month) {
-              _sells["month"]!["sells"].add(SelledProductModel.fromJson(e.data()));
-            }
-            if ((e.get("timestamp").toDate() as DateTime).year == DateTime.now().year) {
-              _sells["year"]!["sells"].add(SelledProductModel.fromJson(e.data()));
-            }
             return <String, dynamic>{
               "timestamp": e.get("timestamp"),
               "price": e.get("newPrice") - e.get("realPrice"),
             };
           },
         ).toList();
+
         for (final Map<String, dynamic> item in data) {
+          final String day = formatDate(item["timestamp"].toDate(), const <String>[dd, "/", mm, "/", yyyy]);
+          final String month = formatDate(item["timestamp"].toDate(), const <String>[mm, "/", yyyy]);
+          final String year = formatDate(item["timestamp"].toDate(), const <String>[yyyy]);
+
+          if (_history["days"]!.containsKey(day)) {
+            _history["days"]![day] += item["price"];
+          } else {
+            _history["days"]![day] = item["price"];
+          }
+
+          if (_history["months"]!.containsKey(month)) {
+            _history["months"]![month] += item["price"];
+          } else {
+            _history["months"]![month] = item["price"];
+          }
+
+          if (_history["years"]!.containsKey(year)) {
+            _history["years"]![year] += item["price"];
+          } else {
+            _history["years"]![year] = item["price"];
+          }
+
           if ((item["timestamp"].toDate() as DateTime).day == DateTime.now().day) {
             _sells["day"]!["amount"] = _sells["day"]!["amount"]! + item["price"];
           }
@@ -98,10 +114,10 @@ class _CountersState extends State<Counters> {
                 context,
                 MaterialPageRoute(
                   builder: (BuildContext context) => item["title"].contains("VENTE PAR JOUR")
-                      ? DayCounter(data: item["sells"])
+                      ? DayCounter(data: _history["days"]!)
                       : item["title"].contains("VENTE PAR MOIS")
-                          ? MonthCounter(data: item["sells"])
-                          : YearCounter(data: item["sells"]),
+                          ? MonthCounter(data: _history["months"]!)
+                          : YearCounter(data: _history["years"]!),
                 ),
               ),
               child: Stack(

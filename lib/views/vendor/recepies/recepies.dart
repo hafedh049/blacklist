@@ -17,11 +17,11 @@ class Recepies extends StatefulWidget {
 class _RecepiesState extends State<Recepies> {
   final List<Map<String, dynamic>> _recepies = <Map<String, dynamic>>[
     <String, dynamic>{
-      "date": formatDate(DateTime.now().add(1.days), <String>[dd, " ", M, " ", yyyy]).toUpperCase(),
+      "date": formatDate(DateTime.now(), <String>[dd, " ", M, " ", yyyy]).toUpperCase(),
       "screen": const FirstDay(),
     },
     <String, dynamic>{
-      "date": formatDate(DateTime.now(), <String>[dd, " ", M, " ", yyyy]).toUpperCase(),
+      "date": formatDate(DateTime.now().subtract(1.days), <String>[dd, " ", M, " ", yyyy]).toUpperCase(),
       "screen": const SecondDay(),
     },
   ];

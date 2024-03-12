@@ -1,19 +1,26 @@
-import 'package:blacklist/models/selled_product.dart';
 import 'package:blacklist/utils/shared.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
-import 'package:lottie/lottie.dart';
 
 class MonthCounter extends StatefulWidget {
   const MonthCounter({super.key, required this.data});
-  final List<SelledProductModel> data;
+  final Map<String, dynamic> data;
   @override
   State<MonthCounter> createState() => _MonthCounterState();
 }
 
 class _MonthCounterState extends State<MonthCounter> {
+  late final List<MapEntry<String, dynamic>> _months;
+
+  @override
+  void initState() {
+    final String month = formatDate(DateTime.now(), const <String>[mm, "/", yyyy]);
+    _months = (widget.data..putIfAbsent(month, () => 0)).entries.toList();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,20 +30,11 @@ class _MonthCounterState extends State<MonthCounter> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Row(
-              children: <Widget>[
-                IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(FontAwesome.chevron_left_solid, size: 25, color: purpleColor)),
-                const SizedBox(width: 10),
-                Text(
-                  '${formatDate(DateTime(DateTime.now().year, DateTime.now().month, 1), const <String>[dd, "/", mm, "/", yyyy])} - ${formatDate(DateTime(DateTime.now().year, DateTime.now().year, 31), const <String>[dd, "/", mm, "/", yyyy])}',
-                  style: GoogleFonts.itim(fontSize: 25, fontWeight: FontWeight.w500, color: purpleColor),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
+            IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(FontAwesome.chevron_left_solid, size: 25, color: purpleColor)),
+            const SizedBox(height: 10),
             Expanded(
-              child: widget.data.isEmpty
-                  ? Center(child: LottieBuilder.asset("assets/lotties/empty.json"))
+              child: _months.isEmpty
+                  ? Center(child: Text("PAS DE VENTE", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.bold, color: whiteColor)))
                   : ListView.separated(
                       itemBuilder: (BuildContext context, int index) => Container(
                         padding: const EdgeInsets.all(16),
@@ -45,13 +43,29 @@ class _MonthCounterState extends State<MonthCounter> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
-                            Text(widget.data[index].productName, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.bold, color: whiteColor)),
+                            Row(
+                              children: <Widget>[
+                                Container(
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: BoxDecoration(color: blueColor, borderRadius: BorderRadius.circular(5)),
+                                  child: Text("MOIS", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.bold, color: whiteColor)),
+                                ),
+                                const SizedBox(width: 10),
+                                Text(_months[index].key, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
+                              ],
+                            ),
                             const SizedBox(height: 20),
-                            Text(widget.data[index].productCategory, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.bold, color: whiteColor)),
-                            const SizedBox(height: 20),
-                            Text(widget.data[index].newPrice.toStringAsFixed(2), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.bold, color: whiteColor)),
-                            const SizedBox(height: 20),
-                            Text("1", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.bold, color: whiteColor)),
+                            Row(
+                              children: <Widget>[
+                                Container(
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: BoxDecoration(color: blueColor, borderRadius: BorderRadius.circular(5)),
+                                  child: Text("TOTALE", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.bold, color: whiteColor)),
+                                ),
+                                const SizedBox(width: 10),
+                                Text(_months[index].value == 0 ? "PAS DE VENTE DANS CE MOIS" : _months[index].value.toStringAsFixed(2), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
+                              ],
+                            ),
                           ],
                         ),
                       ),
