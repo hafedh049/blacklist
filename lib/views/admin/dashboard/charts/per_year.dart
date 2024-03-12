@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:icons_plus/icons_plus.dart';
 
 import '../../../../utils/shared.dart';
 
@@ -44,7 +45,7 @@ class _PerYearState extends State<PerYear> {
 
     String text = "";
 
-    if (value % 200 == 0) {
+    if (value % 500 == 0) {
       text = value.toStringAsFixed(0);
     } else {
       return Container();
@@ -64,57 +65,65 @@ class _PerYearState extends State<PerYear> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 400,
-      width: 600,
-      padding: const EdgeInsets.all(16),
-      decoration: const BoxDecoration(color: darkColor),
-      child: FutureBuilder<bool>(
-        future: _load(),
-        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-          if (snapshot.hasData) {
-            return _mappedData.values.every((double element) => element == 0.0)
-                ? Center(child: Text("NOT YET.", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: whiteColor)))
-                : StatefulBuilder(
-                    builder: (BuildContext context, void Function(void Function()) _) {
-                      return LineChart(
-                        LineChartData(
-                          gridData: FlGridData(
-                            show: true,
-                            drawVerticalLine: true,
-                            horizontalInterval: 1,
-                            verticalInterval: 1,
-                            getDrawingHorizontalLine: (double value) => FlLine(color: whiteColor.withOpacity(.1), strokeWidth: .1),
-                            getDrawingVerticalLine: (double value) => FlLine(color: whiteColor.withOpacity(.1), strokeWidth: .1),
-                          ),
-                          titlesData: FlTitlesData(
-                            show: true,
-                            rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                            topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                            bottomTitles: AxisTitles(sideTitles: SideTitles(showTitles: true, interval: 1, getTitlesWidget: _bottomTitleWidgets)),
-                            leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: true, interval: 1, getTitlesWidget: _leftTitleWidgets)),
-                          ),
-                          borderData: FlBorderData(show: false),
-                          lineBarsData: <LineChartBarData>[
-                            LineChartBarData(
-                              spots: _mappedData.entries.map((MapEntry<int, double> e) => FlSpot(e.key.toDouble(), e.value)).toList(),
-                              isCurved: false,
-                              gradient: LinearGradient(colors: <Color>[whiteColor.withOpacity(.3), purpleColor.withOpacity(.6)]),
-                              barWidth: 5,
-                              isStrokeCapRound: true,
-                              dotData: const FlDotData(show: true),
-                              belowBarData: BarAreaData(show: true, gradient: LinearGradient(colors: <Color>[whiteColor.withOpacity(.2), purpleColor.withOpacity(.2)])),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  );
-          } else if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Loading();
-          }
-          return Errored(error: snapshot.toString());
-        },
+    return Scaffold(
+      body: Column(
+        children: <Widget>[
+          IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(FontAwesome.chevron_left_solid, size: 25, color: purpleColor)),
+          const SizedBox(height: 10),
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: const BoxDecoration(color: darkColor),
+              child: FutureBuilder<bool>(
+                future: _load(),
+                builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                  if (snapshot.hasData) {
+                    return _mappedData.values.every((double element) => element == 0.0)
+                        ? Center(child: Text("NOT YET.", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: whiteColor)))
+                        : StatefulBuilder(
+                            builder: (BuildContext context, void Function(void Function()) _) {
+                              return LineChart(
+                                LineChartData(
+                                  gridData: FlGridData(
+                                    show: true,
+                                    drawVerticalLine: true,
+                                    horizontalInterval: 1,
+                                    verticalInterval: 1,
+                                    getDrawingHorizontalLine: (double value) => FlLine(color: whiteColor.withOpacity(.1), strokeWidth: .1),
+                                    getDrawingVerticalLine: (double value) => FlLine(color: whiteColor.withOpacity(.1), strokeWidth: .1),
+                                  ),
+                                  titlesData: FlTitlesData(
+                                    show: true,
+                                    rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                                    topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                                    bottomTitles: AxisTitles(sideTitles: SideTitles(showTitles: true, interval: 1, getTitlesWidget: _bottomTitleWidgets)),
+                                    leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: true, interval: 1, getTitlesWidget: _leftTitleWidgets)),
+                                  ),
+                                  borderData: FlBorderData(show: false),
+                                  lineBarsData: <LineChartBarData>[
+                                    LineChartBarData(
+                                      spots: _mappedData.entries.map((MapEntry<int, double> e) => FlSpot(e.key.toDouble(), e.value)).toList(),
+                                      isCurved: false,
+                                      gradient: LinearGradient(colors: <Color>[whiteColor.withOpacity(.3), purpleColor.withOpacity(.6)]),
+                                      barWidth: 5,
+                                      isStrokeCapRound: true,
+                                      dotData: const FlDotData(show: true),
+                                      belowBarData: BarAreaData(show: true, gradient: LinearGradient(colors: <Color>[whiteColor.withOpacity(.2), purpleColor.withOpacity(.2)])),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          );
+                  } else if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Loading();
+                  }
+                  return Errored(error: snapshot.toString());
+                },
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

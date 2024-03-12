@@ -19,6 +19,7 @@ class Main extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: "Store",
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark(),
       home: FutureBuilder<FirebaseApp>(
