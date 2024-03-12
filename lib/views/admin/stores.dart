@@ -66,7 +66,7 @@ class _StoresListState extends State<StoresList> {
                   backgroundColor: purpleColor,
                   transitionType: TransitionType.TOP_TO_BOTTOM,
                   textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                  onPress: () => showModalBottomSheet(context: context, builder: (BuildContext context) => AddStore(stores: _stores, callback: () => _storesKey.currentState!.setState(() {}))),
+                  onPress: () => showDialog(context: context, builder: (BuildContext context) => AlertDialog(contentPadding: const EdgeInsets.all(16), content: AddStore(stores: _stores, callback: () => _storesKey.currentState!.setState(() {})))),
                 ),
                 const SizedBox(width: 20),
                 AnimatedButton(

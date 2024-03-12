@@ -53,8 +53,8 @@ class _PassphraseState extends State<Passphrase> {
             (QuerySnapshot<Map<String, dynamic>> value) {
               if (value.docs.isNotEmpty) {
                 _cardKey.currentState!.setState(() => _submitButtonState = false);
-                showToast("Welcome VENDOR", greenColor);
                 if (value.docs.first.get("storeState") != "fermé") {
+                  showToast("Welcome VENDOR", greenColor);
                   Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => CartRecepie(storeID: value.docs[0]["storeID"])));
                 } else {
                   showToast("Store est fermé", redColor);
@@ -82,180 +82,184 @@ class _PassphraseState extends State<Passphrase> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: scaffoldColor,
-      body: Center(
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              AnimatedLoadingBorder(
-                borderWidth: 4,
-                borderColor: purpleColor,
-                child: Container(
-                  color: darkColor,
-                  width: MediaQuery.sizeOf(context).width * .7,
-                  padding: const EdgeInsets.all(24),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Text("WELCOME", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
-                      const SizedBox(height: 10),
-                      StatefulBuilder(
-                        builder: (BuildContext context, void Function(void Function()) _) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  Text("VENDEUR", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
-                                  const SizedBox(width: 10),
-                                  Radio(
-                                    groupValue: _isVendor,
-                                    value: true,
-                                    onChanged: (bool? value) {
-                                      _(() => _isVendor = value!);
-                                      _pragmaKey.currentState!.setState(() {});
-                                    },
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  Text("ADMIN", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
-                                  const SizedBox(width: 10),
-                                  Radio(
-                                    groupValue: _isVendor,
-                                    value: false,
-                                    onChanged: (bool? value) {
-                                      _(() => _isVendor = value!);
-                                      _pragmaKey.currentState!.setState(() {});
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-                      Container(width: MediaQuery.sizeOf(context).width, height: .3, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),
-                      StatefulBuilder(
-                          key: _pragmaKey,
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        backgroundColor: scaffoldColor,
+        body: Center(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                AnimatedLoadingBorder(
+                  borderWidth: 4,
+                  borderColor: purpleColor,
+                  child: Container(
+                    color: darkColor,
+                    width: MediaQuery.sizeOf(context).width * .7,
+                    padding: const EdgeInsets.all(24),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Text("WELCOME", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
+                        const SizedBox(height: 10),
+                        StatefulBuilder(
                           builder: (BuildContext context, void Function(void Function()) _) {
-                            return _isVendor
-                                ? const SizedBox()
-                                : Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: <Widget>[
-                                          Flexible(child: Text("E-mail", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor))),
-                                          const SizedBox(width: 5),
-                                          Text("*", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: redColor)),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 20),
-                                      Container(
-                                        decoration: BoxDecoration(color: scaffoldColor, borderRadius: BorderRadius.circular(3)),
-                                        child: StatefulBuilder(
-                                          builder: (BuildContext context, void Function(void Function()) _) {
-                                            return TextField(
-                                              onSubmitted: (String value) => _signIn(),
-                                              onChanged: (String value) => value.trim().length <= 1 ? _(() {}) : null,
-                                              controller: _emailController,
-                                              style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                                              decoration: InputDecoration(
-                                                contentPadding: const EdgeInsets.all(20),
-                                                focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
-                                                border: InputBorder.none,
-                                                hintText: 'abcd@xyz.tn',
-                                                hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                                                prefixIcon: _emailController.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
-                                              ),
-                                              cursorColor: purpleColor,
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                      const SizedBox(height: 20),
-                                    ],
-                                  );
-                          }),
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Flexible(child: Text("Mot de passe", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor))),
-                          const SizedBox(width: 5),
-                          Text("*", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: redColor)),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-                      Container(
-                        decoration: BoxDecoration(color: scaffoldColor, borderRadius: BorderRadius.circular(3)),
-                        child: StatefulBuilder(
-                          builder: (BuildContext context, void Function(void Function()) _) {
-                            return TextField(
-                              obscureText: !_passwordState,
-                              onSubmitted: (String value) => _signIn(),
-                              onChanged: (String value) => value.trim().length <= 1 ? _(() {}) : null,
-                              controller: _passwordController,
-                              style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                              decoration: InputDecoration(
-                                contentPadding: const EdgeInsets.all(20),
-                                focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
-                                border: InputBorder.none,
-                                hintText: '**********',
-                                hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                                prefixIcon: _passwordController.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
-                                suffixIcon: IconButton(onPressed: () => _(() => _passwordState = !_passwordState), icon: Icon(_passwordState ? FontAwesome.eye_solid : FontAwesome.eye_slash_solid, size: 15, color: purpleColor)),
-                              ),
-                              cursorColor: purpleColor,
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    Text("VENDEUR", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
+                                    const SizedBox(width: 10),
+                                    Radio(
+                                      groupValue: _isVendor,
+                                      value: true,
+                                      onChanged: (bool? value) {
+                                        _(() => _isVendor = value!);
+                                        _pragmaKey.currentState!.setState(() {});
+                                      },
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    Text("ADMIN", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
+                                    const SizedBox(width: 10),
+                                    Radio(
+                                      groupValue: _isVendor,
+                                      value: false,
+                                      onChanged: (bool? value) {
+                                        _(() => _isVendor = value!);
+                                        _pragmaKey.currentState!.setState(() {});
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ],
                             );
                           },
                         ),
-                      ),
-                      const SizedBox(height: 20),
-                      StatefulBuilder(
-                        key: _cardKey,
-                        builder: (BuildContext context, void Function(void Function()) _) {
-                          return Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              IgnorePointer(
-                                ignoring: _submitButtonState,
-                                child: AnimatedButton(
-                                  width: 150,
-                                  height: 40,
-                                  text: _submitButtonState ? "ATTEND..." : 'CONTINUER',
-                                  selectedTextColor: darkColor,
-                                  animatedOn: AnimatedOn.onHover,
-                                  animationDuration: 500.ms,
-                                  isReverse: true,
-                                  selectedBackgroundColor: redColor,
-                                  backgroundColor: purpleColor,
-                                  transitionType: TransitionType.TOP_TO_BOTTOM,
-                                  textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                                  onPress: () => _signIn(),
+                        Container(width: MediaQuery.sizeOf(context).width, height: .3, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),
+                        StatefulBuilder(
+                            key: _pragmaKey,
+                            builder: (BuildContext context, void Function(void Function()) _) {
+                              return _isVendor
+                                  ? const SizedBox()
+                                  : Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: <Widget>[
+                                            Flexible(child: Text("E-mail", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor))),
+                                            const SizedBox(width: 5),
+                                            Text("*", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: redColor)),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 20),
+                                        Container(
+                                          decoration: BoxDecoration(color: scaffoldColor, borderRadius: BorderRadius.circular(3)),
+                                          child: StatefulBuilder(
+                                            builder: (BuildContext context, void Function(void Function()) _) {
+                                              return TextField(
+                                                enableSuggestions: true,
+                                                onSubmitted: (String value) => _signIn(),
+                                                onChanged: (String value) => value.trim().length <= 1 ? _(() {}) : null,
+                                                controller: _emailController,
+                                                style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                                                decoration: InputDecoration(
+                                                  contentPadding: const EdgeInsets.all(20),
+                                                  focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
+                                                  border: InputBorder.none,
+                                                  hintText: 'abcd@xyz.tn',
+                                                  hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                                                  prefixIcon: _emailController.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
+                                                ),
+                                                cursorColor: purpleColor,
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                        const SizedBox(height: 20),
+                                      ],
+                                    );
+                            }),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Flexible(child: Text("Mot de passe", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor))),
+                            const SizedBox(width: 5),
+                            Text("*", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: redColor)),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
+                        Container(
+                          decoration: BoxDecoration(color: scaffoldColor, borderRadius: BorderRadius.circular(3)),
+                          child: StatefulBuilder(
+                            builder: (BuildContext context, void Function(void Function()) _) {
+                              return TextField(
+                                obscureText: !_passwordState,
+                                onSubmitted: (String value) => _signIn(),
+                                onChanged: (String value) => value.trim().length <= 1 ? _(() {}) : null,
+                                controller: _passwordController,
+                                style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                                decoration: InputDecoration(
+                                  contentPadding: const EdgeInsets.all(20),
+                                  focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
+                                  border: InputBorder.none,
+                                  hintText: '**********',
+                                  hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                                  prefixIcon: _passwordController.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
+                                  suffixIcon: IconButton(onPressed: () => _(() => _passwordState = !_passwordState), icon: Icon(_passwordState ? FontAwesome.eye_solid : FontAwesome.eye_slash_solid, size: 15, color: purpleColor)),
                                 ),
-                              ),
-                              const SizedBox(width: 10),
-                              AnimatedOpacity(opacity: _submitButtonState ? 1 : 0, duration: 300.ms, child: const Icon(FontAwesome.bookmark_solid, color: purpleColor, size: 35)),
-                            ],
-                          );
-                        },
-                      ),
-                    ],
+                                cursorColor: purpleColor,
+                              );
+                            },
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        StatefulBuilder(
+                          key: _cardKey,
+                          builder: (BuildContext context, void Function(void Function()) _) {
+                            return Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                IgnorePointer(
+                                  ignoring: _submitButtonState,
+                                  child: AnimatedButton(
+                                    width: 150,
+                                    height: 40,
+                                    text: _submitButtonState ? "ATTEND..." : 'CONTINUER',
+                                    selectedTextColor: darkColor,
+                                    animatedOn: AnimatedOn.onHover,
+                                    animationDuration: 500.ms,
+                                    isReverse: true,
+                                    selectedBackgroundColor: redColor,
+                                    backgroundColor: purpleColor,
+                                    transitionType: TransitionType.TOP_TO_BOTTOM,
+                                    textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                                    onPress: () => _signIn(),
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                AnimatedOpacity(opacity: _submitButtonState ? 1 : 0, duration: 300.ms, child: const Icon(FontAwesome.bookmark_solid, color: purpleColor, size: 35)),
+                              ],
+                            );
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

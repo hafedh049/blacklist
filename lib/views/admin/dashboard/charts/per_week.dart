@@ -62,55 +62,57 @@ class _PerWeekState extends State<PerWeek> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(FontAwesome.chevron_left_solid, size: 25, color: purpleColor)),
-          const SizedBox(height: 10),
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.all(16),
-              decoration: const BoxDecoration(color: darkColor),
-              child: FutureBuilder<bool>(
-                future: _load(),
-                builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-                  if (snapshot.hasData) {
-                    return _mappedData.values.every((double element) => element == 0.0)
-                        ? Center(child: Text("NOT YET.", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: whiteColor)))
-                        : StatefulBuilder(
-                            builder: (BuildContext context, void Function(void Function()) _) {
-                              return BarChart(
-                                BarChartData(
-                                  titlesData: FlTitlesData(
-                                    show: true,
-                                    rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                                    topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                                    bottomTitles: AxisTitles(sideTitles: SideTitles(showTitles: true, getTitlesWidget: _bottomTitles, reservedSize: 42)),
-                                    leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: true, reservedSize: 28, interval: 1, getTitlesWidget: leftTitles)),
+      body: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(FontAwesome.chevron_left_solid, size: 25, color: purpleColor)),
+            const SizedBox(height: 10),
+            Expanded(
+              child: Container(
+                decoration: const BoxDecoration(color: darkColor),
+                child: FutureBuilder<bool>(
+                  future: _load(),
+                  builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                    if (snapshot.hasData) {
+                      return _mappedData.values.every((double element) => element == 0.0)
+                          ? Center(child: Text("NOT YET.", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: whiteColor)))
+                          : StatefulBuilder(
+                              builder: (BuildContext context, void Function(void Function()) _) {
+                                return BarChart(
+                                  BarChartData(
+                                    titlesData: FlTitlesData(
+                                      show: true,
+                                      rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                                      topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                                      bottomTitles: AxisTitles(sideTitles: SideTitles(showTitles: true, getTitlesWidget: _bottomTitles, reservedSize: 42)),
+                                      leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: true, reservedSize: 28, interval: 1, getTitlesWidget: leftTitles)),
+                                    ),
+                                    borderData: FlBorderData(show: false),
+                                    barGroups: _mappedData.entries
+                                        .map(
+                                          (MapEntry<int, double> e) => BarChartGroupData(
+                                            x: e.key,
+                                            barRods: <BarChartRodData>[BarChartRodData(toY: e.value)],
+                                          ),
+                                        )
+                                        .toList(),
+                                    gridData: const FlGridData(show: false),
                                   ),
-                                  borderData: FlBorderData(show: false),
-                                  barGroups: _mappedData.entries
-                                      .map(
-                                        (MapEntry<int, double> e) => BarChartGroupData(
-                                          x: e.key,
-                                          barRods: <BarChartRodData>[BarChartRodData(toY: e.value)],
-                                        ),
-                                      )
-                                      .toList(),
-                                  gridData: const FlGridData(show: false),
-                                ),
-                              );
-                            },
-                          );
-                  } else if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Loading();
-                  }
-                  return Errored(error: snapshot.toString());
-                },
+                                );
+                              },
+                            );
+                    } else if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Loading();
+                    }
+                    return Errored(error: snapshot.toString());
+                  },
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
