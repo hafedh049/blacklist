@@ -1,5 +1,6 @@
 import 'package:blacklist/utils/shared.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -24,6 +25,7 @@ class _SecondDayState extends State<SecondDay> {
           "timestamp",
           isGreaterThanOrEqualTo: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day - 1),
         )
+        .orderBy("timestamp", descending: true)
         .get();
 
     for (final QueryDocumentSnapshot<Map<String, dynamic>> item in data.docs.where(
@@ -40,6 +42,7 @@ class _SecondDayState extends State<SecondDay> {
             "productName": product.productName,
             "productCategory": product.productCategory,
             "productPrice": product.newPrice,
+            "heure": formatDate(product.timestamp, const <String>[HH, ":", nn, " ", am]),
           },
         );
       } else {
@@ -47,6 +50,7 @@ class _SecondDayState extends State<SecondDay> {
         final ClientModel client = ClientModel.fromJson(clientQuery.docs.first.data());
         firstDayData.add(
           <String, dynamic>{
+            "heure": formatDate(product.timestamp, const <String>[HH, ":", nn, " ", am]),
             "clientName": client.clientName,
             "clientCIN": client.clientCIN,
             "productName": product.productName,
@@ -114,13 +118,33 @@ class _SecondDayState extends State<SecondDay> {
                               Container(
                                 padding: const EdgeInsets.all(4),
                                 decoration: BoxDecoration(color: blueColor, borderRadius: BorderRadius.circular(5)),
-                                child: Text("CIN", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
+                                child: Text("HEURE", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
                               ),
                               const SizedBox(width: 10),
-                              Text(_recepies[index]["clientCIN"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
+                              Text(_recepies[index]["heure"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
                             ],
                           ),
                           const SizedBox(height: 10),
+                          if (_recepies[index]["clientCIN"] != "ANONYMOUS")
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    Container(
+                                      padding: const EdgeInsets.all(4),
+                                      decoration: BoxDecoration(color: blueColor, borderRadius: BorderRadius.circular(5)),
+                                      child: Text("CIN", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Text(_recepies[index]["clientCIN"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
+                                  ],
+                                ),
+                                const SizedBox(height: 10),
+                              ],
+                            ),
                           Row(
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[

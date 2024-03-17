@@ -126,137 +126,140 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
                       backgroundColor: purpleColor,
                       transitionType: TransitionType.TOP_TO_BOTTOM,
                       textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                      onPress: () async {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) => AlertDialog(
-                            content: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                Expanded(
-                                  child: SingleChildScrollView(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: <Widget>[
-                                        for (VendorProduct product in _productsDataSource.products.where((VendorProduct element) => element.selected)) ...<Widget>[
-                                          Container(
-                                            padding: const EdgeInsets.all(8),
-                                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: scaffoldColor),
-                                            child: Column(
-                                              children: <Widget>[
-                                                Row(
-                                                  children: <Widget>[
-                                                    Container(
-                                                      padding: const EdgeInsets.all(8),
-                                                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: purpleColor),
-                                                      child: Text("PRODUIT", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
-                                                    ),
-                                                    const SizedBox(width: 10),
-                                                    Text(product.productName.toUpperCase(), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor))
-                                                  ],
+                      onPress: () {
+                        _productsDataSource.products.where((VendorProduct element) => element.selected && element.cartController.text != "0").isEmpty
+                            ? null
+                            : showDialog(
+                                context: context,
+                                builder: (BuildContext contextt) => AlertDialog(
+                                  content: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      Expanded(
+                                        child: SingleChildScrollView(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: <Widget>[
+                                              for (final VendorProduct product in _productsDataSource.products.where((VendorProduct element) => element.selected && element.cartController.text != "0").toList()) ...<Widget>[
+                                                Container(
+                                                  padding: const EdgeInsets.all(8),
+                                                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: scaffoldColor),
+                                                  child: Column(
+                                                    children: <Widget>[
+                                                      Row(
+                                                        children: <Widget>[
+                                                          Container(
+                                                            padding: const EdgeInsets.all(8),
+                                                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: purpleColor),
+                                                            child: Text("PRODUIT", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
+                                                          ),
+                                                          const SizedBox(width: 10),
+                                                          Text(product.productName.toUpperCase(), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor))
+                                                        ],
+                                                      ),
+                                                      const SizedBox(height: 20),
+                                                      Row(
+                                                        children: <Widget>[
+                                                          Container(
+                                                            padding: const EdgeInsets.all(8),
+                                                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: purpleColor),
+                                                            child: Text("QUANTITE", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
+                                                          ),
+                                                          const SizedBox(width: 10),
+                                                          Text(product.cartController.text, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor))
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
-                                                const SizedBox(height: 20),
-                                                Row(
-                                                  children: <Widget>[
-                                                    Container(
-                                                      padding: const EdgeInsets.all(8),
-                                                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: purpleColor),
-                                                      child: Text("QUANTITE", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
-                                                    ),
-                                                    const SizedBox(width: 10),
-                                                    Text(product.cartController.text, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor))
-                                                  ],
-                                                ),
+                                                const SizedBox(height: 10),
                                               ],
-                                            ),
+                                            ],
                                           ),
-                                          const SizedBox(height: 10),
+                                        ),
+                                      ),
+                                      Container(
+                                        padding: const EdgeInsets.all(8),
+                                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: redColor),
+                                        child: Text("TOTALE (${_productsDataSource.products.where((VendorProduct element) => element.selected).map((VendorProduct e) => e.newPrice * int.parse(e.cartController.text)).reduce((double value, double element) => element + value).toStringAsFixed(2)})", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
+                                      ),
+                                      const SizedBox(height: 10),
+                                      Row(
+                                        children: <Widget>[
+                                          AnimatedButton(
+                                            width: 150,
+                                            height: 40,
+                                            text: 'CONFIRMER',
+                                            selectedTextColor: darkColor,
+                                            animatedOn: AnimatedOn.onHover,
+                                            animationDuration: 500.ms,
+                                            isReverse: true,
+                                            selectedBackgroundColor: purpleColor,
+                                            backgroundColor: purpleColor,
+                                            transitionType: TransitionType.TOP_TO_BOTTOM,
+                                            textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                                            onPress: () async {
+                                              Navigator.pop(contextt);
+                                              showToast(context, "Attend", purpleColor);
+                                              final DateTime now = DateTime.now();
+                                              for (VendorProduct product in _productsDataSource.products) {
+                                                if (product.selected && product.cartController.text != "0") {
+                                                  QuerySnapshot<Map<String, dynamic>> query = await FirebaseFirestore.instance.collection("products").where("productReference", isEqualTo: product.productReference).limit(1).get();
+                                                  await query.docs.first.reference.update(<String, dynamic>{"date": now, "productQuantity": product.productQuantity - int.parse(product.cartController.text)});
+                                                  query = await FirebaseFirestore.instance.collection("categories").where("categoryID", isEqualTo: product.categoryID).limit(1).get();
+                                                  await query.docs.first.reference.update(<String, dynamic>{"categoryProductsCount": query.docs.first.get("categoryProductsCount") - int.parse(product.cartController.text)});
+                                                  query = await FirebaseFirestore.instance.collection("stores").where("storeID", isEqualTo: product.storeID).limit(1).get();
+                                                  await query.docs.first.reference.update(<String, dynamic>{"storeTotalProducts": query.docs.first.get("storeTotalProducts") - int.parse(product.cartController.text)});
+                                                  await Future.wait(
+                                                    List<Future<DocumentReference<Map<String, dynamic>>>>.generate(
+                                                      int.parse(product.cartController.text),
+                                                      (int _) => FirebaseFirestore.instance.collection("sells").add(
+                                                            product.toJson()
+                                                              ..putIfAbsent("timestamp", () => now)
+                                                              ..putIfAbsent("clientID", () => widget.clientID),
+                                                          ),
+                                                    ),
+                                                  );
+                                                  product.productQuantity -= int.parse(product.cartController.text);
+                                                  product.cartController.text = "0";
+                                                  product.selected = false;
+                                                }
+                                              }
+
+                                              // ignore: use_build_context_synchronously
+                                              _pagerKey.currentState!.setState(
+                                                () {
+                                                  _productsDataSource = ProductDataSource(context, _productsDataSource.products);
+                                                  _productsDataSource.updateSelectedProducts(_productSelections);
+                                                },
+                                              );
+                                              // ignore: use_build_context_synchronously
+                                              showToast(context, "Ajout a été effectué", purpleColor);
+                                            },
+                                          ),
+                                          const SizedBox(width: 20),
+                                          AnimatedButton(
+                                            width: 150,
+                                            height: 40,
+                                            text: 'ANNULER',
+                                            selectedTextColor: darkColor,
+                                            animatedOn: AnimatedOn.onHover,
+                                            animationDuration: 500.ms,
+                                            isReverse: true,
+                                            selectedBackgroundColor: greyColor,
+                                            backgroundColor: greyColor,
+                                            transitionType: TransitionType.TOP_TO_BOTTOM,
+                                            textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                                            onPress: () => Navigator.pop(context),
+                                          ),
                                         ],
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                Container(
-                                  padding: const EdgeInsets.all(8),
-                                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: redColor),
-                                  child: Text("TOTALE (${_productsDataSource.products.where((VendorProduct element) => element.selected).map((VendorProduct e) => e.newPrice * int.parse(e.cartController.text)).reduce((double value, double element) => element).toStringAsFixed(2)})", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
-                                ),
-                                const SizedBox(height: 10),
-                                Row(
-                                  children: <Widget>[
-                                    AnimatedButton(
-                                      width: 150,
-                                      height: 40,
-                                      text: 'CONFIRMER',
-                                      selectedTextColor: darkColor,
-                                      animatedOn: AnimatedOn.onHover,
-                                      animationDuration: 500.ms,
-                                      isReverse: true,
-                                      selectedBackgroundColor: purpleColor,
-                                      backgroundColor: purpleColor,
-                                      transitionType: TransitionType.TOP_TO_BOTTOM,
-                                      textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                                      onPress: () async {
-                                        Navigator.pop(context);
-                                        showToast(context, "Attend", purpleColor);
-                                        final DateTime now = DateTime.now();
-                                        for (VendorProduct product in _productsDataSource.products) {
-                                          if (product.selected) {
-                                            QuerySnapshot<Map<String, dynamic>> query = await FirebaseFirestore.instance.collection("products").where("productReference", isEqualTo: product.productReference).limit(1).get();
-                                            await query.docs.first.reference.update(<String, dynamic>{"date": now, "productQuantity": product.productQuantity - int.parse(product.cartController.text)});
-                                            query = await FirebaseFirestore.instance.collection("categories").where("categoryID", isEqualTo: product.categoryID).limit(1).get();
-                                            await query.docs.first.reference.update(<String, dynamic>{"categoryProductsCount": query.docs.first.get("categoryProductsCount") - int.parse(product.cartController.text)});
-                                            query = await FirebaseFirestore.instance.collection("stores").where("storeID", isEqualTo: product.storeID).limit(1).get();
-                                            await query.docs.first.reference.update(<String, dynamic>{"storeTotalProducts": query.docs.first.get("storeTotalProducts") - int.parse(product.cartController.text)});
-                                            await Future.wait(
-                                              List<Future>.generate(
-                                                int.parse(product.cartController.text),
-                                                (int _) => FirebaseFirestore.instance.collection("sells").add(
-                                                      product.toJson()
-                                                        ..putIfAbsent("timestamp", () => now)
-                                                        ..putIfAbsent("clientID", () => widget.clientID),
-                                                    ),
-                                              ),
-                                            );
-                                            product.productQuantity -= int.parse(product.cartController.text);
-                                            product.cartController.text = "0";
-                                            product.selected = false;
-                                          }
-                                        }
-                                        // ignore: use_build_context_synchronously
-                                        _pagerKey.currentState!.setState(
-                                          () {
-                                            _productsDataSource = ProductDataSource(context, _productsDataSource.products);
-                                            _productsDataSource.updateSelectedProducts(_productSelections);
-                                          },
-                                        );
-                                        // ignore: use_build_context_synchronously
-                                        showToast(context, "Ajout a été effectué", purpleColor);
-                                      },
-                                    ),
-                                    const SizedBox(width: 20),
-                                    AnimatedButton(
-                                      width: 150,
-                                      height: 40,
-                                      text: 'ANNULER',
-                                      selectedTextColor: darkColor,
-                                      animatedOn: AnimatedOn.onHover,
-                                      animationDuration: 500.ms,
-                                      isReverse: true,
-                                      selectedBackgroundColor: greyColor,
-                                      backgroundColor: greyColor,
-                                      transitionType: TransitionType.TOP_TO_BOTTOM,
-                                      textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                                      onPress: () => Navigator.pop(context),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
+                              );
                       },
                     ),
                   ],

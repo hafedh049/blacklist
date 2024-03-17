@@ -33,6 +33,16 @@ class _PassphraseState extends State<Passphrase> {
 
   bool _isVendor = false;
 
+  /*@override
+  void initState() {
+    InternetConnection().onStatusChange.listen(
+      (InternetStatus status) {
+        showToast(context, status.toString(), purpleColor);
+      },
+    );
+    super.initState();
+  }*/
+
   Future<void> _signIn() async {
     if (_passwordController.text.trim().isEmpty) {
       showToast(context, "Please enter the password", redColor);

@@ -25,7 +25,6 @@ dependencies:
   date_format: ^2.0.7
   flutter_animated_button: ^2.0.3
   animated_loading_border: ^0.0.2
-  fluttertoast: ^8.2.4
   crypto: ^3.0.3
   data_table_2: ^2.5.10
   pretty_qr_code: ^3.2.1
@@ -35,9 +34,10 @@ dependencies:
   fl_chart: ^0.66.2
   uuid: ^4.3.3
   qr_code_dart_scan: ^0.7.5
-  connectivity_plus: ^5.0.2
   flutter_native_splash: ^2.3.10
   flutter_launcher_icons: ^0.13.1
+  toastification: ^1.2.1
+  internet_connection_checker_plus: ^2.2.0
 
 dev_dependencies:
   flutter_test:

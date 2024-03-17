@@ -1,3 +1,4 @@
+import 'package:blacklist/utils/callbacks.dart';
 import 'package:blacklist/utils/shared.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
@@ -125,6 +126,7 @@ class ProductDataSource extends DataTableSource {
   @override
   void dispose() {
     for (final VendorProduct product in products) {
+      showToast(context, "hani", redColor);
       product.dispose();
     }
     super.dispose();
