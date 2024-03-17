@@ -58,7 +58,7 @@ class _ChangeVendorPasswordState extends State<ChangeVendorPassword> {
                       _changePassword();
                     } else {
                       _adminFocus.requestFocus();
-                      showToast("Wrong Credentials", redColor);
+                      showToast(context, "Wrong Credentials", redColor);
                     }
                   },
                   decoration: InputDecoration(
@@ -97,7 +97,7 @@ class _ChangeVendorPasswordState extends State<ChangeVendorPassword> {
                     Navigator.pop(context);
                     _changePassword();
                   } else {
-                    showToast("Wrong Credentials", redColor);
+                    showToast(context, "Wrong Credentials", redColor);
                   }
                 },
               ),

@@ -25,16 +25,17 @@ class _ChangePasswordState extends State<ChangePassword> {
 
   Future<void> _update() async {
     if (_nameController.text.trim().isEmpty) {
-      showToast("Enter a valid vendor name", redColor);
+      showToast(context, "Entrer un nom du vendeur valide", redColor);
     } else if (_newPasswordController.text.trim().isEmpty) {
-      showToast("Enter a valid vendor password", redColor);
+      showToast(context, "Enter son mot de passe", redColor);
     } else {
       final Map<String, dynamic> vendorItem = <String, dynamic>{
         "storeVendorName": _nameController.text.trim(),
         "storeVendorPassword": _newPasswordController.text.trim(),
       };
       await FirebaseFirestore.instance.collection('stores').doc(widget.senderID).update(vendorItem);
-      showToast("Vendor details changed successfully", greenColor);
+      // ignore: use_build_context_synchronously
+      showToast(context, "Mise a jour avec succés", greenColor);
       // ignore: use_build_context_synchronously
       Navigator.pop(context);
     }
@@ -81,7 +82,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                     contentPadding: const EdgeInsets.all(20),
                     focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
                     border: InputBorder.none,
-                    hintText: 'VENDOR NAME',
+                    hintText: 'NOM DU VENDEUR',
                     hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
                     prefixIcon: _nameController.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
                   ),
@@ -105,7 +106,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                     contentPadding: const EdgeInsets.all(20),
                     focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
                     border: InputBorder.none,
-                    hintText: 'OLD PASSWORD',
+                    hintText: 'ANCIEN PASSWORD',
                     hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
                     prefixIcon: _oldPasswordController.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
                     suffixIcon: IconButton(onPressed: () => _(() => _oldPasswordState = !_oldPasswordState), icon: Icon(_oldPasswordState ? FontAwesome.eye_solid : FontAwesome.eye_slash_solid, size: 15, color: purpleColor)),
@@ -130,7 +131,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                     contentPadding: const EdgeInsets.all(20),
                     focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
                     border: InputBorder.none,
-                    hintText: 'NEW PASSWORD',
+                    hintText: 'NOUVEAU PASSWORD',
                     hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
                     prefixIcon: _newPasswordController.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
                     suffixIcon: IconButton(onPressed: () => _(() => _newPasswordState = !_newPasswordState), icon: Icon(_newPasswordState ? FontAwesome.eye_solid : FontAwesome.eye_slash_solid, size: 15, color: purpleColor)),
@@ -148,7 +149,7 @@ class _ChangePasswordState extends State<ChangePassword> {
               AnimatedButton(
                 width: 100,
                 height: 30,
-                text: 'CHANGE',
+                text: 'CHANGER',
                 selectedTextColor: whiteColor,
                 animatedOn: AnimatedOn.onHover,
                 animationDuration: 500.ms,

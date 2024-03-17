@@ -172,13 +172,13 @@ class _CreateUserState extends State<CreateUser> {
                               textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
                               onPress: () async {
                                 if (_usernameController.text.trim().isEmpty) {
-                                  showToast("Username is required", redColor);
+                                  showToast(context, "Username est obligatoire", redColor);
                                 } else if (!_birthDateController.text.contains(RegExp(r'\d{4}\-\d{2}\-\d{2}'))) {
-                                  showToast("Birthdate is wrong or missing", redColor);
+                                  showToast(context, "Année de naissance est obligatoire ou incorrect", redColor);
                                 } else if (!_cinController.text.contains(RegExp(r'\d{8}'))) {
-                                  showToast("CIN is missing", redColor);
+                                  showToast(context, "CIN est obligatoire", redColor);
                                 } else if (!_phoneController.text.contains(RegExp(r'(\(\+216 ?\)|\d\d ?\d\d\d ?\d\d\d)'))) {
-                                  showToast("Phone is required", redColor);
+                                  showToast(context, "Téléphone est obligatoire", redColor);
                                 } else {
                                   await FirebaseFirestore.instance.collection("clients").add(
                                     <String, dynamic>{
@@ -190,7 +190,8 @@ class _CreateUserState extends State<CreateUser> {
                                       'clientPhone': _phoneController.text,
                                     },
                                   );
-                                  showToast("Client created successfully", greenColor);
+                                  // ignore: use_build_context_synchronously
+                                  showToast(context, "Client created successfully", greenColor);
                                   // ignore: use_build_context_synchronously
                                   Navigator.pop(context);
                                   // ignore: use_build_context_synchronously

@@ -109,13 +109,14 @@ class _AddCategoryState extends State<AddCategory> {
 
                             await FirebaseFirestore.instance.collection("categories").add(categoryItem);
 
-                            showToast("Nouvelle catégorie a été ajoutée", greenColor);
+                            // ignore: use_build_context_synchronously
+                            showToast(context, "Nouvelle catégorie a été ajoutée", greenColor);
                             widget.categories.add(CategoryModel.fromJson(categoryItem));
                             // ignore: use_build_context_synchronously
                             Navigator.pop(context);
                             widget.setS(() {});
                           } else {
-                            showToast("Entrer le nom du categorie", redColor);
+                            showToast(context, "Entrer le nom du categorie", redColor);
                           }
                         },
                       ),

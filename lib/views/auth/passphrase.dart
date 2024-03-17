@@ -35,9 +35,9 @@ class _PassphraseState extends State<Passphrase> {
 
   Future<void> _signIn() async {
     if (_passwordController.text.trim().isEmpty) {
-      showToast("Please enter the password", redColor);
+      showToast(context, "Please enter the password", redColor);
     } else if (!_isVendor && _emailController.text.trim().isEmpty) {
-      showToast("Please enter the e-mail", redColor);
+      showToast(context, "Please enter the e-mail", redColor);
     } else {
       _cardKey.currentState!.setState(() => _submitButtonState = true);
       try {
@@ -45,7 +45,7 @@ class _PassphraseState extends State<Passphrase> {
           await FirebaseAuth.instance.signInWithEmailAndPassword(email: _emailController.text, password: _passwordController.text);
           _cardKey.currentState!.setState(() => _submitButtonState = false);
           if (FirebaseAuth.instance.currentUser != null) {
-            showToast("Welcome ADMIN", greenColor);
+            showToast(context, "Welcome ADMIN", greenColor);
             Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => const StoresList()));
           }
         } else {
@@ -54,21 +54,21 @@ class _PassphraseState extends State<Passphrase> {
               if (value.docs.isNotEmpty) {
                 _cardKey.currentState!.setState(() => _submitButtonState = false);
                 if (value.docs.first.get("storeState") != "fermé") {
-                  showToast("Welcome VENDOR", greenColor);
+                  showToast(context, "Welcome VENDOR", greenColor);
                   Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => CartRecepie(storeID: value.docs[0]["storeID"])));
                 } else {
-                  showToast("Store est fermé", redColor);
+                  showToast(context, "Store est fermé", redColor);
                 }
               } else {
                 _cardKey.currentState!.setState(() => _submitButtonState = false);
-                showToast("Invalid Password", redColor);
+                showToast(context, "Invalid Password", redColor);
               }
             },
           );
         }
       } catch (e) {
         _cardKey.currentState!.setState(() => _submitButtonState = false);
-        showToast(e.toString(), redColor);
+        showToast(context, e.toString(), redColor);
       }
     }
   }

@@ -50,7 +50,7 @@ class _QRViewState extends State<QRView> {
       splashColor: transparentColor,
       onTap: () async {
         if (kIsWeb) {
-          showToast("THIS FEATURE IS AVAILABLE ONLY ON ANDROID", redColor);
+          showToast(context, "Cette fonction est valable que sur l'android", redColor);
         } else {
           Navigator.push(
             context,
@@ -87,10 +87,10 @@ class _QRViewState extends State<QRView> {
                   await FirebaseFirestore.instance.collection('clients').where("clientQrCode", isEqualTo: result.text).limit(1).get().then(
                     (QuerySnapshot<Map<String, dynamic>> value) {
                       if (value.docs.isNotEmpty) {
-                        showToast("USER EXISTS", greenColor);
+                        showToast(context, "USER EXISTANT", greenColor);
                         Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => AfterQRScan(storeID: widget.storeID, client: ClientModel.fromJson(value.docs.first.data()))));
                       } else {
-                        showToast("NO USER WITH THIS QR CODE", redColor);
+                        showToast(context, "Aucun utilisateur avec cette QR", redColor);
                         Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => CreateUser(storeID: widget.storeID, qrCode: result.text)));
                       }
                     },

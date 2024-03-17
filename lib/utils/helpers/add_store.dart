@@ -27,11 +27,11 @@ class _AddStoreState extends State<AddStore> {
 
   Future<void> _createStore() async {
     if (_storeNameController.text.trim().isEmpty) {
-      showToast("Enter a valid store name", redColor);
+      showToast(context, "Enter a valid store name", redColor);
     } else if (_vendorNameController.text.trim().isEmpty) {
-      showToast("Enter a valid vendor name", redColor);
+      showToast(context, "Enter a valid vendor name", redColor);
     } else if (_vendorPasswordController.text.trim().isEmpty) {
-      showToast("Enter a valid vendor password", redColor);
+      showToast(context, "Enter a valid vendor password", redColor);
     } else {
       String storeID = const UuidV8().generate();
 
@@ -48,7 +48,8 @@ class _AddStoreState extends State<AddStore> {
 
       widget.stores.add(StoreModel.fromJson(storeItem));
       widget.callback();
-      showToast("Store added successfully", greenColor);
+      // ignore: use_build_context_synchronously
+      showToast(context, "Store added successfully", greenColor);
       // ignore: use_build_context_synchronously
       Navigator.pop(context);
     }

@@ -83,7 +83,8 @@ class _StoresListState extends State<StoresList> {
                   textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
                   onPress: () async {
                     await FirebaseAuth.instance.signOut();
-                    showToast("Bye Bye", redColor);
+                    // ignore: use_build_context_synchronously
+                    showToast(context, "Au revoire", redColor);
                     // ignore: use_build_context_synchronously
                     Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const Passphrase()));
                   },
@@ -151,7 +152,7 @@ class _StoresListState extends State<StoresList> {
                                                   const SizedBox(height: 10),
                                                   Row(
                                                     children: <Widget>[
-                                                      Text("Total Produits", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
+                                                      Text("Totale Produits", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
                                                       const SizedBox(width: 10),
                                                       StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                                                         stream: FirebaseFirestore.instance.collection("stores").where("storeID", isEqualTo: item.storeID).limit(1).snapshots(),
@@ -198,10 +199,11 @@ class _StoresListState extends State<StoresList> {
                                                         onPress: () async {
                                                           if (item.storeState != "ouvert") {
                                                             await _refs[item.storeID]!.update(const <String, dynamic>{"storeState": "ouvert"});
-                                                            showToast("Store opened", greenColor);
+                                                            // ignore: use_build_context_synchronously
+                                                            showToast(context, "Store ouvert", greenColor);
                                                             _storesKey.currentState!.setState(() => item.storeState = "ouvert");
                                                           } else {
-                                                            showToast("Store is already open", redColor);
+                                                            showToast(context, "Store est déja ouvert", redColor);
                                                           }
                                                         },
                                                       ),
@@ -221,10 +223,11 @@ class _StoresListState extends State<StoresList> {
                                                         onPress: () async {
                                                           if (item.storeState != "fermé") {
                                                             await _refs[item.storeID]!.update(const <String, dynamic>{"storeState": "fermé"});
-                                                            showToast("Store closed", greenColor);
+                                                            // ignore: use_build_context_synchronously
+                                                            showToast(context, "Store fermé", greenColor);
                                                             _storesKey.currentState!.setState(() => item.storeState = "fermé");
                                                           } else {
-                                                            showToast("Store is already closed", redColor);
+                                                            showToast(context, "Store est déja fermé", redColor);
                                                           }
                                                         },
                                                       ),

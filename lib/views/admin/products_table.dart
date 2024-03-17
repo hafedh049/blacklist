@@ -183,7 +183,7 @@ class ProductTableState extends State<ProductTable> with RestorationMixin {
                   decoration: InputDecoration(
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: purpleColor)),
                     contentPadding: const EdgeInsets.all(16),
-                    hintText: "Recherche",
+                    hintText: "Chercher un produit...",
                     hintStyle: GoogleFonts.itim(fontSize: 16, color: whiteColor, fontWeight: FontWeight.w500),
                     prefixIcon: const Icon(Icons.search, color: purpleColor, size: 25),
                     suffixIcon: IconButton(onPressed: () => _searchController.clear(), icon: const Icon(FontAwesome.x_solid, size: 18, color: purpleColor)),

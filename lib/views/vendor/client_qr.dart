@@ -184,10 +184,10 @@ class _ClientState extends State<Client> {
                                       await FirebaseFirestore.instance.collection("clients").where("clientName", isEqualTo: _usernameController.text.trim()).limit(1).get().then(
                                         (QuerySnapshot<Map<String, dynamic>> value) {
                                           if (value.docs.isNotEmpty) {
-                                            showToast("CLIENT FOUND", purpleColor);
+                                            showToast(context, "Client trouvé", purpleColor);
                                             Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => AfterQRScan(storeID: widget.storeID, client: ClientModel.fromJson(value.docs.first.data()))));
                                           } else {
-                                            showToast("NO SUCH CLIENT WITH THAT NAME", purpleColor);
+                                            showToast(context, "Pas de client avec ce nom", purpleColor);
                                           }
                                         },
                                       );
@@ -195,15 +195,15 @@ class _ClientState extends State<Client> {
                                       await FirebaseFirestore.instance.collection("clients").where("clientCIN", isEqualTo: _cinController.text.trim()).limit(1).get().then(
                                         (QuerySnapshot<Map<String, dynamic>> value) {
                                           if (value.docs.isNotEmpty) {
-                                            showToast("CLIENT FOUND", purpleColor);
+                                            showToast(context, "Client trouvé", purpleColor);
                                             Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => AfterQRScan(storeID: widget.storeID, client: ClientModel.fromJson(value.docs.first.data()))));
                                           } else {
-                                            showToast("NO SUCH CLIENT WITH THAT NAME", purpleColor);
+                                            showToast(context, "Pas de client avec ce CIN", purpleColor);
                                           }
                                         },
                                       );
                                     } else {
-                                      showToast("ENTER EITHER NAME OR CIN", purpleColor);
+                                      showToast(context, "Entrer soit nom soit cin", purpleColor);
                                     }
                                   },
                                 ),

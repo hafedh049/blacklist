@@ -136,7 +136,8 @@ class ProductDataSource extends DataTableSource {
                                   );
                               // ignore: use_build_context_synchronously
                               Navigator.pop(context);
-                              showToast("Product has been deleted", greenColor);
+                              // ignore: use_build_context_synchronously
+                              showToast(context, "Produit supprimé", greenColor);
                             },
                             child: Text("CONFIRMER", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
                           ),

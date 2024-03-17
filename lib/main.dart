@@ -1,5 +1,6 @@
 import 'package:blacklist/utils/callbacks.dart';
 import 'package:blacklist/views/auth/passphrase.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -10,6 +11,9 @@ import 'utils/helpers/loading.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   Animate.restartOnHotReload = true;
+  Connectivity().onConnectivityChanged.listen(
+        (ConnectivityResult event) {},
+      );
   runApp(const Main());
 }
 

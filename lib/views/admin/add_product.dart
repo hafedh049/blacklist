@@ -178,15 +178,15 @@ class _AddProductState extends State<AddProduct> {
                 textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
                 onPress: () async {
                   if (_productNameController.text.trim().isEmpty) {
-                    showToast("Please fill the product name", redColor);
+                    showToast(context, "Remplir le nom", redColor);
                   } else if (_productOldPriceController.text.trim().isEmpty) {
-                    showToast("Please fill the product old price", redColor);
+                    showToast(context, "Remplir le prix de base", redColor);
                   } else if (_productNewPriceController.text.trim().isEmpty) {
-                    showToast("Please fill the product new price", redColor);
+                    showToast(context, "Remplir le prix de vente", redColor);
                   } else if (_productQuantityController.text.trim().isEmpty) {
-                    showToast("Please fill the product quantity field", redColor);
+                    showToast(context, "Saisir la quantité", redColor);
                   } else if (_productStockAlertController.text.trim().isEmpty) {
-                    showToast("Please fill the product quantity field", redColor);
+                    showToast(context, "Saisir le stock alert", redColor);
                   } else {
                     await FirebaseFirestore.instance.collection('products').add(
                       <String, dynamic>{
@@ -217,7 +217,8 @@ class _AddProductState extends State<AddProduct> {
                         await value.docs.first.reference.update(<String, dynamic>{"categoryProductsCount": value.docs.first.get("categoryProductsCount") + int.parse(_productQuantityController.text)});
                       },
                     );
-                    showToast("Product added successfully", greenColor);
+                    // ignore: use_build_context_synchronously
+                    showToast(context, "Produit ajouté", greenColor);
                     // ignore: use_build_context_synchronously
                     Navigator.pop(context);
                     widget.callback();

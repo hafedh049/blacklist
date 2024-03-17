@@ -117,7 +117,7 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
                     AnimatedButton(
                       width: 200,
                       height: 40,
-                      text: 'Ajouter Aux Panier',
+                      text: 'Ajouter Au Panier',
                       selectedTextColor: darkColor,
                       animatedOn: AnimatedOn.onHover,
                       animationDuration: 500.ms,
@@ -181,7 +181,7 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
                                 Container(
                                   padding: const EdgeInsets.all(8),
                                   decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: redColor),
-                                  child: Text("TOTAL (${_productsDataSource.products.where((VendorProduct element) => element.selected).map((VendorProduct e) => e.newPrice * int.parse(e.cartController.text)).reduce((double value, double element) => element).toStringAsFixed(2)})", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
+                                  child: Text("TOTALE (${_productsDataSource.products.where((VendorProduct element) => element.selected).map((VendorProduct e) => e.newPrice * int.parse(e.cartController.text)).reduce((double value, double element) => element).toStringAsFixed(2)})", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
                                 ),
                                 const SizedBox(height: 10),
                                 Row(
@@ -200,7 +200,7 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
                                       textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
                                       onPress: () async {
                                         Navigator.pop(context);
-                                        showToast("Attend", purpleColor);
+                                        showToast(context, "Attend", purpleColor);
                                         final DateTime now = DateTime.now();
                                         for (VendorProduct product in _productsDataSource.products) {
                                           if (product.selected) {
@@ -232,7 +232,8 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
                                             _productsDataSource.updateSelectedProducts(_productSelections);
                                           },
                                         );
-                                        showToast("Ajout a été effectué", purpleColor);
+                                        // ignore: use_build_context_synchronously
+                                        showToast(context, "Ajout a été effectué", purpleColor);
                                       },
                                     ),
                                     const SizedBox(width: 20),
@@ -285,7 +286,7 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
                   decoration: InputDecoration(
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: purpleColor)),
                     contentPadding: const EdgeInsets.all(16),
-                    hintText: "Recherche",
+                    hintText: "Chercher",
                     hintStyle: GoogleFonts.itim(fontSize: 16, color: whiteColor, fontWeight: FontWeight.w500),
                     prefixIcon: const Icon(Icons.search, color: purpleColor, size: 25),
                     suffixIcon: IconButton(

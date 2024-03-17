@@ -188,15 +188,15 @@ class _EditProductState extends State<EditProduct> {
                 textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
                 onPress: () async {
                   if (_productNameController.text.trim().isEmpty) {
-                    showToast("Please fill the product name", redColor);
+                    showToast(context, "Saisir le nom du produit", redColor);
                   } else if (_productOldPriceController.text.trim().isEmpty) {
-                    showToast("Please fill the product old price", redColor);
+                    showToast(context, "Remplir le prix ancien", redColor);
                   } else if (_productNewPriceController.text.trim().isEmpty) {
-                    showToast("Please fill the product new price", redColor);
+                    showToast(context, "Remplir le nouveau prix", redColor);
                   } else if (_productQuantityController.text.trim().isEmpty) {
-                    showToast("Please fill the product quantity field", redColor);
+                    showToast(context, "Saisir la quantité", redColor);
                   } else if (_productStockAlertController.text.trim().isEmpty) {
-                    showToast("Please fill the product stock alert field", redColor);
+                    showToast(context, "Remplir le stock alert", redColor);
                   } else {
                     await FirebaseFirestore.instance.collection("products").where("productReference", isEqualTo: widget.product.productReference).limit(1).get().then(
                       (QuerySnapshot<Map<String, dynamic>> value) async {
@@ -225,7 +225,8 @@ class _EditProductState extends State<EditProduct> {
                       },
                     );
 
-                    showToast("Product added successfully", greenColor);
+                    // ignore: use_build_context_synchronously
+                    showToast(context, "Produit ajouté", greenColor);
                     // ignore: use_build_context_synchronously
                     Navigator.pop(context);
                   }
