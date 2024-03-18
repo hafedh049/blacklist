@@ -1,10 +1,11 @@
 import 'package:blacklist/models/store_model.dart';
 import 'package:blacklist/utils/callbacks.dart';
-import 'package:blacklist/utils/helpers/add_store.dart';
+import 'package:blacklist/views/admin/add_store.dart';
 import 'package:blacklist/utils/helpers/change_vendor_password.dart';
 import 'package:blacklist/utils/helpers/errored.dart';
 import 'package:blacklist/utils/helpers/loading.dart';
 import 'package:blacklist/utils/shared.dart';
+import 'package:blacklist/views/admin/delete_store.dart';
 import 'package:blacklist/views/admin/drawer_holder.dart';
 import 'package:blacklist/views/auth/passphrase.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -235,9 +236,22 @@ class _StoresListState extends State<StoresList> {
                                                   ),
                                                 ],
                                               ),
-                                              IconButton(
-                                                onPressed: () => showDialog(context: context, builder: (BuildContext context) => AlertDialog(content: ChangeVendorPassword(storeID: item.storeID))),
-                                                icon: const Icon(FontAwesome.user_secret_solid, size: 25, color: purpleColor),
+                                              Column(
+                                                children: <Widget>[
+                                                  IconButton(
+                                                    onPressed: () => showDialog(context: context, builder: (BuildContext context) => AlertDialog(content: ChangeVendorPassword(storeID: item.storeID))),
+                                                    icon: const Icon(FontAwesome.key_solid, size: 25, color: purpleColor),
+                                                  ),
+                                                  IconButton(
+                                                    onPressed: () => showDialog(
+                                                      context: context,
+                                                      builder: (BuildContext context) => AlertDialog(
+                                                        content: DeleteStore(storeID: item.storeID, stores: _stores, callback: () => _storesKey.currentState!.setState(() {})),
+                                                      ),
+                                                    ),
+                                                    icon: const Icon(FontAwesome.delete_left_solid, size: 25, color: purpleColor),
+                                                  ),
+                                                ],
                                               ),
                                             ],
                                           ),

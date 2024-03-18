@@ -7,8 +7,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:uuid/v8.dart';
 
-import '../callbacks.dart';
-import '../shared.dart';
+import '../../utils/callbacks.dart';
+import '../../utils/shared.dart';
 
 class AddStore extends StatefulWidget {
   const AddStore({super.key, required this.callback, required this.stores});
@@ -38,7 +38,7 @@ class _AddStoreState extends State<AddStore> {
       final Map<String, dynamic> storeItem = <String, dynamic>{
         'storeID': storeID,
         'storeName': _storeNameController.text.trim(),
-        'storeState': "open",
+        'storeState': "ouvert",
         'storeVendorName': _vendorNameController.text.trim(),
         'storeVendorPassword': _vendorPasswordController.text.trim(),
         "storeTotalProducts": 0,
