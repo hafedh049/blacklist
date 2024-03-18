@@ -127,7 +127,7 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
                       transitionType: TransitionType.TOP_TO_BOTTOM,
                       textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
                       onPress: () {
-                        _productsDataSource.products.where((VendorProduct element) => element.selected && element.cartController.text != "0").isEmpty
+                        _products.where((VendorProduct element) => element.selected && element.cartController.text != "0").isEmpty
                             ? null
                             : showDialog(
                                 context: context,
@@ -142,7 +142,7 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             mainAxisSize: MainAxisSize.min,
                                             children: <Widget>[
-                                              for (final VendorProduct product in _productsDataSource.products.where((VendorProduct element) => element.selected && element.cartController.text != "0").toList()) ...<Widget>[
+                                              for (final VendorProduct product in _products.where((VendorProduct element) => element.selected && element.cartController.text != "0").toList()) ...<Widget>[
                                                 Container(
                                                   padding: const EdgeInsets.all(8),
                                                   decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: scaffoldColor),
@@ -183,7 +183,7 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
                                       Container(
                                         padding: const EdgeInsets.all(8),
                                         decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: redColor),
-                                        child: Text("TOTALE (${_productsDataSource.products.where((VendorProduct element) => element.selected).map((VendorProduct e) => e.newPrice * int.parse(e.cartController.text)).reduce((double value, double element) => element + value).toStringAsFixed(2)})", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
+                                        child: Text("TOTALE (${_products.where((VendorProduct element) => element.selected).map((VendorProduct e) => e.newPrice * int.parse(e.cartController.text)).reduce((double value, double element) => element + value).toStringAsFixed(2)})", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
                                       ),
                                       const SizedBox(height: 10),
                                       Row(
@@ -204,7 +204,7 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
                                               Navigator.pop(contextt);
                                               showToast(context, "Attend", purpleColor);
                                               final DateTime now = DateTime.now();
-                                              for (VendorProduct product in _productsDataSource.products) {
+                                              for (VendorProduct product in _products) {
                                                 if (product.selected && product.cartController.text != "0") {
                                                   QuerySnapshot<Map<String, dynamic>> query = await FirebaseFirestore.instance.collection("products").where("productReference", isEqualTo: product.productReference).limit(1).get();
                                                   await query.docs.first.reference.update(<String, dynamic>{"date": now, "productQuantity": product.productQuantity - int.parse(product.cartController.text)});
