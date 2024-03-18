@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 
 const Color scaffoldColor = Color.fromARGB(255, 32, 35, 38);
 const Color purpleColor = Color.fromARGB(255, 124, 120, 239);
@@ -11,3 +12,5 @@ const Color redColor = Colors.red;
 const Color transparentColor = Colors.transparent;
 
 List<String> names = <String>[];
+
+Box? offline;

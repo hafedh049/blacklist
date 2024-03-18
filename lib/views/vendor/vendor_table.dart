@@ -8,6 +8,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_animated_button/flutter_animated_button.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import '/views/vendor/vendor_data_sources.dart';
 
 class VendorTable extends StatefulWidget {
@@ -204,24 +205,34 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
                                               Navigator.pop(contextt);
                                               showToast(context, "Attend", purpleColor);
                                               final DateTime now = DateTime.now();
+                                              final bool internetConnection = await InternetConnection().hasInternetAccess;
                                               for (VendorProduct product in _products) {
                                                 if (product.selected && product.cartController.text != "0") {
-                                                  QuerySnapshot<Map<String, dynamic>> query = await FirebaseFirestore.instance.collection("products").where("productReference", isEqualTo: product.productReference).limit(1).get();
-                                                  await query.docs.first.reference.update(<String, dynamic>{"date": now, "productQuantity": product.productQuantity - int.parse(product.cartController.text)});
-                                                  query = await FirebaseFirestore.instance.collection("categories").where("categoryID", isEqualTo: product.categoryID).limit(1).get();
-                                                  await query.docs.first.reference.update(<String, dynamic>{"categoryProductsCount": query.docs.first.get("categoryProductsCount") - int.parse(product.cartController.text)});
-                                                  query = await FirebaseFirestore.instance.collection("stores").where("storeID", isEqualTo: product.storeID).limit(1).get();
-                                                  await query.docs.first.reference.update(<String, dynamic>{"storeTotalProducts": query.docs.first.get("storeTotalProducts") - int.parse(product.cartController.text)});
-                                                  await Future.wait(
-                                                    List<Future<DocumentReference<Map<String, dynamic>>>>.generate(
-                                                      int.parse(product.cartController.text),
-                                                      (int _) => FirebaseFirestore.instance.collection("sells").add(
-                                                            product.toJson()
-                                                              ..putIfAbsent("timestamp", () => now)
-                                                              ..putIfAbsent("clientID", () => widget.clientID),
-                                                          ),
-                                                    ),
-                                                  );
+                                                  if (internetConnection) {
+                                                    QuerySnapshot<Map<String, dynamic>> query = await FirebaseFirestore.instance.collection("products").where("productReference", isEqualTo: product.productReference).limit(1).get();
+                                                    await query.docs.first.reference.update(<String, dynamic>{"date": now, "productQuantity": product.productQuantity - int.parse(product.cartController.text)});
+                                                    query = await FirebaseFirestore.instance.collection("categories").where("categoryID", isEqualTo: product.categoryID).limit(1).get();
+                                                    await query.docs.first.reference.update(<String, dynamic>{"categoryProductsCount": query.docs.first.get("categoryProductsCount") - int.parse(product.cartController.text)});
+                                                    query = await FirebaseFirestore.instance.collection("stores").where("storeID", isEqualTo: product.storeID).limit(1).get();
+                                                    await query.docs.first.reference.update(<String, dynamic>{"storeTotalProducts": query.docs.first.get("storeTotalProducts") - int.parse(product.cartController.text)});
+                                                    await Future.wait(
+                                                      List<Future<DocumentReference<Map<String, dynamic>>>>.generate(
+                                                        int.parse(product.cartController.text),
+                                                        (int _) => FirebaseFirestore.instance.collection("sells").add(
+                                                              product.toJson()
+                                                                ..putIfAbsent("timestamp", () => now)
+                                                                ..putIfAbsent("clientID", () => widget.clientID),
+                                                            ),
+                                                      ),
+                                                    );
+                                                  } else {
+                                                    offline!.put(
+                                                        "vendor_cart",
+                                                        offline!.get("vendor_cart")
+                                                          ..add(product.toJson()
+                                                            ..putIfAbsent("timestamp", () => now)
+                                                            ..putIfAbsent("clientID", () => widget.clientID)));
+                                                  }
                                                   product.productQuantity -= int.parse(product.cartController.text);
                                                   product.cartController.text = "0";
                                                   product.selected = false;
@@ -236,7 +247,7 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
                                                 },
                                               );
                                               // ignore: use_build_context_synchronously
-                                              showToast(context, "Ajout a été effectué", purpleColor);
+                                              showToast(context, internetConnection ? "Ajout a été effectué" : "You are offline but products will be added to cart as soon as the connection comes back", purpleColor);
                                             },
                                           ),
                                           const SizedBox(width: 20),

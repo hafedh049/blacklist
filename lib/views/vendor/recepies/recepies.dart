@@ -8,27 +8,33 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
 
 class Recepies extends StatefulWidget {
-  const Recepies({super.key});
-
+  const Recepies({super.key, required this.storeID});
+  final String storeID;
   @override
   State<Recepies> createState() => _RecepiesState();
 }
 
 class _RecepiesState extends State<Recepies> {
-  final List<Map<String, dynamic>> _recepies = <Map<String, dynamic>>[
-    <String, dynamic>{
-      "date": formatDate(DateTime.now(), <String>[dd, " ", M, " ", yyyy]).toUpperCase(),
-      "screen": const FirstDay(),
-    },
-    <String, dynamic>{
-      "date": formatDate(DateTime.now().subtract(1.days), <String>[dd, " ", M, " ", yyyy]).toUpperCase(),
-      "screen": const SecondDay(),
-    },
-  ];
+  late final List<Map<String, dynamic>> _recepies;
 
   final PageController _daysController = PageController();
 
   int _selectedPage = 0;
+
+  @override
+  void initState() {
+    _recepies = <Map<String, dynamic>>[
+      <String, dynamic>{
+        "date": formatDate(DateTime.now(), const <String>[dd, " ", M, " ", yyyy]).toUpperCase(),
+        "screen": FirstDay(storeID: widget.storeID),
+      },
+      <String, dynamic>{
+        "date": formatDate(DateTime.now().subtract(1.days), const <String>[dd, " ", M, " ", yyyy]).toUpperCase(),
+        "screen": SecondDay(storeID: widget.storeID),
+      },
+    ];
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -70,7 +76,7 @@ class _RecepiesState extends State<Recepies> {
                       },
                       child: AnimatedContainer(
                         duration: 300.ms,
-                        padding: const EdgeInsets.all(8),
+                        padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(color: _selectedPage == 0 ? purpleColor : darkColor, borderRadius: BorderRadius.circular(5)),
                         child: Text(_recepies[0]["date"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
                       ),
@@ -86,7 +92,7 @@ class _RecepiesState extends State<Recepies> {
                         }
                       },
                       child: Container(
-                        padding: const EdgeInsets.all(4),
+                        padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(color: _selectedPage == 1 ? purpleColor : darkColor, borderRadius: BorderRadius.circular(5)),
                         child: Text(_recepies[1]["date"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
                       ),

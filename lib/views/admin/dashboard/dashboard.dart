@@ -49,7 +49,7 @@ class _DashboardState extends State<Dashboard> {
           children: <Widget>[
             IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(FontAwesome.chevron_left_solid, size: 25, color: purpleColor)),
             const SizedBox(height: 30),
-            const Counters(),
+            Counters(storeID: widget.storeID),
             Center(
               child: Wrap(
                 alignment: WrapAlignment.center,

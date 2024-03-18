@@ -27,7 +27,7 @@ class _CartRecepieState extends State<CartRecepie> {
       },
       <String, dynamic>{
         "title": "Recette",
-        "callback": () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const Recepies())),
+        "callback": () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => Recepies(storeID: widget.storeID))),
       },
     ];
     super.initState();

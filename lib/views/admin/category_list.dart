@@ -28,12 +28,14 @@ class _CategoryListState extends State<CategoryList> {
   bool _deleteState = false;
 
   Future<bool> _load() async {
-    await FirebaseFirestore.instance.collection("categories").get().then(
+    await FirebaseFirestore.instance.collection("categories").where("storeID", isEqualTo: widget.storeID).get().then(
       (QuerySnapshot<Map<String, dynamic>> value) {
-        _categories = value.docs.map((QueryDocumentSnapshot<Map<String, dynamic>> e) {
-          _categoryRefs[e.get("categoryID")] = e.reference;
-          return CategoryModel.fromJson(e.data());
-        }).toList();
+        _categories = value.docs.map(
+          (QueryDocumentSnapshot<Map<String, dynamic>> e) {
+            _categoryRefs[e.get("categoryID")] = e.reference;
+            return CategoryModel.fromJson(e.data());
+          },
+        ).toList();
       },
     );
     return true;
@@ -196,7 +198,7 @@ class _CategoryListState extends State<CategoryList> {
                                                       const SizedBox(height: 10),
                                                       Row(
                                                         children: <Widget>[
-                                                          Text("Total D'articles", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
+                                                          Text("Totale D'articles", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
                                                           const SizedBox(width: 10),
                                                           StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                                                             stream: FirebaseFirestore.instance.collection("categories").where("categoryID", isEqualTo: item.categoryID).limit(1).snapshots(),
@@ -214,7 +216,7 @@ class _CategoryListState extends State<CategoryList> {
                                                       const SizedBox(height: 10),
                                                       Row(
                                                         children: <Widget>[
-                                                          Text("Total produits", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
+                                                          Text("Totale produits", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
                                                           const SizedBox(width: 10),
                                                           StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                                                             stream: FirebaseFirestore.instance.collection("categories").where("categoryID", isEqualTo: item.categoryID).limit(1).snapshots(),
@@ -287,7 +289,7 @@ class _CategoryListState extends State<CategoryList> {
                                                                         children: <Widget>[
                                                                           const Spacer(),
                                                                           AnimatedButton(
-                                                                            width: 80,
+                                                                            width: 100,
                                                                             height: 30,
                                                                             text: 'CONFIRMER',
                                                                             selectedTextColor: whiteColor,
@@ -304,7 +306,7 @@ class _CategoryListState extends State<CategoryList> {
                                                                           ),
                                                                           const SizedBox(width: 20),
                                                                           AnimatedButton(
-                                                                            width: 80,
+                                                                            width: 100,
                                                                             height: 30,
                                                                             text: 'ANNULER',
                                                                             selectedTextColor: whiteColor,

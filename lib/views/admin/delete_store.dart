@@ -35,6 +35,13 @@ class _DeleteStoreState extends State<DeleteStore> {
           }
         },
       );
+      await FirebaseFirestore.instance.collection("sells").where("storeID", isEqualTo: widget.storeID).get().then(
+        (QuerySnapshot<Map<String, dynamic>> value) async {
+          for (final QueryDocumentSnapshot<Map<String, dynamic>> selledproduct in value.docs) {
+            await selledproduct.reference.delete();
+          }
+        },
+      );
       await FirebaseFirestore.instance.collection("categories").where("storeID", isEqualTo: widget.storeID).get().then(
         (QuerySnapshot<Map<String, dynamic>> value) async {
           for (final QueryDocumentSnapshot<Map<String, dynamic>> category in value.docs) {

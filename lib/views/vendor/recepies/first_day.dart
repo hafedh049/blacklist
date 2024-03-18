@@ -8,9 +8,11 @@ import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 
 class FirstDay extends StatefulWidget {
-  const FirstDay({super.key});
+  const FirstDay({super.key, required this.storeID});
+  final String storeID;
   @override
   State<FirstDay> createState() => _FirstDayState();
 }
@@ -27,7 +29,7 @@ class _FirstDayState extends State<FirstDay> {
         .orderBy("timestamp", descending: true)
         .get();
 
-    for (final QueryDocumentSnapshot<Map<String, dynamic>> item in data.docs) {
+    for (final QueryDocumentSnapshot<Map<String, dynamic>> item in data.docs.where((QueryDocumentSnapshot<Map<String, dynamic>> element) => element.get("storeID") == widget.storeID)) {
       final SelledProductModel product = SelledProductModel.fromJson(item.data());
       if (product.clientID == "ANONYMOUS") {
         firstDayData.add(
@@ -86,97 +88,99 @@ class _FirstDayState extends State<FirstDay> {
                 if (snapshot.hasData) {
                   _recepies = snapshot.data!;
                   Future.delayed(100.ms, () => _totalKey.currentState!.setState(() {}));
-                  return ListView.separated(
-                    itemBuilder: (BuildContext context, int index) => Container(
-                      padding: const EdgeInsets.all(24),
-                      decoration: BoxDecoration(color: darkColor, borderRadius: BorderRadius.circular(15)),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              Container(
-                                padding: const EdgeInsets.all(4),
-                                decoration: BoxDecoration(color: _recepies[index]["clientName"] == "ANONYMOUS" ? redColor : greenColor, borderRadius: BorderRadius.circular(5)),
-                                child: Text("Client", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
-                              ),
-                              const SizedBox(width: 10),
-                              Text(_recepies[index]["clientName"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
-                            ],
+                  return _recepies.isEmpty
+                      ? Center(child: LottieBuilder.asset("assets/lotties/empty.json"))
+                      : ListView.separated(
+                          itemBuilder: (BuildContext context, int index) => Container(
+                            padding: const EdgeInsets.all(24),
+                            decoration: BoxDecoration(color: darkColor, borderRadius: BorderRadius.circular(15)),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    Container(
+                                      padding: const EdgeInsets.all(4),
+                                      decoration: BoxDecoration(color: _recepies[index]["clientName"] == "ANONYMOUS" ? redColor : greenColor, borderRadius: BorderRadius.circular(5)),
+                                      child: Text("Client", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Text(_recepies[index]["clientName"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
+                                  ],
+                                ),
+                                const SizedBox(height: 10),
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    Container(
+                                      padding: const EdgeInsets.all(4),
+                                      decoration: BoxDecoration(color: blueColor, borderRadius: BorderRadius.circular(5)),
+                                      child: Text("HEURE", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Text(_recepies[index]["heure"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
+                                  ],
+                                ),
+                                const SizedBox(height: 10),
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    Container(
+                                      padding: const EdgeInsets.all(4),
+                                      decoration: BoxDecoration(color: blueColor, borderRadius: BorderRadius.circular(5)),
+                                      child: Text("CIN", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Text(_recepies[index]["clientCIN"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
+                                  ],
+                                ),
+                                const SizedBox(height: 10),
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    Container(
+                                      padding: const EdgeInsets.all(4),
+                                      decoration: BoxDecoration(color: blueColor, borderRadius: BorderRadius.circular(5)),
+                                      child: Text("CATEGORIE", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Text(_recepies[index]["productCategory"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
+                                  ],
+                                ),
+                                const SizedBox(height: 10),
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    Container(
+                                      padding: const EdgeInsets.all(4),
+                                      decoration: BoxDecoration(color: blueColor, borderRadius: BorderRadius.circular(5)),
+                                      child: Text("NOM PRODUIT", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Text(_recepies[index]["productName"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
+                                  ],
+                                ),
+                                const SizedBox(height: 10),
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    Container(
+                                      padding: const EdgeInsets.all(4),
+                                      decoration: BoxDecoration(color: blueColor, borderRadius: BorderRadius.circular(5)),
+                                      child: Text("PRIX", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Text(_recepies[index]["productPrice"].toStringAsFixed(2), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
-                          const SizedBox(height: 10),
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              Container(
-                                padding: const EdgeInsets.all(4),
-                                decoration: BoxDecoration(color: blueColor, borderRadius: BorderRadius.circular(5)),
-                                child: Text("HEURE", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
-                              ),
-                              const SizedBox(width: 10),
-                              Text(_recepies[index]["heure"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
-                            ],
-                          ),
-                          const SizedBox(height: 10),
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              Container(
-                                padding: const EdgeInsets.all(4),
-                                decoration: BoxDecoration(color: blueColor, borderRadius: BorderRadius.circular(5)),
-                                child: Text("CIN", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
-                              ),
-                              const SizedBox(width: 10),
-                              Text(_recepies[index]["clientCIN"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
-                            ],
-                          ),
-                          const SizedBox(height: 10),
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              Container(
-                                padding: const EdgeInsets.all(4),
-                                decoration: BoxDecoration(color: blueColor, borderRadius: BorderRadius.circular(5)),
-                                child: Text("CATEGORIE", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
-                              ),
-                              const SizedBox(width: 10),
-                              Text(_recepies[index]["productCategory"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
-                            ],
-                          ),
-                          const SizedBox(height: 10),
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              Container(
-                                padding: const EdgeInsets.all(4),
-                                decoration: BoxDecoration(color: blueColor, borderRadius: BorderRadius.circular(5)),
-                                child: Text("NOM PRODUIT", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
-                              ),
-                              const SizedBox(width: 10),
-                              Text(_recepies[index]["productName"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
-                            ],
-                          ),
-                          const SizedBox(height: 10),
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              Container(
-                                padding: const EdgeInsets.all(4),
-                                decoration: BoxDecoration(color: blueColor, borderRadius: BorderRadius.circular(5)),
-                                child: Text("PRIX", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
-                              ),
-                              const SizedBox(width: 10),
-                              Text(_recepies[index]["productPrice"].toStringAsFixed(2), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    separatorBuilder: (BuildContext context, int index) => const SizedBox(height: 20),
-                    itemCount: _recepies.length,
-                  );
+                          separatorBuilder: (BuildContext context, int index) => const SizedBox(height: 20),
+                          itemCount: _recepies.length,
+                        );
                 } else if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Loading();
                 } else {

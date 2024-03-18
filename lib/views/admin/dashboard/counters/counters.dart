@@ -12,8 +12,8 @@ import 'package:icons_plus/icons_plus.dart';
 import '../../../../utils/shared.dart';
 
 class Counters extends StatefulWidget {
-  const Counters({super.key});
-
+  const Counters({super.key, required this.storeID});
+  final String storeID;
   @override
   State<Counters> createState() => _CountersState();
 }
@@ -44,7 +44,7 @@ class _CountersState extends State<Counters> {
 
   @override
   void initState() {
-    FirebaseFirestore.instance.collection("sells").get().then(
+    FirebaseFirestore.instance.collection("sells").where("storeID", isEqualTo: widget.storeID).get().then(
       (QuerySnapshot<Map<String, dynamic>> value) {
         final List<Map<String, dynamic>> data = value.docs.map(
           (QueryDocumentSnapshot<Map<String, dynamic>> e) {
