@@ -1,4 +1,5 @@
 import 'package:blacklist/models/category_model.dart';
+import 'package:blacklist/utils/callbacks.dart';
 import 'package:blacklist/utils/shared.dart';
 import 'package:blacklist/views/admin/add_category.dart';
 import 'package:blacklist/views/admin/products_table.dart';
@@ -107,18 +108,32 @@ class _CategoryListState extends State<CategoryList> {
                                 transitionType: TransitionType.TOP_TO_BOTTOM,
                                 textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
                                 onPress: () async {
-                                  for (CategoryModel item in _categories) {
+                                  int counter = 0;
+                                  for (final CategoryModel item in _categories) {
                                     if (item.categoryState) {
-                                      await _categoryRefs[item.categoryID]!.delete();
-                                      _categoryRefs.remove(item.categoryID);
+                                      final String cID = item.categoryID;
                                       _categories.remove(item);
+                                      _categoriesKey.currentState!.setState(() {});
+                                      await _categoryRefs[cID]!.delete();
+                                      _categoryRefs.remove(cID);
+                                      QuerySnapshot<Map<String, dynamic>> query = await FirebaseFirestore.instance.collection("products").where("categoryID", isEqualTo: cID).get();
+                                      for (final doc in query.docs) {
+                                        await doc.reference.delete();
+                                        counter += 1;
+                                      }
+                                      query = await FirebaseFirestore.instance.collection("sells").where("categoryID", isEqualTo: cID).get();
+                                      for (final doc in query.docs) {
+                                        await doc.reference.delete();
+                                      }
                                     }
                                   }
-                                  for (CategoryModel item in _categories) {
-                                    item.categoryState = false;
-                                  }
+                                  final QuerySnapshot<Map<String, dynamic>> storeQuery = await FirebaseFirestore.instance.collection("stores").where("storeID", isEqualTo: widget.storeID).get();
+                                  storeQuery.docs.first.reference.update(<String, dynamic>{"storeTotalProducts": storeQuery.docs.first.get("storeTotalProducts") - counter});
+
                                   _categoriesKey.currentState!.setState(() => _deleteState = false);
                                   _(() {});
+                                  // ignore: use_build_context_synchronously
+                                  showToast(context, "Operation completed", greenColor);
                                 },
                               ),
                             ],
@@ -140,7 +155,7 @@ class _CategoryListState extends State<CategoryList> {
                                 backgroundColor: redColor,
                                 transitionType: TransitionType.TOP_TO_BOTTOM,
                                 textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                                onPress: () async {
+                                onPress: () {
                                   _categoriesKey.currentState!.setState(() => _deleteState = true);
                                   _(() {});
                                 },
@@ -158,13 +173,13 @@ class _CategoryListState extends State<CategoryList> {
                   future: _load(),
                   builder: (BuildContext context, snapshot) {
                     if (snapshot.hasData) {
-                      return _categories.isEmpty
-                          ? LottieBuilder.asset("assets/lotties/empty.json")
-                          : SingleChildScrollView(
-                              child: StatefulBuilder(
-                                  key: _categoriesKey,
-                                  builder: (BuildContext context, void Function(void Function()) _) {
-                                    return Wrap(
+                      return StatefulBuilder(
+                          key: _categoriesKey,
+                          builder: (BuildContext context, void Function(void Function()) _) {
+                            return _categories.isEmpty
+                                ? LottieBuilder.asset("assets/lotties/empty.json")
+                                : SingleChildScrollView(
+                                    child: Wrap(
                                       alignment: WrapAlignment.center,
                                       crossAxisAlignment: WrapCrossAlignment.center,
                                       runAlignment: WrapAlignment.center,
@@ -356,9 +371,9 @@ class _CategoryListState extends State<CategoryList> {
                                             ),
                                           ),
                                       ],
-                                    );
-                                  }),
-                            );
+                                    ),
+                                  );
+                          });
                     } else if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Loading();
                     }

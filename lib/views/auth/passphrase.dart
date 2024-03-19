@@ -37,7 +37,8 @@ class _PassphraseState extends State<Passphrase> {
   @override
   void initState() {
     InternetConnection().onStatusChange.listen(
-      (InternetStatus status) {
+      (InternetStatus status) async {
+        //await offline!.clear();
         showToast(context, status.toString(), purpleColor);
       },
     );

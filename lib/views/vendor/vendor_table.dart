@@ -231,7 +231,8 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
                                                         offline!.get("vendor_cart")
                                                           ..add(product.toJson()
                                                             ..putIfAbsent("timestamp", () => now)
-                                                            ..putIfAbsent("clientID", () => widget.clientID)));
+                                                            ..putIfAbsent("clientID", () => widget.clientID)
+                                                            ..putIfAbsent("cartController", () => product.cartController.text)));
                                                   }
                                                   product.productQuantity -= int.parse(product.cartController.text);
                                                   product.cartController.text = "0";

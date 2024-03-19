@@ -204,7 +204,7 @@ class _AddProductState extends State<AddProduct> {
                     );
                     await FirebaseFirestore.instance.collection("stores").where("storeID", isEqualTo: widget.storeID).limit(1).get().then(
                       (QuerySnapshot<Map<String, dynamic>> value) async {
-                        await value.docs.first.reference.update(<String, dynamic>{"storeTotalProducts": value.docs.first.get("storeTotalProducts") + 1});
+                        await value.docs.first.reference.update(<String, dynamic>{"storeTotalProducts": value.docs.first.get("storeTotalProducts") + int.parse(_productQuantityController.text)});
                       },
                     );
                     await FirebaseFirestore.instance.collection("categories").where("categoryID", isEqualTo: widget.categoryID).limit(1).get().then(
