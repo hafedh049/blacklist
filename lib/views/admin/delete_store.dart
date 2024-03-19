@@ -71,6 +71,11 @@ class _DeleteStoreState extends State<DeleteStore> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
+        Text(
+          "Are you sure to delete '${widget.stores.firstWhere((StoreModel element) => element.storeID == widget.storeID).storeName}'",
+          style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+        ),
+        const SizedBox(height: 20),
         Container(
           color: darkColor,
           child: StatefulBuilder(
