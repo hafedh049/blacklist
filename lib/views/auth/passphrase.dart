@@ -12,7 +12,6 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_animated_button/flutter_animated_button.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
-import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
 class Passphrase extends StatefulWidget {
   const Passphrase({super.key});
@@ -33,17 +32,6 @@ class _PassphraseState extends State<Passphrase> {
   final TextEditingController _passwordController = TextEditingController();
 
   bool _isVendor = false;
-
-  @override
-  void initState() {
-    InternetConnection().onStatusChange.listen(
-      (InternetStatus status) async {
-        //await offline!.clear();
-        showToast(context, status.toString(), purpleColor);
-      },
-    );
-    super.initState();
-  }
 
   Future<void> _signIn() async {
     if (_passwordController.text.trim().isEmpty) {

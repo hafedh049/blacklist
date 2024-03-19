@@ -37,6 +37,37 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
 
   @override
   void initState() {
+    InternetConnection().onStatusChange.listen(
+      (InternetStatus status) async {
+        if (status == InternetStatus.connected) {
+          showToast(context, offline!.get("vendor_cart").toString(), redColor);
+          try {
+            /*  for (final Map<String, dynamic> product in offline!.get("vendor_cart")) {
+              QuerySnapshot<Map<String, dynamic>> query = await FirebaseFirestore.instance.collection("products").where("productReference", isEqualTo: product["productReference"]).limit(1).get();
+              await query.docs.first.reference.update(<String, dynamic>{"date": product["timestamp"], "productQuantity": product["productQuantity"] - int.parse(product["cartController"])});
+              query = await FirebaseFirestore.instance.collection("categories").where("categoryID", isEqualTo: product["categoryID"]).limit(1).get();
+              await query.docs.first.reference.update(<String, dynamic>{"categoryProductsCount": query.docs.first.get("categoryProductsCount") - int.parse(product["cartController"])});
+              query = await FirebaseFirestore.instance.collection("stores").where("storeID", isEqualTo: product["storeID"]).limit(1).get();
+              await query.docs.first.reference.update(<String, dynamic>{"storeTotalProducts": query.docs.first.get("storeTotalProducts") - int.parse(product["cartController"])});
+              await Future.wait(
+                List<Future<DocumentReference<Map<String, dynamic>>>>.generate(
+                  int.parse(product["cartController"]),
+                  (int _) => FirebaseFirestore.instance.collection("sells").add(product),
+                ),
+              );
+              // ignore: use_build_context_synchronously
+              showToast(context, product["productName"], purpleColor);
+            }
+            offline!.put("vendor_cart", <Map<String, dynamic>>[]);*/
+          } catch (e) {
+            // ignore: use_build_context_synchronously
+            showToast(context, e.toString(), redColor);
+          }
+        }
+        // ignore: use_build_context_synchronously
+        showToast(context, status.toString(), greenColor);
+      },
+    );
     super.initState();
   }
 
@@ -233,6 +264,7 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
                                                             ..putIfAbsent("timestamp", () => now)
                                                             ..putIfAbsent("clientID", () => widget.clientID)
                                                             ..putIfAbsent("cartController", () => product.cartController.text)));
+                                                    await offline!.flush();
                                                   }
                                                   product.productQuantity -= int.parse(product.cartController.text);
                                                   product.cartController.text = "0";
