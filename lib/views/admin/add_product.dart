@@ -31,48 +31,18 @@ class _AddProductState extends State<AddProduct> {
   final TextEditingController _productStockAlertController = TextEditingController();
 
   late final Map<String, Map<String, dynamic>> _productTemplate = <String, Map<String, dynamic>>{
-    "Nom de Produit": <String, dynamic>{
-      "controller": _productNameController,
-      "type": "text",
-      "required": true,
-      "hint": "Choisir un nom",
-    },
+    "Nom de Produit": <String, dynamic>{"controller": _productNameController, "type": "text", "required": true, "hint": "Choisir un nom"},
     "Date": <String, dynamic>{
       "controller": _productDateController,
       "type": "date",
       "required": false,
       "hint": formatDate(DateTime.now(), const <String>[dd, '-', M, '-', yyyy, " ", HH, ':', nn, ':', ss]).toUpperCase(),
     },
-    "Reference": <String, dynamic>{
-      "controller": _productReferenceController,
-      "type": "reference",
-      "required": false,
-      "hint": "",
-    },
-    "Coût": <String, dynamic>{
-      "controller": _productOldPriceController,
-      "type": "double",
-      "required": true,
-      "hint": "0.00 DT",
-    },
-    "Prix": <String, dynamic>{
-      "controller": _productNewPriceController,
-      "type": "double",
-      "required": true,
-      "hint": "0.00 DT",
-    },
-    "Quantité": <String, dynamic>{
-      "controller": _productQuantityController,
-      "type": "number",
-      "required": true,
-      "hint": "0",
-    },
-    "Stock Alert": <String, dynamic>{
-      "controller": _productStockAlertController,
-      "type": "number",
-      "required": true,
-      "hint": "0",
-    },
+    "Reference": <String, dynamic>{"controller": _productReferenceController, "type": "reference", "required": false, "hint": ""},
+    "Coût": <String, dynamic>{"controller": _productOldPriceController, "type": "double", "required": true, "hint": "0.00 DT"},
+    "Prix": <String, dynamic>{"controller": _productNewPriceController, "type": "double", "required": true, "hint": "0.00 DT"},
+    "Quantité": <String, dynamic>{"controller": _productQuantityController, "type": "number", "required": true, "hint": "0"},
+    "Stock Alert": <String, dynamic>{"controller": _productStockAlertController, "type": "number", "required": true, "hint": "0"},
   };
 
   @override
