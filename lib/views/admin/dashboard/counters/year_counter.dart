@@ -18,13 +18,12 @@ class _YearCounterState extends State<YearCounter> {
     final int yearA = int.parse(a);
     final int yearB = int.parse(b);
 
-    // Comparing years
+    // Comparing years in descending order
     if (yearA > yearB) {
-      return 1;
-    } else if (yearA < yearB) {
       return -1;
+    } else if (yearA < yearB) {
+      return 1;
     }
-
     // If both years are equal
     return 0;
   }

@@ -42,6 +42,8 @@ class _CountersState extends State<Counters> {
     },
   };
 
+  int _totalselledProducts = 0;
+
   @override
   void initState() {
     FirebaseFirestore.instance.collection("sells").where("storeID", isEqualTo: widget.storeID).get().then(
@@ -54,6 +56,8 @@ class _CountersState extends State<Counters> {
             };
           },
         ).toList();
+
+        _totalselledProducts = data.length;
 
         for (final Map<String, dynamic> item in data) {
           final String day = formatDate(item["timestamp"].toDate(), const <String>[dd, "/", mm, "/", yyyy]);
@@ -77,14 +81,15 @@ class _CountersState extends State<Counters> {
           } else {
             _history["years"]![year] = item["price"];
           }
-
-          if ((item["timestamp"].toDate() as DateTime).day == DateTime.now().day) {
+          final DateTime date = item["timestamp"].toDate();
+          final DateTime now = DateTime.now();
+          if (date.day == now.day && date.month == now.month && date.year == now.year) {
             _sells["day"]!["amount"] = _sells["day"]!["amount"]! + item["price"];
           }
-          if ((item["timestamp"].toDate() as DateTime).month == DateTime.now().month) {
+          if (date.month == now.month && date.year == now.year) {
             _sells["month"]!["amount"] = _sells["month"]!["amount"]! + item["price"];
           }
-          if ((item["timestamp"].toDate() as DateTime).year == DateTime.now().year) {
+          if (date.year == now.year) {
             _sells["year"]!["amount"] = _sells["year"]!["amount"]! + item["price"];
           }
         }
@@ -153,6 +158,38 @@ class _CountersState extends State<Counters> {
               ),
             ),
           ),
+        Container(
+          padding: const EdgeInsets.all(24),
+          margin: const EdgeInsets.only(bottom: 24),
+          color: darkColor,
+          child: Stack(
+            alignment: Alignment.centerLeft,
+            children: <Widget>[
+              Icon(FontAwesome.money_check_dollar_solid, size: 60, color: greyColor.withOpacity(.05)),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  const Icon(FontAwesome.money_check_dollar_solid, size: 35, color: purpleColor),
+                  const Spacer(),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Text("Nombre totale du produits vendus", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.bold, color: greyColor)),
+                      const SizedBox(height: 5),
+                      AnimatedFlipCounter(
+                        value: _totalselledProducts,
+                        textStyle: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.bold, color: whiteColor),
+                        duration: 1.seconds,
+                        thousandSeparator: " ",
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }

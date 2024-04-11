@@ -18,18 +18,18 @@ class _MonthCounterState extends State<MonthCounter> {
     final List<int> dateA = a.split('/').map(int.parse).toList();
     final List<int> dateB = b.split('/').map(int.parse).toList();
 
-    // Comparing years
+    // Comparing years in descending order
     if (dateA[1] > dateB[1]) {
-      return 1;
-    } else if (dateA[1] < dateB[1]) {
       return -1;
+    } else if (dateA[1] < dateB[1]) {
+      return 1;
     }
 
-    // Comparing months
+    // Comparing months in descending order
     if (dateA[0] > dateB[0]) {
-      return 1;
-    } else if (dateA[0] < dateB[0]) {
       return -1;
+    } else if (dateA[0] < dateB[0]) {
+      return 1;
     }
 
     // If both dates are equal
