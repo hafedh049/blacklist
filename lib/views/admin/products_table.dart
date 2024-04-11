@@ -65,7 +65,7 @@ class ProductTableState extends State<ProductTable> with RestorationMixin {
     registerForRestoration(_sortColumnIndex, 'sort_column_index');
 
     if (!_initialized) {
-      _productsDataSource = ProductDataSource(context, _products, true, true, true, true);
+      _productsDataSource = ProductDataSource(context, _products, true);
       _initialized = true;
     }
     _map[_sortColumnIndex.value];
@@ -173,9 +173,6 @@ class ProductTableState extends State<ProductTable> with RestorationMixin {
                         context,
                         _products.where((ProductModel element) => element.productName.toLowerCase().startsWith(value.toLowerCase())).toList(),
                         true,
-                        true,
-                        true,
-                        true,
                       ),
                     );
                   },
@@ -201,7 +198,7 @@ class ProductTableState extends State<ProductTable> with RestorationMixin {
                     builder: (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
                       if (snapshot.hasData) {
                         _products = snapshot.data!.docs.map((QueryDocumentSnapshot<Map<String, dynamic>> e) => ProductModel.fromJson(e.data())).toList();
-                        _productsDataSource = ProductDataSource(context, _products, true, true, true, true);
+                        _productsDataSource = ProductDataSource(context, _products, true);
                         return ListView(
                           restorationId: restorationId,
                           children: <Widget>[

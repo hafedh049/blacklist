@@ -14,10 +14,39 @@ class DayCounter extends StatefulWidget {
 class _DayCounterState extends State<DayCounter> {
   late final List<MapEntry<String, dynamic>> _days;
 
+  int _compareDates(String a, String b) {
+    final List<int> dateA = a.split('/').map(int.parse).toList();
+    final List<int> dateB = b.split('/').map(int.parse).toList();
+
+    // Comparing years
+    if (dateA[2] > dateB[2]) {
+      return 1;
+    } else if (dateA[2] < dateB[2]) {
+      return -1;
+    }
+
+    // Comparing months
+    if (dateA[1] > dateB[1]) {
+      return 1;
+    } else if (dateA[1] < dateB[1]) {
+      return -1;
+    }
+
+    // Comparing days
+    if (dateA[0] > dateB[0]) {
+      return 1;
+    } else if (dateA[0] < dateB[0]) {
+      return -1;
+    }
+
+    // If both dates are equal
+    return 0;
+  }
+
   @override
   void initState() {
     final String day = formatDate(DateTime.now(), const <String>[dd, "/", mm, "/", yyyy]);
-    _days = (widget.data..putIfAbsent(day, () => 0)).entries.toList()..sort((a, b) => b.key.compareTo(a.key));
+    _days = (widget.data..putIfAbsent(day, () => 0)).entries.toList()..sort((MapEntry<String, dynamic> a, MapEntry<String, dynamic> b) => _compareDates(a.key, b.key));
     super.initState();
   }
 

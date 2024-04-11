@@ -14,10 +14,33 @@ class MonthCounter extends StatefulWidget {
 class _MonthCounterState extends State<MonthCounter> {
   late final List<MapEntry<String, dynamic>> _months;
 
+  int _compareDates(String a, String b) {
+    final List<int> dateA = a.split('/').map(int.parse).toList();
+    final List<int> dateB = b.split('/').map(int.parse).toList();
+
+    // Comparing years
+    if (dateA[1] > dateB[1]) {
+      return 1;
+    } else if (dateA[1] < dateB[1]) {
+      return -1;
+    }
+
+    // Comparing months
+    if (dateA[0] > dateB[0]) {
+      return 1;
+    } else if (dateA[0] < dateB[0]) {
+      return -1;
+    }
+
+    // If both dates are equal
+    return 0;
+  }
+
   @override
   void initState() {
     final String month = formatDate(DateTime.now(), const <String>[mm, "/", yyyy]);
-    _months = (widget.data..putIfAbsent(month, () => 0)).entries.toList();
+    _months = (widget.data..putIfAbsent(month, () => 0)).entries.toList()..sort((MapEntry<String, dynamic> a, MapEntry<String, dynamic> b) => _compareDates(a.key, b.key));
+
     super.initState();
   }
 

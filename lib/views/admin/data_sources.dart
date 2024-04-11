@@ -51,17 +51,17 @@ class ProductDataSource extends DataTableSource {
     products = <ProductModel>[];
   }
 
-  ProductDataSource(this.context, this.products, [sortedByNames = true, this.hasRowTaps = true, this.hasRowHeightOverrides = true, this.hasZebraStripes = true]) {
+  ProductDataSource(this.context, this.products, [sortedByNames = true]) {
     if (sortedByNames) {
       sort((ProductModel p) => p.productName, true);
     }
   }
 
   final BuildContext context;
-  late List<ProductModel> products;
-  bool hasRowTaps = true;
-  bool hasRowHeightOverrides = true;
-  bool hasZebraStripes = true;
+  List<ProductModel> products = <ProductModel>[];
+  final bool hasRowTaps = true;
+  final bool hasRowHeightOverrides = true;
+  final bool hasZebraStripes = true;
 
   void sort<T>(Comparable<T> Function(ProductModel p) getField, bool ascending) {
     products.sort(

@@ -14,10 +14,25 @@ class YearCounter extends StatefulWidget {
 class _YearCounterState extends State<YearCounter> {
   late final List<MapEntry<String, dynamic>> _years;
 
+  int _compareDates(String a, String b) {
+    final int yearA = int.parse(a);
+    final int yearB = int.parse(b);
+
+    // Comparing years
+    if (yearA > yearB) {
+      return 1;
+    } else if (yearA < yearB) {
+      return -1;
+    }
+
+    // If both years are equal
+    return 0;
+  }
+
   @override
   void initState() {
     final String year = formatDate(DateTime.now(), const <String>[yyyy]);
-    _years = (widget.data..putIfAbsent(year, () => 0)).entries.toList();
+    _years = (widget.data..putIfAbsent(year, () => 0)).entries.toList()..sort((MapEntry<String, dynamic> a, MapEntry<String, dynamic> b) => _compareDates(a.key, b.key));
     super.initState();
   }
 
