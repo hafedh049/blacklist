@@ -156,10 +156,13 @@ class _StoresListState extends State<StoresList> {
                                                       Text("Totale Produits", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
                                                       const SizedBox(width: 10),
                                                       StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                                                        stream: FirebaseFirestore.instance.collection("stores").where("storeID", isEqualTo: item.storeID).limit(1).snapshots(),
+                                                        stream: FirebaseFirestore.instance.collection("products").where("storeID", isEqualTo: item.storeID).snapshots(),
                                                         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
                                                           if (snapshot.hasData) {
-                                                            final int totalProducts = snapshot.data!.docs[0]["storeTotalProducts"];
+                                                            int totalProducts = 0;
+                                                            for (final QueryDocumentSnapshot<Map<String, dynamic>> doc in snapshot.data!.docs) {
+                                                              totalProducts += (doc.get("productQuantity") as int);
+                                                            }
                                                             return Text(totalProducts.toString(), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: redColor));
                                                           } else {
                                                             return Text("Attend", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: redColor));
