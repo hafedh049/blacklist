@@ -212,19 +212,6 @@ class _EditProductState extends State<EditProduct> {
                         );
                       },
                     );
-
-                    await FirebaseFirestore.instance.collection("categories").where("categoryID", isEqualTo: widget.product.categoryID).limit(1).get().then(
-                      (QuerySnapshot<Map<String, dynamic>> value) async {
-                        await value.docs.first.reference.update(<String, dynamic>{"categoryProductsCount": value.docs.first.get("categoryProductsCount") - widget.product.productQuantity + int.parse(_productQuantityController.text)});
-                      },
-                    );
-
-                    await FirebaseFirestore.instance.collection("stores").where("storeID", isEqualTo: widget.product.storeID).limit(1).get().then(
-                      (QuerySnapshot<Map<String, dynamic>> value) async {
-                        await value.docs.first.reference.update(<String, dynamic>{"storeTotalProducts": value.docs.first.get("storeTotalProducts") - widget.product.productQuantity + int.parse(_productQuantityController.text)});
-                      },
-                    );
-
                     // ignore: use_build_context_synchronously
                     showToast(context, "Produit ajouté", greenColor);
                     // ignore: use_build_context_synchronously

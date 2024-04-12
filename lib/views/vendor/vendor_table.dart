@@ -46,10 +46,6 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
               showToast(context, product["productName"], purpleColor);
               QuerySnapshot<Map<String, dynamic>> query = await FirebaseFirestore.instance.collection("products").where("productReference", isEqualTo: product["productReference"]).limit(1).get();
               await query.docs.first.reference.update(<String, dynamic>{"date": product["timestamp"], "productQuantity": product["productQuantity"] - int.parse(product["cartController"])});
-              query = await FirebaseFirestore.instance.collection("categories").where("categoryID", isEqualTo: product["categoryID"]).limit(1).get();
-              await query.docs.first.reference.update(<String, dynamic>{"categoryProductsCount": query.docs.first.get("categoryProductsCount") - int.parse(product["cartController"])});
-              query = await FirebaseFirestore.instance.collection("stores").where("storeID", isEqualTo: product["storeID"]).limit(1).get();
-              await query.docs.first.reference.update(<String, dynamic>{"storeTotalProducts": query.docs.first.get("storeTotalProducts") - int.parse(product["cartController"])});
               await Future.wait(
                 List<Future<DocumentReference<Map<String, dynamic>>>>.generate(
                   int.parse(product["cartController"]),
@@ -77,7 +73,7 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
     registerForRestoration(_rowsPerPage, 'rows_per_page');
 
     if (!_initialized) {
-      _productsDataSource = ProductDataSource(context, _products, true, true, true, true);
+      _productsDataSource = ProductDataSource(context, _products, true);
       _initialized = true;
     }
     _productsDataSource.updateSelectedProducts(_productSelections);
@@ -111,7 +107,7 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
     final QuerySnapshot<Map<String, dynamic>> query = await FirebaseFirestore.instance.collection("products").where("storeID", isEqualTo: widget.storeID).get();
     return query.docs.map(
       (QueryDocumentSnapshot<Map<String, dynamic>> e) {
-        VendorProduct vp = VendorProduct.fromJson(e.data());
+        final VendorProduct vp = VendorProduct.fromJson(e.data());
         if (widget.gift) {
           vp.newPrice = 0;
         }
@@ -241,10 +237,6 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
                                                   if (internetConnection) {
                                                     QuerySnapshot<Map<String, dynamic>> query = await FirebaseFirestore.instance.collection("products").where("productReference", isEqualTo: product.productReference).limit(1).get();
                                                     await query.docs.first.reference.update(<String, dynamic>{"date": now, "productQuantity": product.productQuantity - int.parse(product.cartController.text)});
-                                                    query = await FirebaseFirestore.instance.collection("categories").where("categoryID", isEqualTo: product.categoryID).limit(1).get();
-                                                    await query.docs.first.reference.update(<String, dynamic>{"categoryProductsCount": query.docs.first.get("categoryProductsCount") - int.parse(product.cartController.text)});
-                                                    query = await FirebaseFirestore.instance.collection("stores").where("storeID", isEqualTo: product.storeID).limit(1).get();
-                                                    await query.docs.first.reference.update(<String, dynamic>{"storeTotalProducts": query.docs.first.get("storeTotalProducts") - int.parse(product.cartController.text)});
                                                     await Future.wait(
                                                       List<Future<DocumentReference<Map<String, dynamic>>>>.generate(
                                                         int.parse(product.cartController.text),
@@ -279,7 +271,7 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
                                                 },
                                               );
                                               // ignore: use_build_context_synchronously
-                                              showToast(context, internetConnection ? "Ajout a été effectué" : "You are offline but products will be added to cart as soon as the connection comes back", purpleColor);
+                                              showToast(context, internetConnection ? "Ajout a été effectué" : "Vous êtes hors ligne mais les produits seront ajoutés au panier dès que la connexion reviendra", purpleColor);
                                             },
                                           ),
                                           const SizedBox(width: 20),
@@ -322,9 +314,6 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
                         context,
                         _products.where((VendorProduct element) => element.productName.toLowerCase().startsWith(value.toLowerCase())).toList(),
                         true,
-                        true,
-                        true,
-                        true,
                       ),
                     );
                   },
@@ -350,7 +339,7 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
                 builder: (BuildContext context, AsyncSnapshot<List<VendorProduct>> snapshot) {
                   if (snapshot.hasData) {
                     _products = snapshot.data!;
-                    _productsDataSource = ProductDataSource(context, _products, true, true, true, true);
+                    _productsDataSource = ProductDataSource(context, _products, true);
                     return ListView(
                       restorationId: restorationId,
                       children: <Widget>[

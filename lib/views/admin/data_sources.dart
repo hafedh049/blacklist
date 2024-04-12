@@ -134,22 +134,6 @@ class ProductDataSource extends DataTableSource {
                               await FirebaseFirestore.instance.collection("products").where("productReference", isEqualTo: product.productReference).get().then(
                                     (QuerySnapshot<Map<String, dynamic>> value) async => await value.docs.first.reference.delete(),
                                   );
-
-                              await FirebaseFirestore.instance.collection("categories").where("categoryID", isEqualTo: product.categoryID).limit(1).get().then(
-                                (QuerySnapshot<Map<String, dynamic>> value) async {
-                                  await value.docs.first.reference.update(<String, dynamic>{"categoryArticlesCount": value.docs.first.get("categoryArticlesCount") - 1});
-                                },
-                              );
-                              await FirebaseFirestore.instance.collection("categories").where("categoryID", isEqualTo: product.categoryID).limit(1).get().then(
-                                (QuerySnapshot<Map<String, dynamic>> value) async {
-                                  await value.docs.first.reference.update(<String, dynamic>{"categoryProductsCount": value.docs.first.get("categoryProductsCount") - product.productQuantity});
-                                },
-                              );
-                              await FirebaseFirestore.instance.collection("stores").where("storeID", isEqualTo: product.storeID).limit(1).get().then(
-                                (QuerySnapshot<Map<String, dynamic>> value) async {
-                                  await value.docs.first.reference.update(<String, dynamic>{"storeTotalProducts": value.docs.first.get("storeTotalProducts") - product.productQuantity});
-                                },
-                              );
                               // ignore: use_build_context_synchronously
                               Navigator.pop(context);
                               // ignore: use_build_context_synchronously

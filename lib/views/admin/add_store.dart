@@ -41,7 +41,6 @@ class _AddStoreState extends State<AddStore> {
         'storeState': "ouvert",
         'storeVendorName': _vendorNameController.text.trim(),
         'storeVendorPassword': _vendorPasswordController.text.trim(),
-        "storeTotalProducts": 0,
       };
 
       await FirebaseFirestore.instance.collection('stores').doc(storeID).set(storeItem);

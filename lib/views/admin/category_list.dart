@@ -216,10 +216,16 @@ class _CategoryListState extends State<CategoryList> {
                                                           Text("Totale D'articles", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
                                                           const SizedBox(width: 10),
                                                           StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                                                            stream: FirebaseFirestore.instance.collection("categories").where("categoryID", isEqualTo: item.categoryID).limit(1).snapshots(),
+                                                            stream: FirebaseFirestore.instance.collection("products").where("categoryID", isEqualTo: item.categoryID).snapshots(),
                                                             builder: (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
                                                               if (snapshot.hasData) {
-                                                                final int categoryArticlesCount = snapshot.data!.docs[0]["categoryArticlesCount"];
+                                                                int categoryArticlesCount = 0;
+                                                                final List<QueryDocumentSnapshot<Map<String, dynamic>>> data = snapshot.data!.docs
+                                                                    .where(
+                                                                      (QueryDocumentSnapshot<Map<String, dynamic>> element) => element.get("storeID") == widget.storeID,
+                                                                    )
+                                                                    .toList();
+                                                                categoryArticlesCount = data.length;
                                                                 return Text(categoryArticlesCount.toString(), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: redColor));
                                                               } else {
                                                                 return Text("Attend", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: redColor));
@@ -234,10 +240,18 @@ class _CategoryListState extends State<CategoryList> {
                                                           Text("Totale produits", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: greyColor)),
                                                           const SizedBox(width: 10),
                                                           StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                                                            stream: FirebaseFirestore.instance.collection("categories").where("categoryID", isEqualTo: item.categoryID).limit(1).snapshots(),
+                                                            stream: FirebaseFirestore.instance.collection("products").where("categoryID", isEqualTo: item.categoryID).snapshots(),
                                                             builder: (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
                                                               if (snapshot.hasData) {
-                                                                final int categoryProductsCount = snapshot.data!.docs[0]["categoryProductsCount"];
+                                                                int categoryProductsCount = 0;
+                                                                final List<QueryDocumentSnapshot<Map<String, dynamic>>> data = snapshot.data!.docs
+                                                                    .where(
+                                                                      (QueryDocumentSnapshot<Map<String, dynamic>> element) => element.get("storeID") == widget.storeID,
+                                                                    )
+                                                                    .toList();
+                                                                for (final QueryDocumentSnapshot<Map<String, dynamic>> element in data) {
+                                                                  categoryProductsCount += element.get("productQuantity") as int;
+                                                                }
                                                                 return Text(categoryProductsCount.toString(), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: redColor));
                                                               } else {
                                                                 return Text("Attend", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: redColor));

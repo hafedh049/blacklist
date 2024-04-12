@@ -27,7 +27,7 @@ class StoresList extends StatefulWidget {
 class _StoresListState extends State<StoresList> {
   final GlobalKey<State> _storesKey = GlobalKey<State>();
 
-  final List<StoreModel> _stores = <StoreModel>[];
+  List<StoreModel> _stores = <StoreModel>[];
 
   final Map<String, DocumentReference> _refs = <String, DocumentReference>{};
 
@@ -99,7 +99,7 @@ class _StoresListState extends State<StoresList> {
                   future: _loadStores(),
                   builder: (BuildContext context, AsyncSnapshot<List<StoreModel>> snapshot) {
                     if (snapshot.hasData) {
-                      _stores.addAll(snapshot.data!);
+                      _stores = snapshot.data!;
                       return StatefulBuilder(
                         key: _storesKey,
                         builder: (BuildContext context, void Function(void Function()) setS) => _stores.isEmpty

@@ -1,4 +1,3 @@
-import 'package:blacklist/utils/callbacks.dart';
 import 'package:blacklist/utils/shared.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
@@ -111,7 +110,7 @@ class ProductDataSource extends DataTableSource {
     products = <VendorProduct>[];
   }
 
-  ProductDataSource(this.context, this.products, [sortedByNames = true, this.hasRowTaps = true, this.hasRowHeightOverrides = true, this.hasZebraStripes = true]) {
+  ProductDataSource(this.context, this.products, [sortedByNames = true]) {
     if (sortedByNames) {
       sort((VendorProduct p) => p.productName, true);
     }
@@ -119,14 +118,13 @@ class ProductDataSource extends DataTableSource {
 
   final BuildContext context;
   late List<VendorProduct> products;
-  bool hasRowTaps = true;
-  bool hasRowHeightOverrides = true;
-  bool hasZebraStripes = true;
+  final bool hasRowTaps = true;
+  final bool hasRowHeightOverrides = true;
+  final bool hasZebraStripes = true;
 
   @override
   void dispose() {
     for (final VendorProduct product in products) {
-      showToast(context, "hani", redColor);
       product.dispose();
     }
     super.dispose();

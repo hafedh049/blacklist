@@ -101,8 +101,6 @@ class _AddCategoryState extends State<AddCategory> {
                             final Map<String, dynamic> categoryItem = <String, dynamic>{
                               'categoryID': const UuidV8().generate(),
                               'categoryName': _categoryName.text.trim(),
-                              'categoryArticlesCount': 0,
-                              'categoryProductsCount': 0,
                               'categoryState': false,
                               'storeID': widget.storeID,
                             };
