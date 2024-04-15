@@ -133,24 +133,26 @@ class _CountersState extends State<Counters> {
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       Icon(item["icon"], size: 35, color: purpleColor),
-                      const Spacer(),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Text(item["title"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.bold, color: greyColor)),
-                          const SizedBox(height: 5),
-                          AnimatedFlipCounter(
-                            value: item["amount"],
-                            wholeDigits: 1,
-                            fractionDigits: 2,
-                            suffix: " DT",
-                            textStyle: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.bold, color: whiteColor),
-                            duration: 1.seconds,
-                            decimalSeparator: ",",
-                            thousandSeparator: " ",
-                          ),
-                        ],
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Text(item["title"], style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.bold, color: greyColor)),
+                            const SizedBox(height: 5),
+                            AnimatedFlipCounter(
+                              value: item["amount"],
+                              wholeDigits: 1,
+                              fractionDigits: 2,
+                              suffix: " DT",
+                              textStyle: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.bold, color: whiteColor),
+                              duration: 1.seconds,
+                              decimalSeparator: ",",
+                              thousandSeparator: " ",
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -170,20 +172,22 @@ class _CountersState extends State<Counters> {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   const Icon(FontAwesome.money_check_dollar_solid, size: 35, color: purpleColor),
-                  const Spacer(),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Text("Nombre totale du produits vendus", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.bold, color: greyColor)),
-                      const SizedBox(height: 5),
-                      AnimatedFlipCounter(
-                        value: _totalselledProducts,
-                        textStyle: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.bold, color: whiteColor),
-                        duration: 1.seconds,
-                        thousandSeparator: " ",
-                      ),
-                    ],
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Text("Nombre totale du produits vendus", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.bold, color: greyColor)),
+                        const SizedBox(height: 5),
+                        AnimatedFlipCounter(
+                          value: _totalselledProducts,
+                          textStyle: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.bold, color: whiteColor),
+                          duration: 1.seconds,
+                          thousandSeparator: " ",
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
