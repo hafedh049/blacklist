@@ -54,14 +54,16 @@ class _CategoryListState extends State<CategoryList> {
             const SizedBox(height: 30),
             Row(
               children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(FontAwesome.chevron_left_solid, size: 25, color: purpleColor)),
-                    const SizedBox(width: 10),
-                    Text("LISTE DU CATEGORIES", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
-                  ],
+                Expanded(
+                  child: Row(
+                    children: <Widget>[
+                      IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(FontAwesome.chevron_left_solid, size: 25, color: purpleColor)),
+                      const SizedBox(width: 10),
+                      Text("LISTE DU CATEGORIES", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
+                    ],
+                  ),
                 ),
-                const Spacer(),
+                const SizedBox(width: 10),
                 StatefulBuilder(
                   builder: (BuildContext context, void Function(void Function()) _) {
                     return _deleteState
