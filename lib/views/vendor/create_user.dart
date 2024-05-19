@@ -6,8 +6,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_animated_button/flutter_animated_button.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
 
@@ -69,143 +67,145 @@ class _CreateUserState extends State<CreateUser> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Center(
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                  },
-                  icon: const Icon(FontAwesome.chevron_left_solid, size: 25, color: purpleColor),
-                ),
-                const SizedBox(height: 10),
-                AnimatedLoadingBorder(
-                  borderWidth: 4,
-                  borderColor: purpleColor,
-                  child: Container(
-                    width: 500,
-                    padding: const EdgeInsets.all(24),
-                    decoration: const BoxDecoration(color: darkColor),
-                    alignment: Alignment.center,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        for (final MapEntry<String, Map<String, dynamic>> entry in _productTemplate.entries)
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  Text(entry.key, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
-                                  const SizedBox(width: 5),
-                                  Text("*", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: entry.value["required"] ? redColor : greenColor)),
-                                ],
-                              ),
-                              const SizedBox(height: 20),
-                              Container(
-                                color: scaffoldColor,
-                                child: TextField(
-                                  onChanged: (String value) {
-                                    if (value.trim().length <= 1) {
-                                      entry.value["key"].currentState!.setState(() {});
-                                    }
-                                    if (entry.value["type"] == "phone") {
-                                      if (const <int>[2, 6].contains(entry.value["controller"].text.length)) {
-                                        entry.value["controller"].text += "";
-                                      }
-                                    }
-                                  },
-                                  controller: entry.value["controller"],
-                                  style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                                  decoration: InputDecoration(
-                                    contentPadding: const EdgeInsets.all(20),
-                                    focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
-                                    border: InputBorder.none,
-                                    hintText: entry.value["hint"],
-                                    hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                                    suffixIcon: StatefulBuilder(
-                                      key: entry.value["key"],
-                                      builder: (BuildContext context, void Function(void Function()) _) {
-                                        return entry.value["controller"].text.trim().isEmpty ? const SizedBox() : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor);
-                                      },
-                                    ),
-                                  ),
-                                  inputFormatters: <TextInputFormatter>[
-                                    FilteringTextInputFormatter.allow(
-                                      RegExp(
-                                        entry.value["type"] == "phone"
-                                            ? r"[\d ]"
-                                            : entry.value["type"] == "number"
-                                                ? r"\d"
-                                                : r".",
-                                      ),
-                                    ),
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        body: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Center(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  IconButton(
+                    onPressed: () => Navigator.pop(context),
+                    icon: const Icon(FontAwesome.chevron_left_solid, size: 25, color: purpleColor),
+                  ),
+                  const SizedBox(height: 10),
+                  AnimatedLoadingBorder(
+                    borderWidth: 4,
+                    borderColor: purpleColor,
+                    child: Container(
+                      width: 500,
+                      padding: const EdgeInsets.all(24),
+                      decoration: const BoxDecoration(color: darkColor),
+                      alignment: Alignment.center,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          for (final MapEntry<String, Map<String, dynamic>> entry in _productTemplate.entries)
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    Text(entry.key, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
+                                    const SizedBox(width: 5),
+                                    Text("*", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: entry.value["required"] ? redColor : greenColor)),
                                   ],
                                 ),
+                                const SizedBox(height: 20),
+                                Container(
+                                  color: scaffoldColor,
+                                  child: TextField(
+                                    onChanged: (String value) {
+                                      if (value.trim().length <= 1) {
+                                        entry.value["key"].currentState!.setState(() {});
+                                      }
+                                      if (entry.value["type"] == "phone") {
+                                        if (const <int>[2, 6].contains(entry.value["controller"].text.length)) {
+                                          entry.value["controller"].text += "";
+                                        }
+                                      }
+                                    },
+                                    controller: entry.value["controller"],
+                                    keyboardType: entry.value["type"] != "text" ? TextInputType.number : TextInputType.text,
+                                    style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                                    decoration: InputDecoration(
+                                      contentPadding: const EdgeInsets.all(20),
+                                      focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
+                                      border: InputBorder.none,
+                                      hintText: entry.value["hint"],
+                                      hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                                      suffixIcon: StatefulBuilder(
+                                        key: entry.value["key"],
+                                        builder: (BuildContext context, void Function(void Function()) _) {
+                                          return entry.value["controller"].text.trim().isEmpty ? const SizedBox() : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor);
+                                        },
+                                      ),
+                                    ),
+                                    inputFormatters: <TextInputFormatter>[
+                                      FilteringTextInputFormatter.allow(
+                                        RegExp(
+                                          entry.value["type"] == "phone"
+                                              ? r"[\d ]"
+                                              : entry.value["type"] == "number"
+                                                  ? r"\d"
+                                                  : r".",
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(height: 20),
+                              ],
+                            ),
+                          Row(
+                            children: <Widget>[
+                              const Spacer(),
+                              GestureDetector(
+                                onTap: () async {
+                                  if (_usernameController.text.trim().isEmpty) {
+                                    showToast(context, "Username est obligatoire", redColor);
+                                  } else if (!_birthDateController.text.contains(RegExp(r'\d{2}\-\d{2}\-\d{4}'))) {
+                                    showToast(context, "Année de naissance est obligatoire ou incorrect", redColor);
+                                  } else if (!_cinController.text.contains(RegExp(r'\d{8}'))) {
+                                    showToast(context, "CIN est obligatoire", redColor);
+                                  } else if (!_phoneController.text.contains(RegExp(r'\d{2} ?\d{3} ?\d{3}'))) {
+                                    showToast(context, "Téléphone est obligatoire", redColor);
+                                  } else {
+                                    final List<int> date = _birthDateController.text.split("-").map((String e) => int.parse(e)).toList();
+                                    await FirebaseFirestore.instance.collection("clients").add(
+                                      <String, dynamic>{
+                                        'clientQrCode': widget.qrCode,
+                                        'storesID': <String>[widget.storeID],
+                                        'clientName': _usernameController.text,
+                                        'clientCIN': _cinController.text,
+                                        'clientBirthdate': DateTime(date[2], date[1], date[0]),
+                                        'clientPhone': "( +216 ) ${_phoneController.text}",
+                                      },
+                                    );
+                                    // ignore: use_build_context_synchronously
+                                    showToast(context, "Client created successfully", greenColor);
+                                    // ignore: use_build_context_synchronously
+                                    Navigator.pop(context);
+                                    // ignore: use_build_context_synchronously
+                                    Navigator.pop(context);
+                                  }
+                                },
+                                child: Container(
+                                  width: 150,
+                                  height: 40,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    color: purpleColor,
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  child: Text('CREATE', style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
+                                ),
                               ),
-                              const SizedBox(height: 20),
                             ],
                           ),
-                        Row(
-                          children: <Widget>[
-                            const Spacer(),
-                            AnimatedButton(
-                              width: 150,
-                              height: 40,
-                              text: 'CREATE',
-                              selectedTextColor: darkColor,
-                              animatedOn: AnimatedOn.onHover,
-                              animationDuration: 500.ms,
-                              isReverse: true,
-                              selectedBackgroundColor: greenColor,
-                              backgroundColor: purpleColor,
-                              transitionType: TransitionType.TOP_TO_BOTTOM,
-                              textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                              onPress: () async {
-                                if (_usernameController.text.trim().isEmpty) {
-                                  showToast(context, "Username est obligatoire", redColor);
-                                } else if (!_birthDateController.text.contains(RegExp(r'\d{4}\-\d{2}\-\d{2}'))) {
-                                  showToast(context, "Année de naissance est obligatoire ou incorrect", redColor);
-                                } else if (!_cinController.text.contains(RegExp(r'\d{8}'))) {
-                                  showToast(context, "CIN est obligatoire", redColor);
-                                } else if (!_phoneController.text.contains(RegExp(r'(\(\+216 ?\)|\d\d ?\d\d\d ?\d\d\d)'))) {
-                                  showToast(context, "Téléphone est obligatoire", redColor);
-                                } else {
-                                  await FirebaseFirestore.instance.collection("clients").add(
-                                    <String, dynamic>{
-                                      'clientQrCode': widget.qrCode,
-                                      'storesID': <String>[widget.storeID],
-                                      'clientName': _usernameController.text,
-                                      'clientCIN': _cinController.text,
-                                      'clientBirthdate': DateTime.parse(_birthDateController.text),
-                                      'clientPhone': _phoneController.text,
-                                    },
-                                  );
-                                  // ignore: use_build_context_synchronously
-                                  showToast(context, "Client created successfully", greenColor);
-                                  // ignore: use_build_context_synchronously
-                                  Navigator.pop(context);
-                                  // ignore: use_build_context_synchronously
-                                  Navigator.pop(context);
-                                }
-                              },
-                            ),
-                          ],
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

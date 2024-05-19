@@ -52,6 +52,7 @@ class _ClientState extends State<Client> {
         _productTemplate["Full Name"]!["key"].currentState!.setState(() => names = value.docs.map((e) => e.data()["clientName"]).toList().cast<String>());
       },
     );
+    print(_productTemplate);
     super.initState();
   }
 

@@ -18,6 +18,7 @@ class _ProductsHistoryState extends State<ProductsHistory> {
   final List<Map<String, dynamic>> _products = <Map<String, dynamic>>[];
 
   Future<bool> _load() async {
+    _products.clear();
     for (final SelledProductModel product in widget.products) {
       if (!_products.map((Map<String, dynamic> e) => e["product"]).contains(product.productName)) {
         _products.add(

@@ -30,7 +30,7 @@ class _AfterQRScanState extends State<AfterQRScan> {
     final QuerySnapshot<Map<String, dynamic>> querySnap = await FirebaseFirestore.instance.collection("sells").where("clientID", isEqualTo: widget.client.clientCIN).get();
     _products = querySnap.docs
         .where(
-          (QueryDocumentSnapshot<Map<String, dynamic>> element) => element.get("storesID").contains(widget.storeID),
+          (QueryDocumentSnapshot<Map<String, dynamic>> element) => element.get("storeID") == widget.storeID,
         )
         .map(
           (QueryDocumentSnapshot<Map<String, dynamic>> e) => SelledProductModel.fromJson(e.data()),
@@ -53,6 +53,7 @@ class _AfterQRScanState extends State<AfterQRScan> {
       body: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(FontAwesome.chevron_left_solid, size: 25, color: purpleColor)),
             const SizedBox(height: 10),
@@ -129,7 +130,7 @@ class _AfterQRScanState extends State<AfterQRScan> {
                                 ),
                                 const SizedBox(height: 10),
                                 AnimatedButton(
-                                  width: 100,
+                                  width: 120,
                                   height: 30,
                                   text: 'HISTORIQUE 📚',
                                   selectedTextColor: whiteColor,
