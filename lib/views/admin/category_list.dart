@@ -274,7 +274,7 @@ class _CategoryListState extends State<CategoryList> {
                                                         children: <Widget>[
                                                           IconButton(
                                                             onPressed: () {
-                                                              final TextEditingController giftVault = TextEditingController();
+                                                              final TextEditingController giftVault = TextEditingController(text: item.gift.toString());
                                                               showModalBottomSheet<void>(
                                                                 context: context,
                                                                 builder: (BuildContext context) => Container(
@@ -298,7 +298,17 @@ class _CategoryListState extends State<CategoryList> {
                                                                                 }
                                                                               },
                                                                               controller: giftVault,
-                                                                              onSubmitted: (String value) {
+                                                                              onSubmitted: (String value) async {
+                                                                                await FirebaseFirestore.instance.collection("categories").where("categoryID", isEqualTo: item.categoryID).limit(1).get().then(
+                                                                                      (QuerySnapshot<Map<String, dynamic>> value) => value.docs.first.reference.update(
+                                                                                        <String, dynamic>{
+                                                                                          "gift": int.parse(giftVault.text),
+                                                                                        },
+                                                                                      ),
+                                                                                    );
+                                                                                // ignore: use_build_context_synchronously
+                                                                                showToast(context, "Gift vault changed successully", greenColor);
+                                                                                // ignore: use_build_context_synchronously
                                                                                 Navigator.pop(context);
                                                                               },
                                                                               style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),

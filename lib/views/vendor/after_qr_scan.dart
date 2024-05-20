@@ -36,11 +36,12 @@ class _AfterQRScanState extends State<AfterQRScan> {
           (QueryDocumentSnapshot<Map<String, dynamic>> e) => SelledProductModel.fromJson(e.data()),
         )
         .toList();
+    _categories.clear();
     for (final SelledProductModel product in _products) {
       if (_categories.containsKey(product.productCategory)) {
         _categories[product.productCategory] = _categories[product.productCategory]! + 1;
       } else {
-        _categories[product.productCategory] = 0;
+        _categories[product.productCategory] = 1;
       }
     }
     return _categories;
@@ -185,7 +186,19 @@ class _AfterQRScanState extends State<AfterQRScan> {
                                         Container(
                                           padding: const EdgeInsets.all(4),
                                           decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: value.value != 1 && value.value % 8 == 1 ? greenColor : redColor),
-                                          child: Text(value.value != 1 && value.value % 8 == 1 ? "CADEAU" : "PAS DE CADEAU", style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
+                                          child: FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                                            future: FirebaseFirestore.instance.collection("categories").where("categoryName", isEqualTo: value.key).limit(1).get(),
+                                            builder: (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+                                              return Text(
+                                                snapshot.hasData
+                                                    ? value.value > 0 && value.value % snapshot.data!.docs.first.get("gift") == 0
+                                                        ? "CADEAU"
+                                                        : "PAS DE CADEAU"
+                                                    : "Wait...",
+                                                style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500),
+                                              );
+                                            },
+                                          ),
                                         ),
                                       ],
                                     ),

@@ -105,6 +105,7 @@ class _AddCategoryState extends State<AddCategory> {
                               'storeID': widget.storeID,
                               'categoryArticlesCount': 0,
                               'categoryProductsCount': 0,
+                              'gift': 3,
                             };
 
                             await FirebaseFirestore.instance.collection("categories").add(categoryItem);

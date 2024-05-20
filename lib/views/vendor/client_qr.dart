@@ -52,7 +52,6 @@ class _ClientState extends State<Client> {
         _productTemplate["Full Name"]!["key"].currentState!.setState(() => names = value.docs.map((e) => e.data()["clientName"]).toList().cast<String>());
       },
     );
-    print(_productTemplate);
     super.initState();
   }
 
@@ -113,6 +112,7 @@ class _ClientState extends State<Client> {
                                     color: scaffoldColor,
                                     child: entry.value["type"] != "text"
                                         ? TextField(
+                                            keyboardType: TextInputType.number,
                                             onChanged: (String value) {
                                               if (value.trim().length <= 1) {
                                                 entry.value["key"].currentState!.setState(() {});

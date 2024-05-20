@@ -5,8 +5,9 @@ class CategoryModel {
   int categoryProductsCount;
   bool categoryState;
   String storeID;
+  int gift;
 
-  // Constructeur
+  // Constructor
   CategoryModel({
     required this.categoryID,
     required this.storeID,
@@ -14,9 +15,10 @@ class CategoryModel {
     required this.categoryArticlesCount,
     required this.categoryProductsCount,
     required this.categoryState,
+    required this.gift, // Include gift in constructor
   });
 
-  // Méthode de désérialisation depuis JSON
+  // Deserialization method from JSON
   factory CategoryModel.fromJson(Map<String, dynamic> json) {
     return CategoryModel(
       storeID: json["storeID"],
@@ -25,10 +27,11 @@ class CategoryModel {
       categoryArticlesCount: json['categoryArticlesCount'],
       categoryProductsCount: json['categoryProductsCount'],
       categoryState: json['categoryState'],
+      gift: json['gift'], // Parse gift from JSON
     );
   }
 
-  // Méthode de sérialisation vers JSON
+  // Serialization method to JSON
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'storeID': storeID,
@@ -37,6 +40,7 @@ class CategoryModel {
       'categoryArticlesCount': categoryArticlesCount,
       'categoryProductsCount': categoryProductsCount,
       'categoryState': categoryState,
+      'gift': gift, // Include gift in JSON
     };
   }
 }
