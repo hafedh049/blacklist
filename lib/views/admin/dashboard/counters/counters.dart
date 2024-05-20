@@ -50,6 +50,7 @@ class _CountersState extends State<Counters> {
       (QuerySnapshot<Map<String, dynamic>> value) {
         final List<Map<String, dynamic>> data = value.docs.map(
           (QueryDocumentSnapshot<Map<String, dynamic>> e) {
+            print(e.data());
             return <String, dynamic>{
               "timestamp": e.get("timestamp"),
               "price": e.get("newPrice") - e.get("realPrice"),

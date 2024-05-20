@@ -1,5 +1,4 @@
 class ClientModel {
-  List<String> storesID;
   String clientName;
   String clientCIN;
   DateTime clientBirthdate;
@@ -8,7 +7,6 @@ class ClientModel {
 
   ClientModel({
     required this.clientQrCode,
-    required this.storesID,
     required this.clientName,
     required this.clientCIN,
     required this.clientBirthdate,
@@ -18,7 +16,6 @@ class ClientModel {
   factory ClientModel.fromJson(Map<String, dynamic> json) {
     return ClientModel(
       clientQrCode: json['clientQrCode'],
-      storesID: List<String>.from(json['storesID']),
       clientName: json['clientName'],
       clientCIN: json['clientCIN'],
       clientBirthdate: json['clientBirthdate'].toDate(),
@@ -29,7 +26,6 @@ class ClientModel {
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'clientQrCode': clientQrCode,
-      'storesID': storesID,
       'clientName': clientName,
       'clientCIN': clientCIN,
       'clientBirthdate': clientBirthdate.toIso8601String(),

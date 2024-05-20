@@ -1,6 +1,6 @@
 import 'package:blacklist/utils/callbacks.dart';
-import 'package:blacklist/utils/helpers/errored.dart';
 import 'package:blacklist/utils/helpers/loading.dart';
+import 'package:blacklist/utils/helpers/erroring.dart';
 import 'package:blacklist/utils/shared.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';

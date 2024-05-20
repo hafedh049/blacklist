@@ -1,6 +1,6 @@
 import 'package:blacklist/models/selled_product.dart';
-import 'package:blacklist/utils/helpers/errored.dart';
 import 'package:blacklist/utils/helpers/loading.dart';
+import 'package:blacklist/utils/helpers/erroring.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';

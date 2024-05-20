@@ -8,8 +8,8 @@ import 'package:lottie/lottie.dart';
 
 import '../../../models/client_model.dart';
 import '../../../models/selled_product.dart';
-import '../../../utils/helpers/errored.dart';
 import '../../../utils/helpers/loading.dart';
+import '../../../utils/helpers/erroring.dart';
 
 class SecondDay extends StatefulWidget {
   const SecondDay({super.key, required this.storeID});
@@ -73,7 +73,9 @@ class _SecondDayState extends State<SecondDay> {
   double _sum() {
     double sum = 0;
     for (final Map<String, dynamic> item in _recepies) {
-      sum += item["productPrice"];
+      if (item["productPrice"] != 0) {
+        sum += item["productPrice"];
+      }
     }
     return sum;
   }
@@ -188,7 +190,7 @@ class _SecondDayState extends State<SecondDay> {
                                       child: Text("PRIX", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
                                     ),
                                     const SizedBox(width: 10),
-                                    Text(_recepies[index]["productPrice"].toStringAsFixed(2), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
+                                    Text(_recepies[index]["productPrice"] == 0 ? "GIFT" : _recepies[index]["productPrice"].toStringAsFixed(2), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
                                   ],
                                 ),
                               ],

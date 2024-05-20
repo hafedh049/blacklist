@@ -1,27 +1,12 @@
+import 'package:blacklist/utils/shared.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 
-import '../shared.dart';
-
-class Errored extends StatelessWidget {
-  final String error;
-  const Errored({super.key, required this.error});
+class Loading extends StatelessWidget {
+  const Loading({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: scaffoldColor,
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            LottieBuilder.asset("assets/lotties/error.json"),
-            Text(error, style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
-          ],
-        ),
-      ),
-    );
+    return Scaffold(backgroundColor: scaffoldColor, body: Center(child: LottieBuilder.asset("assets/lotties/loading.json")));
   }
 }

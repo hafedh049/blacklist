@@ -1,6 +1,6 @@
 import 'package:blacklist/models/client_model.dart';
-import 'package:blacklist/utils/helpers/errored.dart';
 import 'package:blacklist/utils/helpers/loading.dart';
+import 'package:blacklist/utils/helpers/erroring.dart';
 import 'package:blacklist/views/admin/clients_products.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_format/date_format.dart';
@@ -41,7 +41,7 @@ class _ClientsListState extends State<ClientsList> {
             Container(width: MediaQuery.sizeOf(context).width, height: .3, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),
             Expanded(
               child: FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                  future: FirebaseFirestore.instance.collection("clients").where("storesID", arrayContains: widget.storeID).get(),
+                  future: FirebaseFirestore.instance.collection("clients").get(),
                   builder: (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
                     if (snapshot.hasData) {
                       _clients = snapshot.data!.docs.map((e) => ClientModel.fromJson(e.data())).toList();

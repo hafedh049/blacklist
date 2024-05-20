@@ -1,7 +1,7 @@
 import 'package:blacklist/models/client_model.dart';
 import 'package:blacklist/models/selled_product.dart';
-import 'package:blacklist/utils/helpers/errored.dart';
 import 'package:blacklist/utils/helpers/loading.dart';
+import 'package:blacklist/utils/helpers/erroring.dart';
 import 'package:blacklist/utils/shared.dart';
 import 'package:blacklist/views/vendor/products_history.dart';
 import 'package:blacklist/views/vendor/vendor_table.dart';
@@ -183,22 +183,29 @@ class _AfterQRScanState extends State<AfterQRScan> {
                                         const SizedBox(height: 10),
                                         Text(value.value.toString(), style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
                                         const SizedBox(height: 10),
-                                        Container(
-                                          padding: const EdgeInsets.all(4),
-                                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: value.value != 1 && value.value % 8 == 1 ? greenColor : redColor),
-                                          child: FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                                            future: FirebaseFirestore.instance.collection("categories").where("categoryName", isEqualTo: value.key).limit(1).get(),
-                                            builder: (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
-                                              return Text(
+                                        FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                                          future: FirebaseFirestore.instance.collection("categories").where("categoryName", isEqualTo: value.key).limit(1).get(),
+                                          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+                                            return Container(
+                                              padding: const EdgeInsets.all(4),
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(5),
+                                                color: snapshot.hasData
+                                                    ? value.value > 0 && (value.value + 1) % snapshot.data!.docs.first.get("gift") == 0
+                                                        ? greenColor
+                                                        : redColor
+                                                    : blueColor,
+                                              ),
+                                              child: Text(
                                                 snapshot.hasData
-                                                    ? value.value > 0 && value.value % snapshot.data!.docs.first.get("gift") == 0
+                                                    ? value.value > 0 && (value.value + 1) % snapshot.data!.docs.first.get("gift") == 0
                                                         ? "CADEAU"
                                                         : "PAS DE CADEAU"
                                                     : "Wait...",
                                                 style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500),
-                                              );
-                                            },
-                                          ),
+                                              ),
+                                            );
+                                          },
                                         ),
                                       ],
                                     ),

@@ -12,8 +12,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:lottie/lottie.dart';
 
-import '../../utils/helpers/errored.dart';
 import '../../utils/helpers/loading.dart';
+import '../../utils/helpers/erroring.dart';
 
 class CategoryList extends StatefulWidget {
   const CategoryList({super.key, required this.storeID});

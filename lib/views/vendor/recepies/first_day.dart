@@ -1,7 +1,7 @@
 import 'package:blacklist/models/client_model.dart';
 import 'package:blacklist/models/selled_product.dart';
-import 'package:blacklist/utils/helpers/errored.dart';
 import 'package:blacklist/utils/helpers/loading.dart';
+import 'package:blacklist/utils/helpers/erroring.dart';
 import 'package:blacklist/utils/shared.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_format/date_format.dart';
@@ -64,7 +64,9 @@ class _FirstDayState extends State<FirstDay> {
   double _sum() {
     double sum = 0;
     for (final Map<String, dynamic> item in _recepies) {
-      sum += item["productPrice"];
+      if (item["productPrice"] != 0) {
+        sum += item["productPrice"];
+      }
     }
     return sum;
   }
@@ -172,7 +174,7 @@ class _FirstDayState extends State<FirstDay> {
                                       child: Text("PRIX", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
                                     ),
                                     const SizedBox(width: 10),
-                                    Text(_recepies[index]["productPrice"].toStringAsFixed(2), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
+                                    Text(_recepies[index]["productPrice"] == 0 ? "GIFT" : _recepies[index]["productPrice"].toStringAsFixed(2), style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor)),
                                   ],
                                 ),
                               ],

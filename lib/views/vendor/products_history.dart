@@ -1,6 +1,6 @@
 import 'package:blacklist/models/selled_product.dart';
-import 'package:blacklist/utils/helpers/errored.dart';
 import 'package:blacklist/utils/helpers/loading.dart';
+import 'package:blacklist/utils/helpers/erroring.dart';
 import 'package:blacklist/utils/shared.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
