@@ -32,6 +32,8 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
   final TextEditingController _searchController = TextEditingController();
   List<VendorProduct> _products = <VendorProduct>[];
 
+  int _vault = 3;
+
   @override
   String get restorationId => 'paginated_product_table';
 
@@ -105,6 +107,9 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
 
   Future<List<VendorProduct>> _load() async {
     final QuerySnapshot<Map<String, dynamic>> query = await FirebaseFirestore.instance.collection("products").where("storeID", isEqualTo: widget.storeID).get();
+    await FirebaseFirestore.instance.collection("categories").where('categoryID', isEqualTo: query.docs.first.get("categoryID")).limit(1).get().then(
+          (QuerySnapshot<Map<String, dynamic>> value) => _vault = value.docs.first.get("gift"),
+        );
     return query.docs.map(
       (QueryDocumentSnapshot<Map<String, dynamic>> e) {
         final VendorProduct vp = VendorProduct.fromJson(e.data());
@@ -114,6 +119,23 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
         return vp;
       },
     ).toList();
+  }
+
+  (double, double) _cart() {
+    double gifts = 0;
+    final List<VendorProduct> products = <VendorProduct>[];
+    for (final VendorProduct product in _products) {
+      if (product.selected && int.parse(product.cartController.text) > 0) {
+        for (int index = 1; index <= int.parse(product.cartController.text); index++) {
+          if (index % _vault != 0) {
+            products.add(product);
+          } else {
+            gifts += 1;
+          }
+        }
+      }
+    }
+    return (products.map((VendorProduct e) => e.newPrice).reduce((double value, double element) => element + value), gifts);
   }
 
   @override
@@ -154,6 +176,7 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
                       transitionType: TransitionType.TOP_TO_BOTTOM,
                       textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
                       onPress: () {
+                        final (double, double) rec = _cart();
                         _products.where((VendorProduct element) => element.selected && element.cartController.text != "0").isEmpty
                             ? null
                             : showDialog(
@@ -210,8 +233,16 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
                                       Container(
                                         padding: const EdgeInsets.all(8),
                                         decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: redColor),
-                                        child: Text("TOTALE (${_products.where((VendorProduct element) => element.selected).map((VendorProduct e) => e.newPrice * int.parse(e.cartController.text)).reduce((double value, double element) => element + value).toStringAsFixed(2)})", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
+                                        child: Text("TOTALE (${rec.$1.toStringAsFixed(2)})", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
                                       ),
+                                      if (rec.$2 > 0) ...<Widget>[
+                                        const SizedBox(height: 10),
+                                        Container(
+                                          padding: const EdgeInsets.all(8),
+                                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: greenColor),
+                                          child: Text("GIFTS (${rec.$2.toStringAsFixed(0)})", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
+                                        ),
+                                      ],
                                       const SizedBox(height: 10),
                                       Row(
                                         children: <Widget>[
@@ -232,6 +263,7 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
                                               showToast(context, "Attend", purpleColor);
                                               final DateTime now = DateTime.now();
                                               final bool internetConnection = await InternetConnection().hasInternetAccess;
+                                              int counter = 0;
                                               for (VendorProduct product in _products) {
                                                 if (product.selected && product.cartController.text != "0") {
                                                   if (internetConnection) {
@@ -240,11 +272,15 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
                                                     await Future.wait(
                                                       List<Future<DocumentReference<Map<String, dynamic>>>>.generate(
                                                         int.parse(product.cartController.text),
-                                                        (int _) => FirebaseFirestore.instance.collection("sells").add(
-                                                              product.toJson()
-                                                                ..putIfAbsent("timestamp", () => now)
-                                                                ..putIfAbsent("clientID", () => widget.clientID),
-                                                            ),
+                                                        (int _) {
+                                                          counter += 1;
+                                                          return FirebaseFirestore.instance.collection("sells").add(
+                                                                product.toJson()
+                                                                  ..update("newPrice", (dynamic value) => counter % _vault == 0 ? 0 : value)
+                                                                  ..putIfAbsent("timestamp", () => now)
+                                                                  ..putIfAbsent("clientID", () => widget.clientID),
+                                                              );
+                                                        },
                                                       ),
                                                     );
                                                   } else {
