@@ -49,7 +49,9 @@ class _ClientState extends State<Client> {
   void initState() {
     FirebaseFirestore.instance.collection("clients").where("storesID", arrayContains: widget.storeID).get().then(
       (QuerySnapshot<Map<String, dynamic>> value) {
-        _productTemplate["Full Name"]!["key"].currentState!.setState(() => names = value.docs.map((e) => e.data()["clientName"]).toList().cast<String>());
+        print(1);
+        _productTemplate["NOM"]!["key"].currentState!.setState(() => names = value.docs.map((QueryDocumentSnapshot<Map<String, dynamic>> e) => e.data()["clientName"]).toList().cast<String>());
+        _productTemplate["CIN"]!["key"].currentState!.setState(() => names = value.docs.map((QueryDocumentSnapshot<Map<String, dynamic>> e) => e.data()["clientCIN"]).toList().cast<String>());
       },
     );
     super.initState();
