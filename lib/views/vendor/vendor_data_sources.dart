@@ -73,7 +73,7 @@ class VendorProduct {
       storeID: json["storeID"],
       productQuantity: json["productQuantity"],
       categoryID: json["categoryID"],
-      date: json["date"].toDate(),
+      date: json["date"] is DateTime ? json["date"] : json["date"].toDate(),
       productName: json['productName'],
       productCategory: json['productCategory'],
       realPrice: json['realPrice'].toDouble(),
@@ -163,7 +163,7 @@ class ProductDataSource extends DataTableSource {
     return DataRow2.byIndex(
       index: index,
       selected: product.selected,
-      color: color != null ? MaterialStateProperty.all(color) : (hasZebraStripes && index.isEven ? MaterialStateProperty.all(Theme.of(context).highlightColor) : null),
+      color: color != null ? WidgetStateProperty.all(color) : (hasZebraStripes && index.isEven ? WidgetStateProperty.all(Theme.of(context).highlightColor) : null),
       onSelectChanged: (bool? value) {
         if (product.selected != value) {
           _selectedCount += value! ? 1 : -1;

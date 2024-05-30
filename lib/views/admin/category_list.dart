@@ -316,7 +316,7 @@ class _CategoryListState extends State<CategoryList> {
                                                                                 contentPadding: const EdgeInsets.all(20),
                                                                                 focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
                                                                                 border: InputBorder.none,
-                                                                                hintText: "Seille cadeau",
+                                                                                hintText: giftVault.text.trim(),
                                                                                 hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
                                                                                 suffixIcon: giftVault.text.trim().isEmpty ? null : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
                                                                               ),

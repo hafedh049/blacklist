@@ -22,6 +22,7 @@ class _FirstDayState extends State<FirstDay> {
     List<Map<String, dynamic>> firstDayData = <Map<String, dynamic>>[];
     final QuerySnapshot<Map<String, dynamic>> data = await FirebaseFirestore.instance
         .collection("sells")
+        .where("storeID", isEqualTo: widget.storeID)
         .where(
           "timestamp",
           isGreaterThanOrEqualTo: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
@@ -29,7 +30,7 @@ class _FirstDayState extends State<FirstDay> {
         .orderBy("timestamp", descending: true)
         .get();
 
-    for (final QueryDocumentSnapshot<Map<String, dynamic>> item in data.docs.where((QueryDocumentSnapshot<Map<String, dynamic>> element) => element.get("storeID") == widget.storeID)) {
+    for (final QueryDocumentSnapshot<Map<String, dynamic>> item in data.docs) {
       final SelledProductModel product = SelledProductModel.fromJson(item.data());
       if (product.clientID == "ANONYMOUS") {
         firstDayData.add(

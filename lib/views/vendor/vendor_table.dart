@@ -12,10 +12,9 @@ import 'package:internet_connection_checker_plus/internet_connection_checker_plu
 import '/views/vendor/vendor_data_sources.dart';
 
 class VendorTable extends StatefulWidget {
-  const VendorTable({super.key, required this.storeID, this.gift = false, this.clientID = "ANONYMOUS"});
+  const VendorTable({super.key, required this.storeID});
   final String storeID;
-  final bool gift;
-  final String clientID;
+
   @override
   State<VendorTable> createState() => VendorTableState();
 }
@@ -31,8 +30,6 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
   final GlobalKey<State> _searchKey = GlobalKey<State>();
   final TextEditingController _searchController = TextEditingController();
   List<VendorProduct> _products = <VendorProduct>[];
-
-  int _vault = 3;
 
   @override
   String get restorationId => 'paginated_product_table';
@@ -107,35 +104,15 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
 
   Future<List<VendorProduct>> _load() async {
     final QuerySnapshot<Map<String, dynamic>> query = await FirebaseFirestore.instance.collection("products").where("storeID", isEqualTo: widget.storeID).get();
-    await FirebaseFirestore.instance.collection("categories").where('categoryID', isEqualTo: query.docs.first.get("categoryID")).limit(1).get().then(
-          (QuerySnapshot<Map<String, dynamic>> value) => _vault = value.docs.first.get("gift"),
-        );
-    return query.docs.map(
-      (QueryDocumentSnapshot<Map<String, dynamic>> e) {
-        final VendorProduct vp = VendorProduct.fromJson(e.data());
-        if (widget.gift) {
-          vp.newPrice = 0;
-        }
-        return vp;
-      },
-    ).toList();
+    return query.docs.map((QueryDocumentSnapshot<Map<String, dynamic>> e) => VendorProduct.fromJson(e.data())).toList();
   }
 
-  (double, double) _cart() {
-    double gifts = 0;
-    final List<VendorProduct> products = <VendorProduct>[];
-    for (final VendorProduct product in _products) {
-      if (product.selected && int.parse(product.cartController.text) > 0) {
-        for (int index = 1; index <= int.parse(product.cartController.text); index++) {
-          if (index % _vault != 0) {
-            products.add(product);
-          } else {
-            gifts += 1;
-          }
-        }
-      }
+  double _cart() {
+    double price = 0;
+    for (final VendorProduct product in _products.where((VendorProduct product) => (product.selected && int.parse(product.cartController.text) > 0))) {
+      price += product.newPrice * int.parse(product.cartController.text);
     }
-    return (products.map((VendorProduct e) => e.newPrice).reduce((double value, double element) => element + value), gifts);
+    return price;
   }
 
   @override
@@ -176,7 +153,7 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
                       transitionType: TransitionType.TOP_TO_BOTTOM,
                       textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
                       onPress: () {
-                        final (double, double) rec = _cart();
+                        final double price = _cart();
                         _products.where((VendorProduct element) => element.selected && element.cartController.text != "0").isEmpty
                             ? null
                             : showDialog(
@@ -233,99 +210,86 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
                                       Container(
                                         padding: const EdgeInsets.all(8),
                                         decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: redColor),
-                                        child: Text("TOTALE (${rec.$1.toStringAsFixed(2)})", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
+                                        child: Text("TOTALE (${price.toStringAsFixed(2)})", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
                                       ),
-                                      if (rec.$2 > 0) ...<Widget>[
-                                        const SizedBox(height: 10),
-                                        Container(
-                                          padding: const EdgeInsets.all(8),
-                                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: greenColor),
-                                          child: Text("GIFTS (${rec.$2.toStringAsFixed(0)})", style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor)),
-                                        ),
-                                      ],
                                       const SizedBox(height: 10),
-                                      Row(
-                                        children: <Widget>[
-                                          AnimatedButton(
-                                            width: 150,
-                                            height: 40,
-                                            text: 'CONFIRMER',
-                                            selectedTextColor: darkColor,
-                                            animatedOn: AnimatedOn.onHover,
-                                            animationDuration: 500.ms,
-                                            isReverse: true,
-                                            selectedBackgroundColor: purpleColor,
-                                            backgroundColor: purpleColor,
-                                            transitionType: TransitionType.TOP_TO_BOTTOM,
-                                            textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                                            onPress: () async {
-                                              Navigator.pop(contextt);
-                                              showToast(context, "Attend", purpleColor);
-                                              final DateTime now = DateTime.now();
-                                              final bool internetConnection = await InternetConnection().hasInternetAccess;
-                                              int counter = 0;
-                                              for (VendorProduct product in _products) {
-                                                if (product.selected && product.cartController.text != "0") {
-                                                  if (internetConnection) {
-                                                    QuerySnapshot<Map<String, dynamic>> query = await FirebaseFirestore.instance.collection("products").where("productReference", isEqualTo: product.productReference).limit(1).get();
-                                                    await query.docs.first.reference.update(<String, dynamic>{"date": now, "productQuantity": product.productQuantity - int.parse(product.cartController.text)});
-                                                    await Future.wait(
+                                      AnimatedButton(
+                                        width: 150,
+                                        height: 40,
+                                        text: 'CONFIRMER',
+                                        selectedTextColor: darkColor,
+                                        animatedOn: AnimatedOn.onHover,
+                                        animationDuration: 500.ms,
+                                        isReverse: true,
+                                        selectedBackgroundColor: purpleColor,
+                                        backgroundColor: purpleColor,
+                                        transitionType: TransitionType.TOP_TO_BOTTOM,
+                                        textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                                        onPress: () async {
+                                          Navigator.pop(contextt);
+                                          showToast(context, "Attend", purpleColor);
+                                          final DateTime now = DateTime.now();
+                                          final bool internetConnection = await InternetConnection().hasInternetAccess;
+                                          for (VendorProduct product in _products) {
+                                            if (product.selected && product.cartController.text != "0") {
+                                              if (internetConnection) {
+                                                QuerySnapshot<Map<String, dynamic>> query = await FirebaseFirestore.instance.collection("products").where("productReference", isEqualTo: product.productReference).limit(1).get();
+                                                await Future.wait(
+                                                  <Future>[
+                                                        query.docs.first.reference.update(<String, dynamic>{"date": now, "productQuantity": product.productQuantity - int.parse(product.cartController.text)})
+                                                      ] +
                                                       List<Future<DocumentReference<Map<String, dynamic>>>>.generate(
                                                         int.parse(product.cartController.text),
                                                         (int _) {
-                                                          counter += 1;
                                                           return FirebaseFirestore.instance.collection("sells").add(
                                                                 product.toJson()
-                                                                  ..update("newPrice", (dynamic value) => counter % _vault == 0 ? 0 : value)
                                                                   ..putIfAbsent("timestamp", () => now)
-                                                                  ..putIfAbsent("clientID", () => widget.clientID),
+                                                                  ..putIfAbsent("clientID", () => "ANONYMOUS"),
                                                               );
                                                         },
                                                       ),
-                                                    );
-                                                  } else {
-                                                    offline!.put(
-                                                        "vendor_cart",
-                                                        offline!.get("vendor_cart")
-                                                          ..add(product.toJson()
-                                                            ..putIfAbsent("timestamp", () => now)
-                                                            ..putIfAbsent("clientID", () => widget.clientID)
-                                                            ..putIfAbsent("cartController", () => product.cartController.text)));
-                                                    await offline!.flush();
-                                                  }
-                                                  product.productQuantity -= int.parse(product.cartController.text);
-                                                  product.cartController.text = "0";
-                                                  product.selected = false;
-                                                }
+                                                );
+                                              } else {
+                                                offline!.put(
+                                                    "vendor_cart",
+                                                    offline!.get("vendor_cart")
+                                                      ..add(product.toJson()
+                                                        ..putIfAbsent("timestamp", () => now)
+                                                        ..putIfAbsent("clientID", () => "ANONYMOUS")
+                                                        ..putIfAbsent("cartController", () => product.cartController.text)));
+                                                await offline!.flush();
                                               }
+                                              product.productQuantity -= int.parse(product.cartController.text);
+                                              product.cartController.text = "0";
+                                              product.selected = false;
+                                            }
+                                          }
 
-                                              // ignore: use_build_context_synchronously
-                                              _pagerKey.currentState!.setState(
-                                                () {
-                                                  _productsDataSource = ProductDataSource(context, _productsDataSource.products);
-                                                  _productsDataSource.updateSelectedProducts(_productSelections);
-                                                },
-                                              );
-                                              // ignore: use_build_context_synchronously
-                                              showToast(context, internetConnection ? "Ajout a été effectué" : "Vous êtes hors ligne mais les produits seront ajoutés au panier dès que la connexion reviendra", purpleColor);
+                                          // ignore: use_build_context_synchronously
+                                          _pagerKey.currentState!.setState(
+                                            () {
+                                              _productsDataSource = ProductDataSource(context, _productsDataSource.products);
+                                              _productsDataSource.updateSelectedProducts(_productSelections);
                                             },
-                                          ),
-                                          const SizedBox(width: 20),
-                                          AnimatedButton(
-                                            width: 150,
-                                            height: 40,
-                                            text: 'ANNULER',
-                                            selectedTextColor: darkColor,
-                                            animatedOn: AnimatedOn.onHover,
-                                            animationDuration: 500.ms,
-                                            isReverse: true,
-                                            selectedBackgroundColor: greyColor,
-                                            backgroundColor: greyColor,
-                                            transitionType: TransitionType.TOP_TO_BOTTOM,
-                                            textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                                            onPress: () => Navigator.pop(context),
-                                          ),
-                                        ],
+                                          );
+                                          // ignore: use_build_context_synchronously
+                                          showToast(context, internetConnection ? "Ajout a été effectué" : "Vous êtes hors ligne mais les produits seront ajoutés au panier dès que la connexion reviendra", purpleColor);
+                                        },
+                                      ),
+                                      const SizedBox(height: 10),
+                                      AnimatedButton(
+                                        width: 150,
+                                        height: 40,
+                                        text: 'ANNULER',
+                                        selectedTextColor: darkColor,
+                                        animatedOn: AnimatedOn.onHover,
+                                        animationDuration: 500.ms,
+                                        isReverse: true,
+                                        selectedBackgroundColor: greyColor,
+                                        backgroundColor: greyColor,
+                                        transitionType: TransitionType.TOP_TO_BOTTOM,
+                                        textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                                        onPress: () => Navigator.pop(context),
                                       ),
                                     ],
                                   ),
@@ -335,7 +299,6 @@ class VendorTableState extends State<VendorTable> with RestorationMixin {
                     ),
                   ],
                 ),
-                const Spacer(),
               ],
             ),
             Container(width: MediaQuery.sizeOf(context).width, height: .3, color: greyColor, margin: const EdgeInsets.symmetric(vertical: 20)),

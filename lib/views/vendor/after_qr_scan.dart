@@ -4,7 +4,6 @@ import 'package:blacklist/utils/helpers/loading.dart';
 import 'package:blacklist/utils/helpers/erroring.dart';
 import 'package:blacklist/utils/shared.dart';
 import 'package:blacklist/views/vendor/products_history.dart';
-import 'package:blacklist/views/vendor/vendor_table.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:comment_tree/comment_tree.dart';
 import 'package:date_format/date_format.dart';
@@ -13,6 +12,8 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_animated_button/flutter_animated_button.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
+
+import 'vendor_table_gift.dart';
 
 class AfterQRScan extends StatefulWidget {
   const AfterQRScan({super.key, required this.storeID, required this.client});
@@ -112,25 +113,7 @@ class _AfterQRScanState extends State<AfterQRScan> {
                                   backgroundColor: purpleColor,
                                   transitionType: TransitionType.TOP_TO_BOTTOM,
                                   textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                                  onPress: () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => VendorTable(clientID: widget.client.clientCIN, storeID: widget.storeID))),
-                                ),
-                                const SizedBox(height: 10),
-                                IgnorePointer(
-                                  ignoring: true,
-                                  child: AnimatedButton(
-                                    width: 100,
-                                    height: 30,
-                                    text: 'CADEAU 🎁',
-                                    selectedTextColor: whiteColor,
-                                    animatedOn: AnimatedOn.onHover,
-                                    animationDuration: 500.ms,
-                                    isReverse: true,
-                                    selectedBackgroundColor: darkColor,
-                                    backgroundColor: purpleColor,
-                                    transitionType: TransitionType.TOP_TO_BOTTOM,
-                                    textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                                    onPress: () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => VendorTable(clientID: widget.client.clientCIN, storeID: widget.storeID, gift: true))),
-                                  ),
+                                  onPress: () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => VendorTableGift(clientID: widget.client.clientCIN, storeID: widget.storeID))),
                                 ),
                                 const SizedBox(height: 10),
                                 AnimatedButton(
@@ -172,7 +155,7 @@ class _AfterQRScanState extends State<AfterQRScan> {
                                     preferredSize: const Size.fromRadius(15),
                                     child: CircleAvatar(
                                       backgroundColor: purpleColor,
-                                      child: Text((_categories.keys.toList().indexOf(value.key)).toString(), style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
+                                      child: Text((_categories.keys.toList().indexOf(value.key) + 1).toString(), style: GoogleFonts.itim(fontSize: 14, color: whiteColor, fontWeight: FontWeight.w500)),
                                     ),
                                   ),
                                   contentChild: (BuildContext context, MapEntry<String, int> value) => Container(
@@ -194,14 +177,14 @@ class _AfterQRScanState extends State<AfterQRScan> {
                                               decoration: BoxDecoration(
                                                 borderRadius: BorderRadius.circular(5),
                                                 color: snapshot.hasData
-                                                    ? value.value > 0 && (value.value + 1) % snapshot.data!.docs.first.get("gift") == 0
+                                                    ? (value.value + 1) % snapshot.data!.docs.first.get("gift") == 0
                                                         ? greenColor
                                                         : redColor
                                                     : blueColor,
                                               ),
                                               child: Text(
                                                 snapshot.hasData
-                                                    ? value.value > 0 && (value.value + 1) % snapshot.data!.docs.first.get("gift") == 0
+                                                    ? (value.value + 1) % snapshot.data!.docs.first.get("gift") == 0
                                                         ? "CADEAU"
                                                         : "PAS DE CADEAU"
                                                     : "Wait...",
