@@ -113,7 +113,16 @@ class _AfterQRScanState extends State<AfterQRScan> {
                                   backgroundColor: purpleColor,
                                   transitionType: TransitionType.TOP_TO_BOTTOM,
                                   textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                                  onPress: () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => VendorTableGift(clientID: widget.client.clientCIN, storeID: widget.storeID))),
+                                  onPress: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (BuildContext context) => VendorTableGift(
+                                        clientID: widget.client.clientCIN,
+                                        storeID: widget.storeID,
+                                        callback: () => setState(() {}),
+                                      ),
+                                    ),
+                                  ),
                                 ),
                                 const SizedBox(height: 10),
                                 AnimatedButton(

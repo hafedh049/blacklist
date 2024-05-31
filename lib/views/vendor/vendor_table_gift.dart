@@ -12,9 +12,10 @@ import 'package:internet_connection_checker_plus/internet_connection_checker_plu
 import '/views/vendor/vendor_data_sources.dart';
 
 class VendorTableGift extends StatefulWidget {
-  const VendorTableGift({super.key, required this.storeID, required this.clientID});
+  const VendorTableGift({super.key, required this.storeID, required this.clientID, required this.callback});
   final String storeID;
   final String clientID;
+  final void Function() callback;
   @override
   State<VendorTableGift> createState() => VendorTableGiftState();
 }
@@ -157,7 +158,10 @@ class VendorTableGiftState extends State<VendorTableGift> with RestorationMixin 
                     Row(
                       children: <Widget>[
                         IconButton(
-                          onPressed: () => Navigator.pop(context),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            widget.callback();
+                          },
                           icon: const Icon(FontAwesome.chevron_left_solid, size: 25, color: purpleColor),
                         ),
                         const SizedBox(width: 10),

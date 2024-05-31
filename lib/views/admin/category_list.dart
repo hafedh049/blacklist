@@ -59,7 +59,7 @@ class _CategoryListState extends State<CategoryList> {
                     children: <Widget>[
                       IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(FontAwesome.chevron_left_solid, size: 25, color: purpleColor)),
                       const SizedBox(width: 10),
-                      Text("LISTE DU CATEGORIES", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor)),
+                      Expanded(child: Text("LISTE DU CATEGORIES", style: GoogleFonts.itim(fontSize: 22, fontWeight: FontWeight.w500, color: greyColor))),
                     ],
                   ),
                 ),
@@ -173,7 +173,7 @@ class _CategoryListState extends State<CategoryList> {
               child: Center(
                 child: FutureBuilder<bool>(
                   future: _load(),
-                  builder: (BuildContext context, snapshot) {
+                  builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
                     if (snapshot.hasData) {
                       return StatefulBuilder(
                           key: _categoriesKey,
@@ -299,17 +299,18 @@ class _CategoryListState extends State<CategoryList> {
                                                                               },
                                                                               controller: giftVault,
                                                                               onSubmitted: (String value) async {
-                                                                                await FirebaseFirestore.instance.collection("categories").where("categoryID", isEqualTo: item.categoryID).limit(1).get().then(
-                                                                                      (QuerySnapshot<Map<String, dynamic>> value) => value.docs.first.reference.update(
-                                                                                        <String, dynamic>{
-                                                                                          "gift": int.parse(giftVault.text),
-                                                                                        },
-                                                                                      ),
-                                                                                    );
-                                                                                // ignore: use_build_context_synchronously
-                                                                                showToast(context, "Gift vault changed successully", greenColor);
-                                                                                // ignore: use_build_context_synchronously
-                                                                                Navigator.pop(context);
+                                                                                if (int.tryParse(giftVault.text) != null && int.parse(giftVault.text) > 0) {
+                                                                                  item.gift = int.parse(giftVault.text);
+                                                                                  await FirebaseFirestore.instance.collection("categories").where("categoryID", isEqualTo: item.categoryID).limit(1).get().then(
+                                                                                        (QuerySnapshot<Map<String, dynamic>> value) => value.docs.first.reference.update(
+                                                                                          <String, dynamic>{"gift": int.parse(giftVault.text)},
+                                                                                        ),
+                                                                                      );
+                                                                                  // ignore: use_build_context_synchronously
+                                                                                  showToast(context, "Gift vault changed successully", greenColor);
+                                                                                  // ignore: use_build_context_synchronously
+                                                                                  Navigator.pop(context);
+                                                                                }
                                                                               },
                                                                               style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
                                                                               decoration: InputDecoration(
@@ -341,8 +342,19 @@ class _CategoryListState extends State<CategoryList> {
                                                                             backgroundColor: greenColor,
                                                                             transitionType: TransitionType.TOP_TO_BOTTOM,
                                                                             textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                                                                            onPress: () {
-                                                                              Navigator.pop(context);
+                                                                            onPress: () async {
+                                                                              if (int.tryParse(giftVault.text) != null && int.parse(giftVault.text) > 0) {
+                                                                                item.gift = int.parse(giftVault.text);
+                                                                                await FirebaseFirestore.instance.collection("categories").where("categoryID", isEqualTo: item.categoryID).limit(1).get().then(
+                                                                                      (QuerySnapshot<Map<String, dynamic>> value) => value.docs.first.reference.update(
+                                                                                        <String, dynamic>{"gift": int.parse(giftVault.text)},
+                                                                                      ),
+                                                                                    );
+                                                                                // ignore: use_build_context_synchronously
+                                                                                showToast(context, "Gift vault changed successully", greenColor);
+                                                                                // ignore: use_build_context_synchronously
+                                                                                Navigator.pop(context);
+                                                                              }
                                                                             },
                                                                           ),
                                                                           const SizedBox(width: 20),

@@ -28,34 +28,32 @@ class _DeleteStoreState extends State<DeleteStore> {
     } else {
       widget.stores.removeWhere((StoreModel element) => element.storeID == widget.storeID);
       widget.callback();
-      await FirebaseFirestore.instance.collection("products").where("storeID", isEqualTo: widget.storeID).get().then(
-        (QuerySnapshot<Map<String, dynamic>> value) async {
-          for (final QueryDocumentSnapshot<Map<String, dynamic>> product in value.docs) {
-            await product.reference.delete();
-          }
-        },
-      );
-      await FirebaseFirestore.instance.collection("sells").where("storeID", isEqualTo: widget.storeID).get().then(
-        (QuerySnapshot<Map<String, dynamic>> value) async {
-          for (final QueryDocumentSnapshot<Map<String, dynamic>> selledproduct in value.docs) {
-            await selledproduct.reference.delete();
-          }
-        },
-      );
-      await FirebaseFirestore.instance.collection("categories").where("storeID", isEqualTo: widget.storeID).get().then(
-        (QuerySnapshot<Map<String, dynamic>> value) async {
-          for (final QueryDocumentSnapshot<Map<String, dynamic>> category in value.docs) {
-            await category.reference.delete();
-          }
-        },
-      );
-      await FirebaseFirestore.instance.collection("stores").where("storeID", isEqualTo: widget.storeID).limit(1).get().then(
-            (QuerySnapshot<Map<String, dynamic>> value) async => await value.docs.first.reference.delete(),
-          );
       // ignore: use_build_context_synchronously
       showToast(context, "Store deleted", greenColor);
       // ignore: use_build_context_synchronously
       Navigator.pop(context);
+      await Future.wait(
+        <Future>[
+          FirebaseFirestore.instance.collection("products").where("storeID", isEqualTo: widget.storeID).get().then(
+            (QuerySnapshot<Map<String, dynamic>> value) async {
+              await Future.wait(<Future>[for (final QueryDocumentSnapshot<Map<String, dynamic>> product in value.docs) product.reference.delete()]);
+            },
+          ),
+          FirebaseFirestore.instance.collection("sells").where("storeID", isEqualTo: widget.storeID).get().then(
+            (QuerySnapshot<Map<String, dynamic>> value) async {
+              await Future.wait(<Future>[for (final QueryDocumentSnapshot<Map<String, dynamic>> selledproduct in value.docs) selledproduct.reference.delete()]);
+            },
+          ),
+          FirebaseFirestore.instance.collection("categories").where("storeID", isEqualTo: widget.storeID).get().then(
+            (QuerySnapshot<Map<String, dynamic>> value) async {
+              await Future.wait(<Future>[for (final QueryDocumentSnapshot<Map<String, dynamic>> category in value.docs) category.reference.delete()]);
+            },
+          ),
+          FirebaseFirestore.instance.collection("stores").where("storeID", isEqualTo: widget.storeID).limit(1).get().then(
+                (QuerySnapshot<Map<String, dynamic>> value) async => await value.docs.first.reference.delete(),
+              ),
+        ],
+      );
     }
   }
 

@@ -3,7 +3,7 @@
 import 'package:animated_loading_border/animated_loading_border.dart';
 import 'package:blacklist/utils/callbacks.dart';
 import 'package:blacklist/utils/shared.dart';
-import 'package:blacklist/views/admin/stores.dart';
+import 'package:blacklist/views/admin/stores_list.dart';
 import 'package:blacklist/views/vendor/cart_recipe.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
