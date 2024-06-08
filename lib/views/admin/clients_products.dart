@@ -42,6 +42,7 @@ class _ClientsProductsState extends State<ClientsProducts> {
                 future: FirebaseFirestore.instance.collection("sells").where("clientID", isEqualTo: widget.clientID).get(),
                 builder: (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
                   if (snapshot.hasData) {
+                    _data.clear();
                     snapshot.data!.docs.map((QueryDocumentSnapshot<Map<String, dynamic>> e) => SelledProductModel.fromJson(e.data())).toList().forEach(
                       (SelledProductModel element) {
                         if (!_data.containsKey(element.productReference)) {
@@ -52,6 +53,7 @@ class _ClientsProductsState extends State<ClientsProducts> {
                             "product_category": element.productCategory,
                             "product_reference": element.productReference,
                             "product_date": formatDate(element.date, const <String>[dd, " / ", MM, " / ", yyyy, " - ", HH, " : ", n]).toUpperCase(),
+                            "date": element.date,
                           };
                         } else {
                           _data[element.productReference]!["product_quantity"] += 1;
@@ -59,7 +61,7 @@ class _ClientsProductsState extends State<ClientsProducts> {
                       },
                     );
 
-                    List<Map<String, dynamic>> data = _data.values.toList()..sort((dynamic a, dynamic b) => a["product_date"].milliseconds >= b["product_date"].milliseconds ? 1 : -1);
+                    final List<Map<String, dynamic>> data = _data.values.toList()..sort((dynamic a, dynamic b) => a["date"].millisecond >= b["date"].millisecond ? 1 : -1);
 
                     return data.isEmpty
                         ? Center(child: LottieBuilder.asset("assets/lotties/empty.json"))
@@ -132,7 +134,7 @@ class _ClientsProductsState extends State<ClientsProducts> {
                                         child: Text("Total", style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: whiteColor)),
                                       ),
                                       const SizedBox(width: 10),
-                                      Text((data[index]["product_price"] * data[index]["product_quantity"]).toStringAsFixed(2), style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: whiteColor)),
+                                      Text(data[index]["product_price"] == 0 ? "GIFT" : (data[index]["product_price"] * data[index]["product_quantity"]).toStringAsFixed(2), style: GoogleFonts.itim(fontSize: 18, fontWeight: FontWeight.w500, color: whiteColor)),
                                     ],
                                   ),
                                 ],

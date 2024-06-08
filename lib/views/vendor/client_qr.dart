@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:animated_loading_border/animated_loading_border.dart';
 import 'package:blacklist/models/client_model.dart';
 import 'package:blacklist/utils/callbacks.dart';
@@ -24,9 +22,10 @@ class Client extends StatefulWidget {
 
 class _ClientState extends State<Client> {
   final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _cinController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
 
-  final List<String> _names = names;
+  List<String> _names = <String>[];
+  List<String> _phones = <String>[];
 
   late final Map<String, Map<String, dynamic>> _productTemplate = <String, Map<String, dynamic>>{
     "NOM": <String, dynamic>{
@@ -36,20 +35,20 @@ class _ClientState extends State<Client> {
       "hint": "Enter le nom du client",
       "key": GlobalKey<State>(),
     },
-    "CIN": <String, dynamic>{
-      "controller": _cinController,
+    "TELEPHONE": <String, dynamic>{
+      "controller": _phoneController,
       "type": "number",
       "required": true,
-      "hint": "CIN est obligatoire : ${List<String>.generate(8, (int index) => Random().nextInt(10).toString()).join()}",
+      "hint": "Numéro de téléphone est obligatoire",
       "key": GlobalKey<State>(),
     },
   };
 
   Future<bool> _load() async {
-    FirebaseFirestore.instance.collection("clients").where("storesID", arrayContains: widget.storeID).get().then(
+    await FirebaseFirestore.instance.collection("clients").where("storesID", arrayContains: widget.storeID).get().then(
       (QuerySnapshot<Map<String, dynamic>> value) {
-        _productTemplate["NOM"]!["key"].currentState!.setState(() => names = value.docs.map((QueryDocumentSnapshot<Map<String, dynamic>> e) => e.data()["clientName"]).toList().cast<String>());
-        _productTemplate["CIN"]!["key"].currentState!.setState(() => names = value.docs.map((QueryDocumentSnapshot<Map<String, dynamic>> e) => e.data()["clientCIN"]).toList().cast<String>());
+        _productTemplate["NOM"]!["key"].currentState!.setState(() => _names = value.docs.map((QueryDocumentSnapshot<Map<String, dynamic>> e) => e.data()["clientName"]).toList().cast<String>());
+        _productTemplate["TELEPHONE"]!["key"].currentState!.setState(() => _phones = value.docs.map((QueryDocumentSnapshot<Map<String, dynamic>> e) => e.data()["clientPhone"]).toList().cast<String>());
       },
     );
     return true;
@@ -58,7 +57,7 @@ class _ClientState extends State<Client> {
   @override
   void dispose() {
     _usernameController.dispose();
-    _cinController.dispose();
+    _phoneController.dispose();
     super.dispose();
   }
 
@@ -114,29 +113,31 @@ class _ClientState extends State<Client> {
                                       Container(
                                         color: scaffoldColor,
                                         child: entry.value["type"] != "text"
-                                            ? TextField(
-                                                keyboardType: TextInputType.number,
-                                                onChanged: (String value) {
-                                                  if (value.trim().length <= 1) {
-                                                    entry.value["key"].currentState!.setState(() {});
-                                                  }
-                                                },
-                                                controller: entry.value["controller"],
-                                                style: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                                                decoration: InputDecoration(
-                                                  contentPadding: const EdgeInsets.all(20),
-                                                  focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
-                                                  border: InputBorder.none,
-                                                  hintText: entry.value["hint"],
-                                                  hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
-                                                  suffixIcon: StatefulBuilder(
-                                                    key: entry.value["key"],
-                                                    builder: (BuildContext context, void Function(void Function()) _) {
-                                                      return entry.value["controller"].text.trim().isEmpty ? const SizedBox() : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor);
+                                            ? StatefulBuilder(
+                                                key: entry.value["key"],
+                                                builder: (BuildContext context, void Function(void Function()) _) {
+                                                  return SearchField<String>(
+                                                    autoCorrect: false,
+                                                    onSearchTextChanged: (String value) {
+                                                      if (value.trim().length <= 1) {
+                                                        entry.value["key"].currentState!.setState(() {});
+                                                      }
+                                                      return _phones.where((String element) => element.toLowerCase().startsWith(value.toLowerCase())).map((String e) => SearchFieldListItem<String>(e, item: e, child: Padding(padding: const EdgeInsets.all(8.0), child: Text(e)))).toList();
                                                     },
-                                                  ),
-                                                ),
-                                                inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp(entry.value["type"] == "number" ? r"\d" : r"."))],
+                                                    controller: entry.value["controller"],
+                                                    searchStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                                                    searchInputDecoration: InputDecoration(
+                                                      contentPadding: const EdgeInsets.all(20),
+                                                      focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: purpleColor, width: 2, style: BorderStyle.solid)),
+                                                      border: InputBorder.none,
+                                                      hintText: entry.value["hint"],
+                                                      hintStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: greyColor),
+                                                      suffixIcon: entry.value["controller"].text.trim().isEmpty ? const SizedBox() : const Icon(FontAwesome.circle_check_solid, size: 15, color: greenColor),
+                                                    ),
+                                                    inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp(entry.value["type"] == "number" ? r"\d" : r".")), LengthLimitingTextInputFormatter(8)],
+                                                    suggestions: _phones.map((String e) => SearchFieldListItem<String>(e, item: e, child: Padding(padding: const EdgeInsets.all(8.0), child: Text(e)))).toList(),
+                                                  );
+                                                },
                                               )
                                             : StatefulBuilder(
                                                 key: entry.value["key"],
@@ -168,50 +169,47 @@ class _ClientState extends State<Client> {
                                       const SizedBox(height: 20),
                                     ],
                                   ),
-                                Row(
-                                  children: <Widget>[
-                                    const Spacer(),
-                                    AnimatedButton(
-                                      width: 150,
-                                      height: 40,
-                                      text: 'SUIVANT',
-                                      selectedTextColor: darkColor,
-                                      animatedOn: AnimatedOn.onHover,
-                                      animationDuration: 500.ms,
-                                      isReverse: true,
-                                      selectedBackgroundColor: greenColor,
-                                      backgroundColor: purpleColor,
-                                      transitionType: TransitionType.TOP_TO_BOTTOM,
-                                      textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
-                                      onPress: () async {
-                                        if (_usernameController.text.trim().isNotEmpty) {
-                                          await FirebaseFirestore.instance.collection("clients").where("clientName", isEqualTo: _usernameController.text.trim()).limit(1).get().then(
-                                            (QuerySnapshot<Map<String, dynamic>> value) {
-                                              if (value.docs.isNotEmpty) {
-                                                showToast(context, "Client trouvé", purpleColor);
-                                                Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => AfterQRScan(storeID: widget.storeID, client: ClientModel.fromJson(value.docs.first.data()))));
-                                              } else {
-                                                showToast(context, "Pas de client avec ce nom", purpleColor);
-                                              }
-                                            },
-                                          );
-                                        } else if (_cinController.text.trim().isNotEmpty) {
-                                          await FirebaseFirestore.instance.collection("clients").where("clientCIN", isEqualTo: _cinController.text.trim()).limit(1).get().then(
-                                            (QuerySnapshot<Map<String, dynamic>> value) {
-                                              if (value.docs.isNotEmpty) {
-                                                showToast(context, "Client trouvé", purpleColor);
-                                                Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => AfterQRScan(storeID: widget.storeID, client: ClientModel.fromJson(value.docs.first.data()))));
-                                              } else {
-                                                showToast(context, "Pas de client avec ce CIN", purpleColor);
-                                              }
-                                            },
-                                          );
-                                        } else {
-                                          showToast(context, "Entrer soit nom soit cin", purpleColor);
-                                        }
-                                      },
-                                    ),
-                                  ],
+                                Center(
+                                  child: AnimatedButton(
+                                    width: 150,
+                                    height: 40,
+                                    text: 'SUIVANT',
+                                    selectedTextColor: darkColor,
+                                    animatedOn: AnimatedOn.onHover,
+                                    animationDuration: 500.ms,
+                                    isReverse: true,
+                                    selectedBackgroundColor: greenColor,
+                                    backgroundColor: purpleColor,
+                                    transitionType: TransitionType.TOP_TO_BOTTOM,
+                                    textStyle: GoogleFonts.itim(fontSize: 16, fontWeight: FontWeight.w500, color: whiteColor),
+                                    onPress: () async {
+                                      if (_usernameController.text.trim().isNotEmpty) {
+                                        await FirebaseFirestore.instance.collection("clients").where("clientName", isEqualTo: _usernameController.text.trim()).limit(1).get().then(
+                                          (QuerySnapshot<Map<String, dynamic>> value) {
+                                            if (value.docs.isNotEmpty) {
+                                              showToast(context, "Client trouvé", purpleColor);
+                                              Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => AfterQRScan(storeID: widget.storeID, client: ClientModel.fromJson(value.docs.first.data()))));
+                                            } else {
+                                              showToast(context, "Pas de client avec ce nom", purpleColor);
+                                            }
+                                          },
+                                        );
+                                      } else if (_phoneController.text.trim().isNotEmpty) {
+                                        await FirebaseFirestore.instance.collection("clients").where("clientPhone", isEqualTo: _phoneController.text.trim()).limit(1).get().then(
+                                          (QuerySnapshot<Map<String, dynamic>> value) {
+                                            if (value.docs.isNotEmpty) {
+                                              showToast(context, "Client trouvé", purpleColor);
+                                              Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => AfterQRScan(storeID: widget.storeID, client: ClientModel.fromJson(value.docs.first.data()))));
+                                            } else {
+                                              showToast(context, "Pas de client avec ce Téléphone", purpleColor);
+                                            }
+                                          },
+                                        );
+                                      } else {
+                                        showToast(context, "Entrer soit Nom soit Téléphone", purpleColor);
+                                      }
+                                    },
+                                  ),
                                 ),
                               ],
                             );

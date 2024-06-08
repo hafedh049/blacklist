@@ -11,6 +11,4 @@ const Color blueColor = Colors.blueAccent;
 const Color redColor = Colors.red;
 const Color transparentColor = Colors.transparent;
 
-List<String> names = <String>[];
-
 Box? offline;
